@@ -502,7 +502,7 @@ function bQ(){
   if(g('QBA'))g('QBA').onclick=qCamOn;if(g('QBR2'))g('QBR2').onclick=qCamRec;if(g('QBS'))g('QBS').onclick=qCamStop;if(g('QBRT'))g('QBRT').onclick=qCamRetry;
   if(g('QSK'))g('QSK').onclick=function(){QV=false;qCC();QS++;bQ()};
   if(g('QUZ'))g('QUZ').onclick=function(){g('QUF').click()};
-  if(g('QUF'))g('QUF').onchange=function(){var f=this.files[0];if(!f)return;QV=true;var s=g('QUS');s.style.display='block';s.textContent='✅ Vidéo "'+f.name+'" sélectionnée.';show('✅ Vidéo sélectionnée !')};
+  if(g('QUF'))g('QUF').onchange=function(){var f=this.files[0];if(!f)return;QV=true;QA.vidFile=f;var s=g('QUS');s.style.display='block';s.textContent='✅ Vidéo "'+f.name+'" sélectionnée.';show('✅ Vidéo sélectionnée !')};
   g('QB').querySelectorAll('[data-cd]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-cd').split(':'),k=p[0],v=p[1];b.closest('.cs2').querySelectorAll('.cd').forEach(function(c){c.classList.remove('sl');c.querySelector('.ck').textContent=''});b.classList.add('sl');b.querySelector('.ck').textContent='✓';QA[k]=v}});
   g('QB').querySelectorAll('[data-pl]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-pl').split(':');b.closest('.pl').querySelectorAll('.pi2').forEach(function(x){x.classList.remove('sl')});b.classList.add('sl');QA[p[0]]=p[1]}});
   g('QB').querySelectorAll('[data-tg]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-tg').split(':'),k=p[0],v=p[1];if(!Array.isArray(QA[k]))QA[k]=[];b.classList.toggle('sl');if(b.classList.contains('sl')){if(!QA[k].includes(v))QA[k].push(v)}else QA[k]=QA[k].filter(function(x){return x!==v})}});
@@ -510,7 +510,32 @@ function bQ(){
   if(g('QAG')){var s=g('QAG');for(var a=18;a<=75;a++){var o=document.createElement('option');o.value=a;o.textContent=a+' ans';if(QA.age&&parseInt(QA.age)===a)o.selected=true;s.appendChild(o)}}
 }
 function qNI(){var n=g('QN'),a=g('QAG'),h2=g('QH'),w=g('QW');if(!n||!n.value.trim()){show('⚠️ Prénom requis');return}if(!a||!a.value){show('⚠️ Âge requis');return}QA.name=n.value.trim();QA.age=a.value;var v=g('QV');if(v)QA.ville=v.value.trim();if(h2&&h2.value)QA.height=h2.value;if(w&&w.value)QA.weight=w.value;QS++;bQ()}
-async function qSub(){var em=g('QE'),wh=g('QWH');if(!em)return;var ev=em.value.trim(),wv=wh?wh.value.trim():'';if(!ev){show('⚠️ Email requis');return}QA.email=ev;QA.whats=wv;var btn=g('QSND');btn.textContent='Envoi…';btn.disabled=true;var iF=QA.g==='f';var msg='NOUVELLE INSCRIPTION LOVESIAM\n\nProfil: '+(iF?'Femme thaïlandaise':'Homme français')+'\nPrénom: '+QA.name+'\nÂge: '+QA.age+' ans\nVille: '+QA.ville+'\nTaille: '+QA.height+' cm / Poids: '+QA.weight+' kg\nLangues: '+(iF?'FR:'+QA.lfr+' / EN:'+QA.len:'TH:'+QA.lth+' / EN:'+QA.len)+'\nDescription: '+(QA.desc||'')+'\nRecherche: '+QA.looking+'\nSituation: '+(QA.fam||'')+' / '+(QA.job||'')+'\nVidéo: '+(QV?'✅':'À enregistrer')+'\n\nEmail: '+ev+'\nWhatsApp: '+(wv||'—');try{await emailjs.send(ES,ET,{to_email:PE,from_name:QA.name,from_email:ev,subject:'Nouvelle inscription LoveSiam — '+QA.name,message:msg});show('✅ Inscription envoyée !')}catch(e2){show('✅ Dossier enregistré !')}U={name:QA.name,city:QA.ville||'France',bio:QA.desc||'',gender:QA.g,email:ev,status:'pending'};updNav();QD=true;bQ();rFG()}
+async function uploadVideo(){
+  if(!QCH.length&&!QA.vidFile)return null;
+  try{
+    var blob=QA.vidFile||new Blob(QCH,{type:'video/webm'});
+    var fd=new FormData();fd.append('file',blob);fd.append('upload_preset','lovesiam_videos');fd.append('folder','lovesiam');
+    var r=await fetch('https://api.cloudinary.com/v1_1/dfxxg3dk4/video/upload',{method:'POST',body:fd});
+    var d=await r.json();return d.secure_url||null;
+  }catch(e){return null}
+}
+async function qSub(){
+  var em=g('QE'),wh=g('QWH');if(!em)return;
+  var ev=em.value.trim(),wv=wh?wh.value.trim():'';
+  if(!ev){show('⚠️ Email requis');return}
+  QA.email=ev;QA.whats=wv;
+  var btn=g('QSND');btn.textContent='Envoi…';btn.disabled=true;
+  var iF=QA.g==='f';
+  var vidUrl=null;
+  if(QV){
+    btn.textContent='Upload vidéo…';
+    vidUrl=await uploadVideo();
+  }
+  var msg='NOUVELLE INSCRIPTION LOVESIAM\n\nProfil: '+(iF?'Femme thaïlandaise':'Homme français')+'\nPrénom: '+QA.name+'\nÂge: '+QA.age+' ans\nVille: '+QA.ville+'\nTaille: '+QA.height+' cm / Poids: '+QA.weight+' kg\nLangues: '+(iF?'FR:'+QA.lfr+' / EN:'+QA.len:'TH:'+QA.lth+' / EN:'+QA.len)+'\nDescription: '+(QA.desc||'')+'\nRecherche: '+QA.looking+'\nSituation: '+(QA.fam||'')+' / '+(QA.job||'')+'\n\n🎬 VIDÉO: '+(vidUrl?vidUrl:'Non uploadée — à enregistrer avec le candidat')+'\n\nℹ️ Les sous-titres FR↔TH seront ajoutés par Patrick avant publication.\n\nEmail: '+ev+'\nWhatsApp: '+(wv||'—');
+  try{await emailjs.send(ES,ET,{to_email:PE,from_name:QA.name,from_email:ev,subject:'Nouvelle inscription LoveSiam — '+QA.name,message:msg});show('✅ Inscription envoyée !')}catch(e2){show('✅ Dossier enregistré !')}
+  U={name:QA.name,city:QA.ville||'France',bio:QA.desc||'',gender:QA.g,email:ev,status:'pending'};
+  updNav();QD=true;bQ();rFG();
+}
 async function qCamOn(){var er=g('QCE');er.style.display='none';try{QST=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true});var v=g('QCV');v.srcObject=QST;v.style.display='block';v.play();g('QCP').style.display='none';g('QBA').style.display='none';g('QBR2').style.display='block'}catch(e){er.style.display='block';er.textContent="❌ Impossible d'accéder à la caméra.";g('QCP').style.display='none'}}
 function qCamRec(){QCH=[];var mt=MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')?'video/webm;codecs=vp8,opus':'video/webm';QMR=new MediaRecorder(QST,{mimeType:mt});QMR.ondataavailable=function(e){if(e.data.size>0)QCH.push(e.data)};QMR.onstop=function(){var bl=new Blob(QCH,{type:'video/webm'});var rv=g('QCR');rv.src=URL.createObjectURL(bl);rv.style.display='block';g('QCV').style.display='none';g('QRB').style.display='none';g('QCP2').style.display='none';g('QBS').style.display='none';g('QBRT').style.display='block';QV=true;if(QST){QST.getTracks().forEach(function(t){t.stop()});QST=null}show('✅ Vidéo enregistrée !')};QMR.start();QRS=0;g('QRB').style.display='flex';g('QCP2').style.display='block';g('QBR2').style.display='none';g('QBS').style.display='block';QRT=setInterval(function(){QRS++;g('QRL').textContent='REC '+QRS+'s / 60s';g('QCPF').style.width=(QRS/60*100)+'%';if(QRS>=60)qCamStop()},1000)}
 function qCamStop(){clearInterval(QRT);if(QMR&&QMR.state!=='inactive')QMR.stop()}
