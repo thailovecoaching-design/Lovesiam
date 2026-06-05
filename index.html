@@ -4,521 +4,806 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>LoveSiam — Rencontres Franco-Thaïlandaises</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--g:#C4962A;--gl:#E8B84B;--gd:rgba(196,150,42,.1);--nv:#1A2744;--bg:#fff;--b2:#F8F6F2;--b3:#F0EDE6;--tm:#4A5568;--td:#8A95A8;--rd:#C0392B;--gn:#27AE60}
-body{background:var(--bg);color:var(--nv);font-family:'DM Sans',sans-serif;overflow-x:hidden}
-nav{position:fixed;top:0;left:0;right:0;z-index:99;height:56px;background:rgba(255,255,255,.97);border-bottom:1px solid rgba(196,150,42,.12);display:flex;align-items:center;justify-content:space-between;padding:0 16px}
-.ltx{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--nv);font-weight:600;letter-spacing:.08em;cursor:pointer}
-.ltx em{color:var(--g);font-weight:300;font-style:italic}
-.lw{display:flex;border-radius:16px;overflow:hidden;border:1px solid rgba(26,39,68,.15)}
-.lb{padding:4px 9px;font-size:.65rem;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
-.lb.on{background:var(--nv);color:#fff}.lb.off{background:transparent;color:var(--td)}
-.nb{padding:6px 13px;border-radius:20px;font-size:.72rem;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:500;border:none}
-.nb0{background:transparent;border:1.5px solid rgba(26,39,68,.2);color:var(--nv)}
-.nb1{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;font-weight:600}
-.bn{position:fixed;bottom:0;left:0;right:0;z-index:99;height:56px;background:rgba(255,255,255,.97);border-top:1px solid rgba(26,39,68,.08);display:flex;align-items:center;justify-content:space-around}
-.bi{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:5px 12px;opacity:.3}
-.bi.on{opacity:1}
-.bi i{font-size:1.1rem;position:relative}
-.bi s{font-size:.53rem;letter-spacing:.06em;text-transform:uppercase;color:var(--td);font-weight:500}
-.bi.on s{color:var(--g)}
-.pg{display:none;padding:56px 0 64px;min-height:100vh}.pg.on{display:block}
-.tk{position:fixed;top:64px;left:50%;transform:translateX(-50%) translateY(-10px);background:var(--nv);border-radius:9px;padding:9px 16px;font-size:.77rem;z-index:999;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none;color:#fff}
-.tk.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.hero{min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;text-align:center;background:linear-gradient(160deg,#FFFBF4,#fff 50%,#F8F6FF)}
-.ey{font-size:.61rem;letter-spacing:.26em;text-transform:uppercase;color:var(--g);margin-bottom:14px;font-weight:500}
-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,8vw,4.8rem);font-weight:300;line-height:1.06;margin-bottom:12px;color:var(--nv)}
-h1 em{font-style:italic;color:var(--g)}
-.hs{font-size:.88rem;color:var(--tm);line-height:1.8;max-width:380px;margin:0 auto 28px}
-.ct{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
-.bg{padding:12px 24px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:30px;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;box-shadow:0 5px 16px rgba(196,150,42,.28)}
-.bo{padding:12px 24px;background:#fff;color:var(--nv);border:1.5px solid rgba(26,39,68,.15);border-radius:30px;font-family:'DM Sans',sans-serif;font-size:.84rem;cursor:pointer}
-.sw{display:flex;background:#fff;border-radius:16px;box-shadow:0 4px 18px rgba(0,0,0,.08);border:1px solid rgba(196,150,42,.1);width:100%;max-width:320px}
-.st{flex:1;padding:14px 8px;text-align:center;position:relative}
-.st:not(:last-child)::after{content:'';position:absolute;right:0;top:20%;height:60%;width:1px;background:rgba(196,150,42,.15)}
-.sn{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--g);font-weight:600;line-height:1}
-.sl{font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--td);margin-top:3px;font-weight:500}
-.sc{padding:40px 18px;text-align:center}
-.sc.a{background:var(--b2)}
-.sc.n{background:var(--nv);color:#fff}
-.se{font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:var(--g);margin-bottom:6px;font-weight:500}
-h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:7px;color:var(--nv)}
-h2 em{font-style:italic;color:var(--g)}
-.n h2{color:#fff}
-.ss{font-size:.8rem;color:var(--tm);line-height:1.68;margin-bottom:20px}
-.n .ss{color:rgba(255,255,255,.6)}
-.dg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
-.dc{background:#fff;border-radius:13px;padding:14px;border:1px solid rgba(26,39,68,.07);box-shadow:0 2px 7px rgba(0,0,0,.04);text-align:left}
-.dc i{font-size:1.4rem;margin-bottom:6px;display:block}
-.dc h4{font-size:.8rem;font-weight:600;margin-bottom:3px;color:var(--nv)}
-.dc p{font-size:.68rem;color:var(--tm);line-height:1.58}
-.pi{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left}
-.pi:last-child{border:none}
-.pn{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:rgba(196,150,42,.3);width:32px;flex-shrink:0;line-height:1}
-.pt h4{font-size:.85rem;font-weight:600;margin-bottom:3px;color:#fff}
-.pt p{font-size:.72rem;color:rgba(255,255,255,.55);line-height:1.6}
-.fh{padding:13px 16px 7px;display:flex;align-items:center;justify-content:space-between}
-.ft{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--nv)}
-.fb{margin:0 12px 11px;padding:10px 13px;background:var(--gd);border:1px solid rgba(196,150,42,.18);border-radius:10px;font-size:.73rem;color:var(--tm);line-height:1.58;text-align:center}
-.fs{display:flex;gap:5px;padding:0 12px 11px;overflow-x:auto;scrollbar-width:none;justify-content:center}
-.fs::-webkit-scrollbar{display:none}
-.fc{padding:5px 12px;border-radius:15px;font-size:.68rem;white-space:nowrap;cursor:pointer;border:1px solid rgba(26,39,68,.12);background:transparent;color:var(--td);font-family:'DM Sans',sans-serif}
-.fc.on{background:var(--nv);border-color:var(--nv);color:#fff}
-.gr{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding:0 11px}
-.pc{background:#fff;border-radius:15px;overflow:hidden;border:1px solid rgba(26,39,68,.07);cursor:pointer;box-shadow:0 2px 9px rgba(0,0,0,.06)}
-.ph{width:100%;aspect-ratio:4/5;position:relative;overflow:hidden;background:var(--b3)}
-.sw2{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;filter:blur(6px);opacity:.5;transform:scale(1.1)}
-.so{position:absolute;inset:0;background:linear-gradient(180deg,rgba(248,246,242,.05) 0%,rgba(248,246,242,.4) 70%,rgba(248,246,242,.8) 100%)}
-.sl2{background:rgba(26,39,68,.72);color:#fff;padding:3px 11px;border-radius:14px;font-size:.6rem;font-weight:500;white-space:nowrap}
-.sb{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:13px;padding:4px 12px;font-size:.62rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
-.bd{position:absolute;font-size:.53rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 6px;border-radius:5px;font-weight:600;top:7px;left:7px}
-.bn2{background:var(--rd);color:#fff}.bo2{background:var(--gn);color:#fff}
-.vd{position:absolute;bottom:7px;right:7px;background:rgba(196,150,42,.88);color:#fff;font-size:.53rem;padding:2px 6px;border-radius:4px;font-weight:600}
-.pif{padding:10px}
-.pnm{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--nv);margin-bottom:2px}
-.plc{font-size:.65rem;color:var(--td);margin-bottom:4px}
-.plg{font-size:.6rem;padding:2px 7px;border-radius:6px;background:var(--b2);color:var(--nv);font-weight:500;display:inline-block;margin-bottom:6px}
-.pds{font-size:.67rem;color:var(--tm);line-height:1.48;margin-bottom:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.lb{width:100%;padding:7px;border-radius:8px;border:1px solid rgba(196,150,42,.22);background:rgba(196,150,42,.08);color:var(--g);font-size:.69rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600}
-.pp{position:fixed;inset:0;background:#fff;z-index:500;display:none;flex-direction:column;overflow-y:auto}
-.pp.on{display:flex}
-.ph2{padding:12px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(26,39,68,.07);flex-shrink:0;background:#fff;position:sticky;top:0;z-index:2}
-.pb{background:none;border:none;color:var(--g);font-size:1rem;cursor:pointer;font-weight:600}
-.pc2{width:100%;height:160px;display:flex;align-items:center;justify-content:center;background:var(--b3);position:relative;overflow:hidden}
-.pc2b{filter:blur(18px);opacity:.4;font-size:7rem;position:absolute}
-.pc2l{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}
-.av{width:70px;height:70px;border-radius:50%;background:var(--b2);display:flex;align-items:center;justify-content:center;font-size:2.2rem;border:3px solid #fff;margin-top:-35px;margin-left:16px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
-.vm{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:600;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px}
+:root{--g:#B8860B;--gl:#DAA520;--gd:rgba(184,134,11,.12);--bg:#FAFAF7;--bg2:#F5F3EE;--bg3:#EDEAE2;--tx:#1A1A2E;--tm:#4A4560;--td:#8A8699;--w:#FFFFFF;--red:#C0392B;--grn:#27AE60}
+body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:99;height:56px;background:rgba(250,250,247,.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(184,134,11,.15);display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.logo{display:flex;align-items:center;gap:9px;cursor:pointer}
+.logo-txt{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--g);letter-spacing:.12em;font-weight:600}.logo-txt em{font-style:italic;font-weight:300}
+.lt-wrap{display:flex;border-radius:18px;overflow:hidden;border:1px solid rgba(184,134,11,.25)}
+.lt{padding:4px 10px;font-size:.67rem;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s}
+.lt.on{background:var(--gd);color:var(--g)}.lt.off{background:transparent;color:var(--td)}
+.nb{padding:6px 14px;border-radius:22px;font-size:.73rem;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:500;border:none;transition:all .2s}
+.nb-o{background:transparent;border:1px solid rgba(184,134,11,.35);color:var(--g)}
+.nb-p{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;font-weight:600}
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:99;height:58px;background:rgba(250,250,247,.97);border-top:1px solid rgba(184,134,11,.12);display:flex;align-items:center;justify-content:space-around}
+.bni{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:6px 14px;opacity:.35;transition:all .2s}
+.bni.on{opacity:1}
+.bni-ic{font-size:1.15rem;position:relative}
+.bni-lb{font-size:.56rem;letter-spacing:.07em;text-transform:uppercase;color:var(--td);font-weight:500}
+.bni.on .bni-lb{color:var(--g)}
+.pg{display:none;padding:56px 0 66px;min-height:100vh}.pg.on{display:block}
+.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%) translateY(-10px);background:var(--tx);border-radius:10px;padding:10px 18px;font-size:.79rem;z-index:999;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none;color:#fff}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* HOME */
+.hero{min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 22px;text-align:center;background:linear-gradient(160deg,#FFF8EE 0%,var(--bg) 60%)}
+.hero-badge{display:inline-flex;padding:5px 16px;border-radius:20px;border:1px solid rgba(184,134,11,.25);background:rgba(184,134,11,.08);font-size:.63rem;letter-spacing:.2em;color:var(--g);text-transform:uppercase;margin-bottom:18px;font-weight:500}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,8vw,5rem);font-weight:300;line-height:1.07;margin-bottom:12px;color:var(--tx)}
+.hero h1 em{font-style:italic;color:var(--g)}
+.hero-sub{font-size:.9rem;color:var(--tm);line-height:1.8;max-width:400px;margin:0 auto 28px}
+.cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-g{padding:12px 24px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:32px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(184,134,11,.25)}
+.btn-g:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(184,134,11,.32)}
+.btn-o{padding:12px 24px;background:var(--w);color:var(--tm);border:1px solid rgba(26,26,46,.15);border-radius:32px;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;transition:all .2s}
+.stats{display:flex;gap:28px;margin-top:40px;justify-content:center}
+.sn{font-family:'Cormorant Garamond',serif;font-size:2.1rem;color:var(--g);line-height:1}
+.sl{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--td);margin-top:3px;font-weight:500}
+.sdiv{width:1px;height:32px;background:rgba(184,134,11,.2);align-self:center}
+
+/* SECTIONS */
+.sec{padding:44px 20px;text-align:center}
+.sec.alt{background:var(--bg2)}
+.eye{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--g);margin-bottom:6px;font-weight:500}
+.sec h2{font-family:'Cormorant Garamond',serif;font-size:1.85rem;font-weight:300;margin-bottom:18px;color:var(--tx)}
+.sec h2 em{font-style:italic;color:var(--g)}
+.dcard{display:flex;gap:13px;padding:15px;background:var(--w);border-radius:14px;border:1px solid rgba(26,26,46,.07);margin-bottom:10px;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.dic{width:40px;height:40px;border-radius:10px;background:var(--gd);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.dcard h4{font-size:.88rem;font-weight:600;margin-bottom:3px;color:var(--tx)}
+.dcard p{font-size:.76rem;color:var(--tm);line-height:1.65}
+.proc-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(26,26,46,.07);text-align:left}
+.proc-item:last-child{border:none}
+.proc-n{font-family:'Cormorant Garamond',serif;font-size:2rem;color:rgba(184,134,11,.25);width:34px;flex-shrink:0;line-height:1}
+.proc-t h4{font-size:.88rem;font-weight:600;margin-bottom:3px;color:var(--tx)}
+.proc-t p{font-size:.76rem;color:var(--tm);line-height:1.65}
+
+/* FEED */
+.fhead{padding:14px 18px 8px;display:flex;align-items:center;justify-content:space-between}
+.fttl{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:400;color:var(--tx)}
+.fbanner{margin:0 14px 12px;padding:11px 14px;background:rgba(184,134,11,.07);border:1px solid rgba(184,134,11,.15);border-radius:11px;font-size:.75rem;color:var(--tm);line-height:1.6;text-align:center}
+.filters{display:flex;gap:6px;padding:0 14px 12px;overflow-x:auto;scrollbar-width:none;justify-content:center}
+.filters::-webkit-scrollbar{display:none}
+.fc{padding:5px 13px;border-radius:16px;font-size:.7rem;white-space:nowrap;cursor:pointer;border:1px solid rgba(184,134,11,.2);background:transparent;color:var(--td);flex-shrink:0;font-family:'DM Sans',sans-serif;transition:all .2s}
+.fc.on{background:var(--gd);border-color:var(--g);color:var(--g)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 12px}
+.pcard{background:var(--w);border-radius:16px;overflow:hidden;border:1px solid rgba(26,26,46,.07);cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.pcard:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.1)}
+.pphoto{width:100%;aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;position:relative;font-size:3.5rem;background:linear-gradient(145deg,#F0EDE6,#E8E4DA)}
+.pblur{position:absolute;inset:0;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(250,250,247,.5);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:12px}
+.pblur-ic{font-size:1.6rem}
+.pblur-t{font-size:.67rem;color:var(--tm);text-align:center;line-height:1.5}
+.pblur-btn{padding:6px 13px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:15px;font-size:.69rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:3px}
+.pbadge{position:absolute;font-size:.56rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;font-weight:600}
+.pnew{top:8px;left:8px;background:var(--red);color:#fff}
+.pon{top:8px;left:8px;background:var(--grn);color:#fff}
+.pvid{bottom:8px;right:8px;background:rgba(184,134,11,.9);color:#fff}
+.pinfo{padding:11px}
+.pname{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--tx);margin-bottom:2px}
+.page{font-size:.72rem;color:var(--td);margin-bottom:5px}
+.ptags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.ptag{padding:2px 8px;border-radius:8px;font-size:.62rem;background:var(--bg2);color:var(--tm);font-weight:500}
+.pdesc{font-size:.71rem;color:var(--tm);line-height:1.5;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lbtn{width:100%;padding:7px;border-radius:9px;border:1px solid rgba(184,134,11,.25);background:rgba(184,134,11,.08);color:var(--g);font-size:.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .2s}
+.lbtn:hover{background:var(--gd)}
+
+/* PROFILE PAGE */
+.profile-page{position:fixed;inset:0;background:var(--bg);z-index:500;display:none;flex-direction:column;overflow-y:auto}
+.profile-page.on{display:flex}
+.pp-head{padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(26,26,46,.08);flex-shrink:0;background:var(--w);position:sticky;top:0;z-index:2}
+.pp-back{background:none;border:none;color:var(--g);font-size:1.1rem;cursor:pointer;font-weight:600}
+.pp-cover{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:5rem;background:linear-gradient(145deg,#F0EDE6,#E8E4DA);position:relative;overflow:hidden}
+.pp-avatar{width:80px;height:80px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:2.5rem;border:3px solid var(--w);margin-top:-40px;margin-left:18px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.pp-infos{padding:10px 18px 18px}
+.pp-name{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--tx);margin-bottom:3px}
+.pp-handle{font-size:.78rem;color:var(--td);margin-bottom:10px}
+.pp-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.pp-tag{padding:4px 12px;border-radius:18px;font-size:.72rem;background:var(--bg2);color:var(--tm);font-weight:500;border:1px solid rgba(26,26,46,.08)}
+.pp-tag.lang{background:rgba(184,134,11,.1);color:var(--g);border-color:rgba(184,134,11,.2)}
+.pp-desc{font-size:.83rem;color:var(--tm);line-height:1.72;margin-bottom:16px;padding:14px;background:var(--w);border-radius:12px;border:1px solid rgba(26,26,46,.07)}
+.pp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.pp-stat{background:var(--w);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(26,26,46,.07)}
+.pp-sn{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--g)}
+.pp-sl{font-size:.6rem;color:var(--td);font-weight:500;text-transform:uppercase;letter-spacing:.08em}
+.pp-btns{display:flex;gap:10px;margin-bottom:16px}
+.pp-msg{flex:1;padding:11px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer}
+.pp-like{flex:1;padding:11px;background:var(--w);color:var(--red);border:1px solid rgba(192,57,43,.2);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer}
+.pp-vid{width:100%;aspect-ratio:9/16;max-height:320px;background:linear-gradient(145deg,#1A1A2E,#2D2B4E);border-radius:14px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:.82rem;cursor:pointer;position:relative;overflow:hidden}
+
+/* VIDEO MODAL */
+.vm{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:600;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px}
 .vm.on{display:flex}
-.vc{position:absolute;top:16px;right:16px;width:34px;height:34px;background:rgba(255,255,255,.14);border:none;border-radius:50%;color:#fff;font-size:.9rem;cursor:pointer}
-.vs{width:100%;max-width:280px;aspect-ratio:9/16;border-radius:18px;overflow:hidden;position:relative;flex-shrink:0;background:var(--nv)}
-.vg{position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(0,0,0,.86) 100%)}
-.vb{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);width:88%;background:rgba(0,0,0,.8);border:1px solid rgba(196,150,42,.22);border-radius:10px;padding:10px 12px;z-index:3}
-.vl{font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px;font-weight:500}
-.vf{font-size:.78rem;color:#fff;line-height:1.48}
-.vd2{height:1px;background:rgba(196,150,42,.18);margin:5px 0}
-.vt{font-size:.74rem;color:var(--gl);line-height:1.48}
-.vp{position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,.1);z-index:4}
+.vcl{position:absolute;top:18px;right:18px;width:36px;height:36px;background:rgba(255,255,255,.15);border:none;border-radius:50%;color:#fff;font-size:.95rem;cursor:pointer}
+.vs{width:100%;max-width:290px;aspect-ratio:9/16;border-radius:20px;overflow:hidden;position:relative;flex-shrink:0;background:#1A1A2E}
+.vg{position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(0,0,0,.88) 100%)}
+.vsb{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);width:88%;background:rgba(0,0,0,.82);border:1px solid rgba(184,134,11,.25);border-radius:11px;padding:11px 13px;z-index:3}
+.vsl{font-size:.52rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:3px;font-weight:500}
+.vsf{font-size:.8rem;color:#fff;line-height:1.5}
+.vsd{height:1px;background:rgba(184,134,11,.2);margin:6px 0}
+.vst{font-size:.76rem;color:var(--gl);line-height:1.5}
+.vpp{position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,.1);z-index:4}
 .vpf{height:100%;background:var(--g)}
-.vi{position:absolute;bottom:0;left:0;right:0;padding:14px;z-index:3}
-.vn{font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:3px;color:#fff}
-.vlo{font-size:.7rem;color:rgba(255,255,255,.6)}
-.vct{display:flex;align-items:center;gap:7px;margin-top:11px;width:100%;max-width:280px}
-.vb2{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;font-size:.9rem;flex-shrink:0}
-.vb2.p{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff}
-.vb2.l{background:rgba(192,57,43,.1);color:var(--rd);border:1px solid rgba(192,57,43,.2)}
-.vln{display:flex;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.14)}
-.vl2{padding:4px 10px;font-size:.62rem;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
-.vl2.on{background:var(--nv);color:#fff}.vl2.off{background:transparent;color:rgba(255,255,255,.45)}
-.ml{padding:44px 18px;text-align:center}
-.mt{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:10px;cursor:pointer}
-.mt:hover{background:var(--b2)}
-.ma{width:44px;height:44px;border-radius:50%;background:var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;border:2px solid transparent;position:relative}
-.ma.u{border-color:var(--g)}
-.od{position:absolute;bottom:0;right:0;width:9px;height:9px;background:var(--gn);border-radius:50%;border:2px solid #fff}
-.mn{font-size:.85rem;font-weight:600;margin-bottom:2px;color:var(--nv)}
-.mp{font-size:.7rem;color:var(--td);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vi{position:absolute;bottom:0;left:0;right:0;padding:16px;z-index:3}
+.vn{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin-bottom:3px;color:#fff}
+.vlo{font-size:.72rem;color:rgba(255,255,255,.65);margin-bottom:7px}
+.vtgs{display:flex;gap:5px;flex-wrap:wrap}
+.vtag{padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.15);font-size:.62rem;color:rgba(255,255,255,.8)}
+.vctrls{display:flex;align-items:center;gap:8px;margin-top:12px;width:100%;max-width:290px}
+.vcb{width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;font-size:.95rem;flex-shrink:0}
+.vcb-p{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff}
+.vcb-l{background:rgba(192,57,43,.1);color:var(--red);border:1px solid rgba(192,57,43,.2)}
+.vlng{display:flex;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
+.vl{padding:5px 11px;font-size:.64rem;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.vl.on{background:var(--gd);color:var(--g)}.vl.off{background:transparent;color:rgba(255,255,255,.5)}
+
+/* MESSAGES */
+.mlk{text-align:center;padding:48px 20px}
+.mt{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:11px;cursor:pointer;transition:all .2s}
+.mt:hover{background:var(--bg2)}
+.mav{width:46px;height:46px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;border:2px solid transparent;position:relative}
+.mav.u{border-color:var(--g)}
+.od{position:absolute;bottom:0;right:0;width:10px;height:10px;background:var(--grn);border-radius:50%;border:2px solid var(--bg)}
+.mn{font-size:.87rem;font-weight:600;margin-bottom:2px;color:var(--tx)}
+.mp{font-size:.72rem;color:var(--td);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mp.u{color:var(--tm);font-weight:500}
-.mb{width:6px;height:6px;background:var(--g);border-radius:50%;flex-shrink:0}
-.ch{position:fixed;inset:0;background:#fff;display:none;flex-direction:column;padding-top:56px;z-index:150}
-.ch.on{display:flex}
-.chd{padding:10px 13px;display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(26,39,68,.07);flex-shrink:0;background:#fff}
-.chb{background:none;border:none;color:var(--g);font-size:1rem;cursor:pointer;font-weight:600}
-.cha{width:34px;height:34px;border-radius:50%;background:var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
-.chm{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none;background:var(--b2)}
-.cm{max-width:78%;padding:8px 11px;border-radius:13px;font-size:.8rem;line-height:1.55}
-.cm.r{background:#fff;align-self:flex-start;border-bottom-left-radius:3px;color:var(--nv);box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.cm.s{background:linear-gradient(135deg,var(--nv),#243156);color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
-.cr{font-size:.67rem;color:var(--g);margin-top:3px;padding-top:3px;border-top:1px solid rgba(196,150,42,.18)}
-.ct2{font-size:.54rem;opacity:.4;margin-top:2px;display:block}
-.cia{padding:8px 12px;display:flex;gap:7px;align-items:flex-end;border-top:1px solid rgba(26,39,68,.07);flex-shrink:0;background:#fff}
-.ci{flex:1;background:var(--b2);border:1.5px solid rgba(26,39,68,.1);border-radius:16px;padding:8px 12px;color:var(--nv);font-family:'DM Sans',sans-serif;font-size:.8rem;resize:none;outline:none;max-height:80px}
-.ci:focus{border-color:var(--g)}
-.cs{width:34px;height:34px;background:linear-gradient(135deg,var(--g),var(--gl));border:none;border-radius:50%;color:#fff;cursor:pointer;font-size:.85rem;flex-shrink:0}
-.qp{padding:64px 14px 72px;max-width:440px;margin:0 auto}
-.qc{background:#fff;border:1px solid rgba(26,39,68,.07);border-radius:18px;padding:22px 18px;box-shadow:0 4px 18px rgba(0,0,0,.06)}
-.qpb{height:3px;background:var(--b2);border-radius:2px;margin-bottom:20px;overflow:hidden}
+.mbd{width:7px;height:7px;background:var(--g);border-radius:50%;flex-shrink:0}
+.chat{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;padding-top:56px;z-index:150}
+.chat.on{display:flex}
+.chd{padding:11px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(26,26,46,.08);flex-shrink:0;background:var(--w)}
+.chb{background:none;border:none;color:var(--g);font-size:1.1rem;cursor:pointer;font-weight:600}
+.chav{width:36px;height:36px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.chm{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:9px;scrollbar-width:none}
+.cm{max-width:78%;padding:9px 12px;border-radius:14px;font-size:.82rem;line-height:1.58}
+.cm.r{background:var(--w);align-self:flex-start;border-bottom-left-radius:3px;color:var(--tx);border:1px solid rgba(26,26,46,.08)}
+.cm.s{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
+.ctr{font-size:.69rem;color:var(--g);margin-top:4px;padding-top:4px;border-top:1px solid rgba(184,134,11,.2)}
+.ct{font-size:.56rem;opacity:.45;margin-top:2px;display:block}
+.cia{padding:9px 13px;display:flex;gap:8px;align-items:flex-end;border-top:1px solid rgba(26,26,46,.08);flex-shrink:0;background:var(--w)}
+.ci{flex:1;background:var(--bg);border:1px solid rgba(26,26,46,.12);border-radius:17px;padding:9px 13px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.82rem;resize:none;outline:none;max-height:88px}
+.ci:focus{border-color:rgba(184,134,11,.4)}
+.csnd{width:36px;height:36px;background:linear-gradient(135deg,var(--g),var(--gl));border:none;border-radius:50%;color:#fff;cursor:pointer;font-size:.88rem;flex-shrink:0}
+
+/* QUESTIONNAIRE */
+.qp{padding:68px 16px 76px;max-width:460px;margin:0 auto}
+.qc{background:var(--w);border:1px solid rgba(26,26,46,.08);border-radius:20px;padding:24px 20px;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.qpb{height:3px;background:var(--bg2);border-radius:2px;margin-bottom:22px;overflow:hidden}
 .qpf{height:100%;background:linear-gradient(90deg,var(--g),var(--gl));transition:width .4s}
-.qe{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--g);margin-bottom:6px;font-weight:500}
-.qt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,5vw,2rem);font-weight:300;line-height:1.12;margin-bottom:5px;color:var(--nv)}
-.qt em{font-style:italic;color:var(--g)}
-.qs{font-size:.76rem;color:var(--tm);line-height:1.65;margin-bottom:18px}
-.cs2{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.cd{display:flex;align-items:center;gap:11px;padding:12px 14px;background:var(--b2);border:1.5px solid rgba(26,39,68,.08);border-radius:11px;cursor:pointer;user-select:none}
-.cd.sl{border-color:var(--g);background:rgba(196,150,42,.06)}
-.ci2{font-size:1.3rem;flex-shrink:0}
-.cl{font-size:.85rem;font-weight:500;margin-bottom:2px;color:var(--nv)}
-.cs3{font-size:.68rem;color:var(--td);line-height:1.48}
-.ck{width:19px;height:19px;border-radius:50%;border:1.5px solid rgba(26,39,68,.17);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.62rem;margin-left:auto}
-.cd.sl .ck{background:var(--g);border-color:var(--g);color:#fff}
-.fg{margin-bottom:13px}
-.fl{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--nv);display:block;margin-bottom:6px;font-weight:600}
-.fi,.fsl,.fa{width:100%;background:var(--b2);border:1.5px solid rgba(26,39,68,.1);border-radius:9px;padding:10px 12px;color:var(--nv);font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;-webkit-appearance:none}
+.qeye{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--g);margin-bottom:7px;font-weight:500}
+.qttl{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,5vw,2.1rem);font-weight:300;line-height:1.14;margin-bottom:5px;color:var(--tx)}
+.qttl em{font-style:italic;color:var(--g)}
+.qsub{font-size:.78rem;color:var(--tm);line-height:1.68;margin-bottom:20px}
+.cards{display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.card{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--bg);border:1.5px solid rgba(26,26,46,.09);border-radius:12px;cursor:pointer;user-select:none;transition:all .2s}
+.card.sel{border-color:var(--g);background:rgba(184,134,11,.06)}
+.cic{font-size:1.35rem;flex-shrink:0}
+.clb{font-size:.87rem;font-weight:500;margin-bottom:2px;color:var(--tx)}
+.csb{font-size:.7rem;color:var(--td);line-height:1.5}
+.cck{width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(26,26,46,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.65rem;margin-left:auto;transition:all .2s}
+.card.sel .cck{background:var(--g);border-color:var(--g);color:#fff}
+.fg{margin-bottom:15px}
+.fl{font-size:.62rem;letter-spacing:.17em;text-transform:uppercase;color:var(--g);display:block;margin-bottom:7px;font-weight:500}
+.fi,.fsl,.fa{width:100%;background:var(--bg);border:1.5px solid rgba(26,26,46,.1);border-radius:10px;padding:11px 13px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.86rem;outline:none;-webkit-appearance:none;transition:border-color .2s}
 .fi:focus,.fsl:focus,.fa:focus{border-color:var(--g)}
 .fi::placeholder,.fa::placeholder{color:var(--td)}
-.fa{resize:none;line-height:1.62}
-.fsl option{background:#fff;color:var(--nv)}
-.r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.pl{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
-.pi2{padding:6px 12px;border-radius:22px;border:1.5px solid rgba(26,39,68,.1);background:var(--b2);color:var(--tm);font-size:.77rem;cursor:pointer;font-family:'DM Sans',sans-serif}
-.pi2.sl{border-color:var(--g);background:rgba(196,150,42,.08);color:var(--g)}
-.lr{margin-bottom:11px}
-.lh{display:flex;align-items:center;gap:6px;margin-bottom:6px}
-.lp{display:flex;gap:5px;flex-wrap:wrap}
-.lp2{padding:5px 10px;border-radius:14px;border:1.5px solid rgba(26,39,68,.09);background:var(--b2);color:var(--tm);font-size:.73rem;cursor:pointer;font-family:'DM Sans',sans-serif}
-.lp2.sl{border-color:var(--g);background:rgba(196,150,42,.08);color:var(--g)}
-.ds{display:flex;align-items:center;gap:9px;margin:13px 0 11px}
-.dl{flex:1;height:1px;background:rgba(26,39,68,.08)}
-.dt{font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--td);font-weight:500;white-space:nowrap}
-.gt{display:flex;gap:9px;padding:10px;background:var(--b2);border-radius:9px;margin-bottom:6px}
-.gt strong{font-size:.78rem;font-weight:600;display:block;margin-bottom:2px;color:var(--nv)}
-.gt span{font-size:.68rem;color:var(--tm);line-height:1.52}
-.ca{width:100%;aspect-ratio:9/16;max-height:260px;background:var(--nv);border-radius:12px;overflow:hidden;position:relative;margin-bottom:10px;display:flex;align-items:center;justify-content:center}
-.cp{font-size:.78rem;color:rgba(255,255,255,.4);text-align:center;padding:13px;line-height:1.58}
-.rb{position:absolute;top:8px;left:8px;background:var(--rd);color:#fff;padding:3px 8px;border-radius:6px;font-size:.67rem;display:flex;align-items:center;gap:4px;font-weight:500}
-.rd2{width:5px;height:5px;border-radius:50%;background:#fff;animation:bk .8s infinite}
-@keyframes bk{0%,100%{opacity:1}50%{opacity:.2}}
-.cpb{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.1)}
-.cpf{height:100%;background:var(--rd);transition:width 1s linear}
-.uz{border:2px dashed rgba(196,150,42,.22);border-radius:11px;padding:18px;text-align:center;margin-bottom:10px;cursor:pointer;background:var(--b2)}
-.qn{display:flex;gap:8px;margin-top:10px}
-.qb{flex:1;padding:11px;background:var(--b2);border:1.5px solid rgba(26,39,68,.1);border-radius:11px;color:var(--td);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer}
-.qx{flex:2;padding:11px;background:linear-gradient(135deg,var(--g),var(--gl));border:none;border-radius:11px;color:#fff;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer}
-.qf{flex:1}
-.sr{background:var(--b2);border:1px solid rgba(196,150,42,.14);border-radius:12px;padding:14px;margin-bottom:12px}
-.sr .r{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(26,39,68,.07)}
-.sr .r:last-child{border:none}
-.sk{font-size:.68rem;color:var(--td)}
-.sv{font-size:.77rem;color:var(--tm);text-align:right}
-.su{text-align:center;padding:12px 0}
-.su i{font-size:2.8rem;margin-bottom:11px;display:block}
-.su h3{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:400;margin-bottom:6px;color:var(--nv)}
-.su p{font-size:.77rem;color:var(--tm);line-height:1.65;margin-bottom:16px}
-.ns{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;text-align:left}
-.ni{display:flex;gap:9px;padding:10px;background:var(--b2);border-radius:9px}
-.ni i{font-size:.9rem;flex-shrink:0}
-.ni h5{font-size:.77rem;font-weight:600;margin-bottom:2px;color:var(--nv)}
-.ni p{font-size:.68rem;color:var(--tm);line-height:1.48}
-.mav{width:78px;height:78px;border-radius:50%;background:var(--b2);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:12px auto;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.mnm{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;text-align:center;margin-bottom:3px;color:var(--nv)}
-.mlc{font-size:.7rem;color:var(--td);text-align:center}
-.mst{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}
-.mst div{background:#fff;border-radius:10px;padding:10px;text-align:center;border:1px solid rgba(26,39,68,.07)}
-.msn{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--g)}
-.msl{font-size:.56rem;color:var(--td);font-weight:500}
-.ms{background:#fff;border-radius:11px;padding:12px;margin-bottom:9px;border:1px solid rgba(26,39,68,.07)}
-.ms2{font-size:.57rem;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:5px;font-weight:500}
-.ms3{font-size:.8rem;color:var(--tm);line-height:1.58}
-.lc{background:#fff;border:1px solid rgba(26,39,68,.08);border-radius:18px;padding:24px 20px;width:100%;max-width:340px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
-.ab{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;text-align:left}
-.af{display:flex;gap:7px;font-size:.75rem;color:rgba(255,255,255,.78)}
-@media(min-width:480px){.gr{grid-template-columns:repeat(3,1fr)}}
+.fa{resize:none;line-height:1.65}
+.fsl option{background:var(--w);color:var(--tx)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px}
+.pill{padding:7px 13px;border-radius:24px;border:1.5px solid rgba(26,26,46,.1);background:var(--bg);color:var(--tm);font-size:.79rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.pill.sel{border-color:var(--g);background:rgba(184,134,11,.08);color:var(--g)}
+.lrow{margin-bottom:13px}
+.lhd{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.lps{display:flex;gap:6px;flex-wrap:wrap}
+.lp{padding:6px 11px;border-radius:16px;border:1.5px solid rgba(26,26,46,.09);background:var(--bg);color:var(--tm);font-size:.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.lp.sel{border-color:var(--g);background:rgba(184,134,11,.08);color:var(--g)}
+.ds{display:flex;align-items:center;gap:10px;margin:15px 0 12px}
+.dl{flex:1;height:1px;background:rgba(26,26,46,.09)}
+.dt{font-size:.57rem;letter-spacing:.18em;text-transform:uppercase;color:var(--td);font-weight:500;white-space:nowrap}
+.gtip{display:flex;gap:10px;padding:11px;background:var(--bg);border-radius:10px;border:1px solid rgba(26,26,46,.07);margin-bottom:7px}
+.gtip strong{font-size:.81rem;font-weight:600;display:block;margin-bottom:2px;color:var(--tx)}
+.gtip span{font-size:.7rem;color:var(--tm);line-height:1.55}
+.bi{background:var(--bg);border-radius:10px;padding:12px;border:1px solid rgba(184,134,11,.15);margin-bottom:12px}
+.bi-t{font-size:.57rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g);margin-bottom:9px;font-weight:500}
+.bi-r{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.bi-c{padding:8px;background:var(--w);border-radius:7px;border:1px solid rgba(26,26,46,.06)}
+.bi-f{font-size:.61rem;color:var(--td);margin-bottom:3px}
+.bi-p{font-size:.72rem;font-style:italic;line-height:1.45;color:var(--tm)}
+.ca{width:100%;aspect-ratio:9/16;max-height:270px;background:linear-gradient(145deg,#1A1A2E,#2D2B4E);border-radius:13px;overflow:hidden;position:relative;margin-bottom:11px;display:flex;align-items:center;justify-content:center}
+.cph{font-size:.8rem;color:rgba(255,255,255,.5);text-align:center;padding:14px;line-height:1.6}
+.rb{position:absolute;top:9px;left:9px;background:var(--red);color:#fff;padding:3px 9px;border-radius:7px;font-size:.7rem;display:flex;align-items:center;gap:5px;font-weight:500}
+.rd{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink .8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.cp{position:absolute;bottom:0;left:0;right:0;height:4px;background:rgba(255,255,255,.12)}
+.cpf{height:100%;background:var(--red);transition:width 1s linear}
+.uz{border:2px dashed rgba(184,134,11,.25);border-radius:12px;padding:20px;text-align:center;margin-bottom:11px;cursor:pointer;transition:all .2s;background:var(--bg)}
+.uz:hover{border-color:var(--g);background:rgba(184,134,11,.04)}
+.qnav{display:flex;gap:9px;margin-top:11px}
+.qbk{flex:1;padding:12px;background:var(--bg);border:1.5px solid rgba(26,26,46,.1);border-radius:12px;color:var(--td);font-family:'DM Sans',sans-serif;font-size:.84rem;cursor:pointer;transition:all .2s}
+.qnx{flex:2;padding:12px;background:linear-gradient(135deg,var(--g),var(--gl));border:none;border-radius:12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(184,134,11,.22)}
+.qfl{flex:1}
+.sr{background:var(--bg);border:1px solid rgba(184,134,11,.15);border-radius:13px;padding:15px;margin-bottom:13px}
+.sr-r{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(26,26,46,.07)}
+.sr-r:last-child{border:none}
+.sr-k{font-size:.7rem;color:var(--td)}
+.sr-v{font-size:.79rem;color:var(--tm);text-align:right}
+.su{text-align:center;padding:14px 0}
+.su-i{font-size:3rem;margin-bottom:12px}
+.su-t{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:400;margin-bottom:7px;color:var(--tx)}
+.su-s{font-size:.79rem;color:var(--tm);line-height:1.68;margin-bottom:18px}
+.ns{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;text-align:left}
+.ni{display:flex;gap:10px;padding:11px;background:var(--bg);border-radius:10px;border:1px solid rgba(26,26,46,.07)}
+.ni-ic{font-size:.95rem;flex-shrink:0}
+.ni-t h5{font-size:.79rem;font-weight:600;margin-bottom:2px;color:var(--tx)}
+.ni-t p{font-size:.7rem;color:var(--tm);line-height:1.5}
+
+/* MON PROFIL */
+.mpav{width:82px;height:82px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:2.6rem;margin:14px auto;border:3px solid var(--w);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.mpnm{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;text-align:center;margin-bottom:3px;color:var(--tx)}
+.mplc{font-size:.72rem;color:var(--td);text-align:center}
+.mpst{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.mpst div{background:var(--w);border-radius:11px;padding:11px;text-align:center;border:1px solid rgba(26,26,46,.07)}
+.mpsn{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--g)}
+.mpsl{font-size:.58rem;color:var(--td);font-weight:500}
+.mpsec{background:var(--w);border-radius:12px;padding:13px;margin-bottom:10px;border:1px solid rgba(26,26,46,.07)}
+.mpsl2{font-size:.59rem;letter-spacing:.16em;text-transform:uppercase;color:var(--g);margin-bottom:6px;font-weight:500}
+.mpsv{font-size:.82rem;color:var(--tm);line-height:1.6}
+.lcard{background:var(--w);border:1px solid rgba(26,26,46,.08);border-radius:20px;padding:26px 22px;width:100%;max-width:360px;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+
+@media(min-width:500px){.grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
-<div class="tk" id="T"></div>
+<div class="toast" id="T"></div>
+
 <nav>
-  <div class="ltx" id="LG">Love<em>Siam</em></div>
-  <div style="display:flex;gap:7px;align-items:center">
-    <div class="lw"><button class="lb on" id="LF">🇫🇷</button><button class="lb off" id="LT">🇹🇭</button></div>
-    <div id="NA"><button class="nb nb0" id="BL" style="margin-right:4px">Connexion</button><button class="nb nb1" id="BI">M'inscrire</button></div>
+  <div class="logo" id="LOGO">
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+      <path d="M15 26 Q12 21 10 16 Q8 11 10 8.5 Q12 6 15 7.5 Q18 6 20 8.5 Q22 11 20 16 Q18 21 15 26Z" fill="none" stroke="#B8860B" stroke-width="1.4"/>
+      <ellipse cx="15" cy="7" rx="2.2" ry="1.4" fill="#B8860B" opacity=".6"/>
+      <path d="M10 11 Q12.5 9 15 10 Q17.5 9 20 11" fill="none" stroke="#B8860B" stroke-width="1.1" opacity=".55"/>
+      <path d="M7.5 14 Q10 11.5 12 13" fill="none" stroke="#B8860B" stroke-width="1" opacity=".4"/>
+      <path d="M22.5 14 Q20 11.5 18 13" fill="none" stroke="#B8860B" stroke-width="1" opacity=".4"/>
+      <circle cx="15" cy="15" r="1.8" fill="#B8860B" opacity=".35"/>
+      <ellipse cx="15" cy="27" rx="3" ry="1.2" fill="#B8860B" opacity=".2"/>
+    </svg>
+    <span class="logo-txt">Love<em>Siam</em></span>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <div class="lt-wrap">
+      <button class="lt on" id="LF">🇫🇷 FR</button>
+      <button class="lt off" id="LT">🇹🇭 TH</button>
+    </div>
+    <div id="NA">
+      <button class="nb nb-o" id="BLG" style="margin-right:5px">Connexion</button>
+      <button class="nb nb-p" id="BCD">Candidater</button>
+    </div>
   </div>
 </nav>
 
+<!-- HOME -->
 <div class="pg on" id="ph">
   <div class="hero">
-    <div class="ey">✦ Un accompagnement humain et personnalisé</div>
+    <div class="hero-badge">✦ Rencontres authentiques · Accompagnement personnalisé</div>
     <h1>La rencontre<br><em>franco-thaïlandaise</em></h1>
-    <p class="hs">Un service sur-mesure, de l'inscription à la rencontre. Chaque profil est sélectionné avec soin.</p>
-    <div class="ct"><button class="bg" id="HC">🌸 M'inscrire maintenant</button><button class="bo" id="HF">Voir les profils →</button></div>
-    <div class="sw">
-      <div class="st"><div class="sn" id="CM">0</div><div class="sl">Membres</div></div>
-      <div class="st"><div class="sn" id="CC">0</div><div class="sl">Couples</div></div>
-      <div class="st"><div class="sn" id="CO">0</div><div class="sl">En ligne</div></div>
+    <p class="hero-sub">Patrick vous guide vers une rencontre sincère. Chaque profil est sélectionné, chaque relation accompagnée avec bienveillance.</p>
+    <div class="cta">
+      <button class="btn-g" id="HC">Soumettre ma candidature</button>
+      <button class="btn-o" id="HF">Voir les profils →</button>
+    </div>
+    <div class="stats">
+      <div><div class="sn" id="CM">0</div><div class="sl">Membres</div></div>
+      <div class="sdiv"></div>
+      <div><div class="sn" id="CC">0</div><div class="sl">Couples</div></div>
+      <div class="sdiv"></div>
+      <div><div class="sn" id="CO">0</div><div class="sl">En ligne</div></div>
     </div>
   </div>
-  <div class="sc a">
-    <div class="se">✦ Pourquoi LoveSiam</div><h2>Ce qui nous <em>distingue</em></h2>
-    <p class="ss">Un service humain — pas un algorithme.</p>
-    <div class="dg">
-      <div class="dc"><i>🎯</i><h4>Profils sélectionnés</h4><p>Chaque candidature est étudiée et validée.</p></div>
-      <div class="dc"><i>❤️</i><h4>Introduction facilitée</h4><p>Votre consultant organise la mise en relation.</p></div>
-      <div class="dc"><i>🎬</i><h4>Vidéos FR↔TH</h4><p>Traduction simultanée sur chaque vidéo.</p></div>
-      <div class="dc"><i>🌿</i><h4>Coaching inclus</h4><p>Accompagnement et suivi personnalisé.</p></div>
-    </div>
+  <div class="sec alt">
+    <div class="eye">✦ Pourquoi LoveSiam</div>
+    <h2>Ce qui nous <em>distingue</em></h2>
+    <div class="dcard"><div class="dic">🎯</div><div><h4>Patrick valide chaque profil</h4><p>Aucun profil publié sans vérification personnelle. Chaque candidat est interviewé avant d'apparaître.</p></div></div>
+    <div class="dcard"><div class="dic">❤️</div><div><h4>Zéro contact sans introduction</h4><p>Vous exprimez votre intérêt. Patrick reçoit une notification et facilite l'introduction.</p></div></div>
+    <div class="dcard"><div class="dic">🎬</div><div><h4>Vidéos traduites FR↔TH</h4><p>Chaque présentation est publiée avec traduction simultanée dans les deux langues.</p></div></div>
+    <div class="dcard"><div class="dic">🌿</div><div><h4>Coaching relationnel</h4><p>Patrick vous accompagne : préparation émotionnelle, coaching et suivi tout au long du processus.</p></div></div>
   </div>
-  <div class="sc n">
-    <div class="se">✦ Le Processus</div><h2>Comment <em>ça marche</em></h2>
-    <p class="ss">Simple, transparent et humain.</p>
-    <div class="pi"><div class="pn">01</div><div class="pt"><h4>Inscription guidée</h4><p>Remplissez votre profil. Votre dossier est étudié.</p></div></div>
-    <div class="pi"><div class="pn">02</div><div class="pt"><h4>Validation et publication</h4><p>Votre vidéo est publiée avec traduction FR↔TH.</p></div></div>
-    <div class="pi"><div class="pn">03</div><div class="pt"><h4>Coup de cœur → action</h4><p>Votre consultant organise l'introduction.</p></div></div>
-    <div class="pi"><div class="pn">04</div><div class="pt"><h4>Accompagnement</h4><p>Coaching et suivi selon vos besoins.</p></div></div>
+  <div class="sec">
+    <div class="eye">✦ Le Processus</div>
+    <h2>Comment <em>ça marche</em></h2>
+    <div class="proc-item"><div class="proc-n">01</div><div class="proc-t"><h4>Questionnaire guidé</h4><p>Remplissez votre profil et vos valeurs. Patrick prend connaissance de votre dossier sous 48h.</p></div></div>
+    <div class="proc-item"><div class="proc-n">02</div><div class="proc-t"><h4>Interview avec Patrick</h4><p>Patrick vous contacte pour un échange et valide votre candidature personnellement.</p></div></div>
+    <div class="proc-item"><div class="proc-n">03</div><div class="proc-t"><h4>Votre vidéo publiée FR↔TH</h4><p>Votre présentation est publiée avec traduction simultanée.</p></div></div>
+    <div class="proc-item"><div class="proc-n">04</div><div class="proc-t"><h4>Coup de cœur → Patrick agit</h4><p>Vous aimez un profil, Patrick reçoit une notification et organise l'introduction.</p></div></div>
+    <div class="proc-item"><div class="proc-n">05</div><div class="proc-t"><h4>Accompagnement personnalisé</h4><p>Coaching, préparation à la rencontre et suivi selon vos besoins.</p></div></div>
   </div>
-  <div class="sc a">
-    <div class="se">✦ Votre consultant</div><h2>Un accompagnement <em>sur-mesure</em></h2>
-    <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid rgba(26,39,68,.07);box-shadow:0 2px 9px rgba(0,0,0,.05)">
-      <div style="font-size:2.6rem;text-align:center;margin-bottom:11px">👨‍💼</div>
-      <p style="font-size:.81rem;color:var(--tm);line-height:1.7;margin-bottom:13px;text-align:center">Spécialiste des relations franco-thaïlandaises, votre consultant vous accompagne avec bienveillance de l'inscription à la rencontre.</p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:14px">
-        <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.67rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500">💞 Love Coach</span>
-        <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.67rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500">🇹🇭 Expert Thaïlande</span>
-        <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.67rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500">🤝 Consultant</span>
+  <div class="sec alt">
+    <div class="eye">✦ Votre guide</div>
+    <h2>Patrick, <em>votre conseiller</em></h2>
+    <div style="padding:18px;background:var(--w);border-radius:14px;border:1px solid rgba(26,26,46,.07);text-align:left;box-shadow:0 2px 8px rgba(0,0,0,.04)">
+      <div style="font-size:2.8rem;margin-bottom:12px;text-align:center">👨‍💼</div>
+      <p style="font-size:.83rem;color:var(--tm);line-height:1.72;margin-bottom:14px;text-align:center">Spécialiste des relations franco-thaïlandaises, Patrick vous accompagne avec bienveillance de la première candidature jusqu'à la rencontre.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;justify-content:center">
+        <div style="padding:5px 12px;background:var(--gd);border-radius:16px;font-size:.7rem;color:var(--g);border:1px solid rgba(184,134,11,.2);font-weight:500">💞 Love Coach</div>
+        <div style="padding:5px 12px;background:var(--gd);border-radius:16px;font-size:.7rem;color:var(--g);border:1px solid rgba(184,134,11,.2);font-weight:500">🇹🇭 Expert Thaïlande</div>
+        <div style="padding:5px 12px;background:var(--gd);border-radius:16px;font-size:.7rem;color:var(--g);border:1px solid rgba(184,134,11,.2);font-weight:500">🤝 Consultant</div>
       </div>
-      <button class="bg" style="width:100%" id="PC">Prendre contact</button>
-    </div>
-  </div>
-  <div class="sc n">
-    <div class="se">✦ Accès Premium</div><h2>Rejoignez <em>LoveSiam</em></h2>
-    <p class="ss">Femmes thaïlandaises — gratuit. Hommes français — accès premium.</p>
-    <div style="background:rgba(255,255,255,.06);border:1px solid rgba(196,150,42,.22);border-radius:16px;padding:20px">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#fff;margin-bottom:5px;font-weight:300">Accès <em style="color:var(--gl)">Complet</em></div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:2.3rem;color:var(--gl);font-weight:600;margin-bottom:3px">À venir</div>
-      <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:16px">Tarifs en cours de finalisation</div>
-      <div class="ab">
-        <div class="af"><span style="color:var(--gl)">✓</span>Accès aux vidéos complètes FR↔TH</div>
-        <div class="af"><span style="color:var(--gl)">✓</span>Introduction par votre consultant</div>
-        <div class="af"><span style="color:var(--gl)">✓</span>Messagerie avec traduction intégrée</div>
-        <div class="af"><span style="color:var(--gl)">✓</span>Coaching relationnel personnalisé</div>
-      </div>
-      <button class="bg" style="width:100%;opacity:.55;cursor:not-allowed">Bientôt disponible</button>
+      <button class="btn-g" style="width:100%" id="PC">Prendre contact avec Patrick</button>
     </div>
   </div>
 </div>
 
+<!-- FEED -->
 <div class="pg" id="pf">
-  <div class="fh"><div class="ft">Profils ✦</div><div style="font-size:.68rem;color:var(--td)"><span style="color:var(--gn)">●</span> 7 en ligne</div></div>
-  <div class="fb">🔒 <strong style="color:var(--g)">Profils vérifiés.</strong> Inscrivez-vous pour accéder aux vidéos.</div>
-  <div class="fs" id="FF"></div>
-  <div class="gr" id="FG"></div>
+  <div class="fhead"><div class="fttl">Profils ✦</div><div style="font-size:.7rem;color:var(--td)"><span style="color:var(--grn)">●</span> 7 en ligne</div></div>
+  <div class="fbanner">🔒 <strong style="color:var(--g)">Profils vérifiés par Patrick.</strong> Candidatez pour accéder aux vidéos complètes.</div>
+  <div class="filters" id="FF"></div>
+  <div class="grid" id="FG"></div>
 </div>
 
-<div class="pp" id="PPG">
-  <div class="ph2"><button class="pb" id="PPB">← Retour</button><div id="PPT" style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--nv)"></div></div>
-  <div class="pc2" id="PPC"><div class="pc2b" id="PPCB"></div><div class="pc2l" id="PPCL"><div style="font-size:1.4rem">🔒</div><div style="font-size:.72rem;color:var(--nv);font-weight:500">Photo visible après inscription</div><button class="bg" style="font-size:.72rem;padding:6px 14px" id="PPCAND">M'inscrire</button></div></div>
-  <div style="display:flex;align-items:flex-end;padding-right:14px"><div class="av" id="PPAV"></div><div style="padding-bottom:7px;flex:1;padding-left:9px"><div id="PPOL" style="font-size:.68rem;font-weight:500"></div></div></div>
-  <div style="padding:11px 16px 18px" id="PPINFO"></div>
-</div>
-
-<div class="pg" id="pm">
-  <div class="fh"><div class="ft">Messages</div><div id="MUB" style="display:none;padding:3px 9px;background:var(--gd);color:var(--g);border-radius:12px;font-size:.68rem;font-weight:500"></div></div>
-  <div class="ml" id="MLK" style="display:none">
-    <div style="font-size:2.2rem;margin-bottom:10px">🔒</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:6px;color:var(--nv)">Espace membres</div>
-    <p style="font-size:.76rem;color:var(--tm);line-height:1.65;margin-bottom:16px">Messagerie accessible après validation.</p>
-    <button class="bg" id="MLB">M'inscrire</button>
+<!-- PROFILE PAGE -->
+<div class="profile-page" id="PPG">
+  <div class="pp-head">
+    <button class="pp-back" id="PPB">← Retour</button>
+    <div id="PP-TITLE" style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--tx)"></div>
   </div>
-  <div style="padding:0 5px" id="ML"></div>
+  <div class="pp-cover" id="PP-COVER"></div>
+  <div style="display:flex;align-items:flex-end;gap:12px;padding-right:18px">
+    <div class="pp-avatar" id="PP-AV"></div>
+    <div style="padding-bottom:8px;flex:1">
+      <div id="PP-ONLINE" style="font-size:.7rem;font-weight:500"></div>
+    </div>
+  </div>
+  <div class="pp-infos" id="PP-INFOS"></div>
 </div>
 
-<div class="ch" id="CH">
-  <div class="chd"><button class="chb" id="CHB">←</button><div class="cha" id="CAV"></div><div><div style="font-size:.85rem;font-weight:600;color:var(--nv)" id="CNM"></div><div style="font-size:.6rem" id="CST"></div></div><div style="margin-left:auto;font-size:.58rem;color:var(--g);background:var(--gd);padding:3px 8px;border-radius:6px;border:1px solid rgba(196,150,42,.18);font-weight:500">🌐 FR↔TH</div></div>
+<!-- MESSAGES -->
+<div class="pg" id="pm">
+  <div class="fhead"><div class="fttl">Messages</div><div id="MUB" style="display:none;padding:3px 10px;background:var(--gd);color:var(--g);border-radius:14px;font-size:.7rem;font-weight:500"></div></div>
+  <div class="mlk" id="MLK" style="display:none">
+    <div style="font-size:2.4rem;margin-bottom:11px">🔒</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:400;margin-bottom:7px;color:var(--tx)">Espace membres</div>
+    <p style="font-size:.78rem;color:var(--tm);line-height:1.68;margin-bottom:18px">La messagerie est accessible après validation par Patrick.</p>
+    <button class="btn-g" id="MLB">Candidater maintenant</button>
+  </div>
+  <div style="padding:0 6px" id="ML"></div>
+</div>
+
+<!-- CHAT -->
+<div class="chat" id="CH">
+  <div class="chd">
+    <button class="chb" id="CHB">←</button>
+    <div class="chav" id="CAV"></div>
+    <div><div style="font-size:.87rem;font-weight:600;color:var(--tx)" id="CNM"></div><div style="font-size:.62rem" id="CST"></div></div>
+    <div style="margin-left:auto;font-size:.6rem;color:var(--g);background:var(--gd);padding:3px 9px;border-radius:7px;border:1px solid rgba(184,134,11,.2);font-weight:500">🌐 FR↔TH</div>
+  </div>
   <div class="chm" id="CMS"></div>
-  <div class="cia"><textarea class="ci" id="CI" rows="1" placeholder="Votre message…"></textarea><button class="cs" id="CSB">➤</button></div>
+  <div class="cia">
+    <textarea class="ci" id="CI" rows="1" placeholder="Votre message…"></textarea>
+    <button class="csnd" id="CSB">➤</button>
+  </div>
 </div>
 
+<!-- MON PROFIL -->
 <div class="pg" id="pp">
   <div id="PO">
-    <div style="padding:56px 18px;text-align:center">
-      <div style="font-size:2.6rem;margin-bottom:11px">🔒</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:6px;color:var(--nv)">Espace membre</div>
-      <p style="font-size:.77rem;color:var(--tm);line-height:1.65;margin-bottom:20px">Accès activé après validation de votre inscription.</p>
-      <button class="bg" style="width:100%;max-width:280px;display:block;margin:0 auto 9px" id="PCB">M'inscrire</button>
-      <button class="bo" style="width:100%;max-width:280px;display:block;margin:7px auto 0" id="PLB">J'ai déjà un compte</button>
+    <div style="padding:60px 20px;text-align:center">
+      <div style="font-size:2.8rem;margin-bottom:12px">🔒</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:7px;color:var(--tx)">Espace membre</div>
+      <p style="font-size:.79rem;color:var(--tm);line-height:1.68;margin-bottom:22px">Votre accès est activé après validation par Patrick.</p>
+      <button class="btn-g" style="margin-bottom:10px;width:100%;max-width:300px" id="PCB">Soumettre ma candidature</button><br>
+      <button class="btn-o" style="width:100%;max-width:300px;margin-top:8px" id="PLB">J'ai déjà un compte</button>
     </div>
   </div>
   <div id="PI" style="display:none">
-    <div style="padding:13px 16px 18px">
-      <div style="text-align:center;padding:13px 0 6px">
-        <div class="mav" id="PAV">👤</div>
-        <div class="mnm" id="PNM"></div>
-        <div class="mlc" id="PLC"></div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:5px;margin-top:5px"><div id="PDT" style="width:6px;height:6px;border-radius:50%"></div><span id="PSL" style="font-size:.68rem"></span></div>
+    <div style="padding:14px 18px 20px">
+      <div style="text-align:center;padding:14px 0 7px">
+        <div class="mpav" id="PAV">👤</div>
+        <div class="mpnm" id="PNM"></div>
+        <div class="mplc" id="PLC"></div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px"><div id="PDT" style="width:7px;height:7px;border-radius:50%"></div><span id="PSL" style="font-size:.7rem"></span></div>
       </div>
-      <div class="mst"><div><div class="msn">0</div><div class="msl">Likes</div></div><div><div class="msn">0</div><div class="msl">Vues</div></div><div><div class="msn">0</div><div class="msl">Matchs</div></div></div>
-      <div class="ms" id="PSC"></div>
-      <div class="ms"><div class="ms2">Ma présentation</div><div class="ms3" id="PBIO"></div></div>
-      <button id="PLO" style="width:100%;padding:10px;background:transparent;border:1.5px solid rgba(192,57,43,.2);border-radius:10px;color:var(--rd);font-family:'DM Sans',sans-serif;font-size:.77rem;cursor:pointer;margin-top:6px">Se déconnecter</button>
+      <div class="mpst"><div><div class="mpsn">0</div><div class="mpsl">Likes</div></div><div><div class="mpsn">0</div><div class="mpsl">Vues</div></div><div><div class="mpsn">0</div><div class="mpsl">Matchs</div></div></div>
+      <div class="mpsec" id="PSC"></div>
+      <div class="mpsec"><div class="mpsl2">Ma présentation</div><div class="mpsv" id="PBIO"></div></div>
+      <button id="PLO" style="width:100%;padding:11px;background:transparent;border:1.5px solid rgba(192,57,43,.2);border-radius:11px;color:var(--red);font-family:'DM Sans',sans-serif;font-size:.79rem;cursor:pointer;margin-top:7px">Se déconnecter</button>
     </div>
   </div>
 </div>
 
+<!-- LOGIN -->
 <div class="pg" id="plo">
-  <div style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 118px);padding:16px">
-    <div class="lc">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--nv);letter-spacing:.09em;margin-bottom:13px;font-weight:600">LoveSiam</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:300;margin-bottom:4px;color:var(--nv)">Connexion</div>
-      <div style="font-size:.76rem;color:var(--tm);margin-bottom:16px">Accédez à votre espace membre.</div>
+  <div style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 122px);padding:18px">
+    <div class="lcard">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--g);letter-spacing:.12em;margin-bottom:14px;font-weight:600">LoveSiam</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:300;margin-bottom:5px;color:var(--tx)">Connexion</div>
+      <div style="font-size:.78rem;color:var(--tm);margin-bottom:18px;line-height:1.6">Accédez à votre espace membre.</div>
       <div class="fg"><label class="fl">Email</label><input class="fi" id="LE" type="email" placeholder="votre@email.com"></div>
-      <button class="qx qf" id="LB" style="margin-top:3px">Se connecter</button>
-      <div style="margin-top:13px;font-size:.73rem;color:var(--td);text-align:center">Pas encore membre ? <span style="color:var(--g);cursor:pointer;font-weight:600" id="LC">M'inscrire</span></div>
+      <button class="qnx qfl" id="LB" style="margin-top:3px">Se connecter</button>
+      <div style="margin-top:14px;font-size:.75rem;color:var(--td);text-align:center">Pas encore membre ? <span style="color:var(--g);cursor:pointer;font-weight:600" id="LC">Candidater</span></div>
     </div>
   </div>
 </div>
 
+<!-- QUESTIONNAIRE -->
 <div class="pg" id="pq">
   <div class="qp"><div class="qc">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--nv);letter-spacing:.09em;margin-bottom:13px;font-weight:600">LoveSiam</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--g);letter-spacing:.12em;margin-bottom:14px;font-weight:600">LoveSiam</div>
     <div class="qpb"><div class="qpf" id="QP" style="width:12%"></div></div>
     <div id="QB"></div>
   </div></div>
 </div>
 
+<!-- VIDEO MODAL -->
 <div class="vm" id="VM">
-  <button class="vc" id="VCL">✕</button>
+  <button class="vcl" id="VCL">✕</button>
   <div class="vs" id="VS">
     <div class="vg"></div>
-    <div style="position:absolute;top:9px;left:9px;z-index:3;background:rgba(0,0,0,.58);border:1px solid rgba(196,150,42,.28);border-radius:5px;padding:3px 8px;font-size:.56rem;color:var(--gl);font-weight:500">🌐 FR↔TH</div>
-    <div class="vp"><div class="vpf" id="VPF" style="width:0%"></div></div>
-    <div class="vb"><div class="vl">🇫🇷 Français</div><div class="vf" id="VFR"></div><div class="vd2"></div><div class="vl">🇹🇭 ภาษาไทย</div><div class="vt" id="VTH"></div></div>
-    <div class="vi"><div class="vn" id="VNM"></div><div class="vlo" id="VLC2"></div></div>
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:5rem;opacity:.07;pointer-events:none" id="VEM"></div>
+    <div style="position:absolute;top:10px;left:10px;z-index:3;background:rgba(0,0,0,.6);border:1px solid rgba(184,134,11,.3);border-radius:6px;padding:3px 9px;font-size:.58rem;color:var(--gl);font-weight:500">🌐 FR↔TH</div>
+    <div class="vpp"><div class="vpf" id="VPF" style="width:0%"></div></div>
+    <div class="vsb"><div class="vsl">🇫🇷 Français</div><div class="vsf" id="VFR"></div><div class="vsd"></div><div class="vsl">🇹🇭 ภาษาไทย</div><div class="vst" id="VTH"></div></div>
+    <div class="vi"><div class="vn" id="VNM"></div><div class="vlo" id="VLC"></div><div class="vtgs" id="VTG"></div></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:5.5rem;opacity:.1;pointer-events:none" id="VEM"></div>
   </div>
-  <div class="vct">
-    <button class="vb2 p" id="VP">⏸</button>
+  <div class="vctrls">
+    <button class="vcb vcb-p" id="VP">⏸</button>
     <div style="flex:1"></div>
-    <div class="vln"><button class="vl2 on" id="VLF">🇫🇷 FR</button><button class="vl2 off" id="VLT">🇹🇭 TH</button></div>
+    <div class="vlng"><button class="vl on" id="VLF">🇫🇷 FR</button><button class="vl off" id="VLT">🇹🇭 TH</button></div>
     <div style="flex:1"></div>
-    <button class="vb2 l" id="VLK">❤️</button>
+    <button class="vcb vcb-l" id="VLK">❤️</button>
   </div>
 </div>
 
-<div class="bn">
-  <div class="bi on" id="BH"><i>🏠</i><s>Accueil</s></div>
-  <div class="bi" id="BF"><i>🎬</i><s>Profils</s></div>
-  <div class="bi" id="BM"><i id="BMI">💬</i><s>Messages</s></div>
-  <div class="bi" id="BP"><i>👤</i><s>Profil</s></div>
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <div class="bni on" id="BH"><div class="bni-ic">🏠</div><div class="bni-lb">Accueil</div></div>
+  <div class="bni" id="BF"><div class="bni-ic">🎬</div><div class="bni-lb">Profils</div></div>
+  <div class="bni" id="BM"><div class="bni-ic" id="BMI">💬</div><div class="bni-lb">Messages</div></div>
+  <div class="bni" id="BP"><div class="bni-ic">👤</div><div class="bni-lb">Profil</div></div>
 </div>
 
 <script>
-emailjs.init('_62gqRQHF8yL_AVRb');
-var ES='service_9mpf0pc',ET='template_yvczjb6',PE='contact@lovesiam.com';
-var BG=['#F8E8D8','#E8D8F8','#D8F8E8','#F8F0D8','#D8E8F8','#F8D8E8','#E8F8D8'];
-var SF='<svg width="90" height="130" viewBox="0 0 90 130"><ellipse cx="45" cy="23" rx="16" ry="18" fill="#C4A090"/><path d="M18 130 Q23 68 45 63 Q67 68 72 130Z" fill="#B89080"/><ellipse cx="26" cy="88" rx="9" ry="24" fill="#B89080" transform="rotate(-7,26,88)"/><ellipse cx="64" cy="88" rx="9" ry="24" fill="#B89080" transform="rotate(7,64,88)"/></svg>';
-var SH='<svg width="90" height="130" viewBox="0 0 90 130"><ellipse cx="45" cy="22" rx="15" ry="17" fill="#8090A0"/><path d="M16 130 Q21 65 45 60 Q69 65 74 130Z" fill="#708090"/><ellipse cx="23" cy="85" rx="10" ry="26" fill="#708090" transform="rotate(-5,23,85)"/><ellipse cx="67" cy="85" rx="10" ry="26" fill="#708090" transform="rotate(5,67,85)"/></svg>';
+var PE='contact@lovesiam.com',ES='YOUR_SERVICE_ID',ET='YOUR_TEMPLATE_ID',EK='YOUR_PUBLIC_KEY';
 var PR=[
-  {id:1,n:"Ning",a:26,h:162,w:52,l:"Bangkok",g:"f",on:true,nw:true,lfr:"Moyen",len:"Un peu",b:"Enseignante de yoga à Bangkok. Je vis avec ma famille. Je cherche un homme sincère.",s:[{f:"Bonjour, je m'appelle Ning, j'ai 26 ans.",t:"สวัสดีค่ะ ฉันชื่อนิ่ง อายุ 26 ปีค่ะ"},{f:"Je vis à Bangkok et j'enseigne le yoga.",t:"ฉันอยู่กรุงเทพฯ สอนโยคะค่ะ"},{f:"Je cherche un homme sincère et attentionné.",t:"ฉันมองหาผู้ชายที่จริงใจค่ะ"}]},
-  {id:2,n:"Pierre",a:38,h:180,w:80,l:"Lyon",g:"h",on:false,nw:true,lth:"Un peu",len:"Excellent",b:"Ingénieur à Lyon. J'ai découvert la Thaïlande il y a 3 ans. Je cherche une relation authentique.",s:[{f:"Bonjour, je suis Pierre, ingénieur à Lyon.",t:"สวัสดีครับ ผมชื่อปิแอร์ วิศวกรครับ"},{f:"J'ai découvert la Thaïlande il y a 3 ans.",t:"ผมรู้จักไทยเมื่อ 3 ปีก่อนครับ"},{f:"Je cherche une relation sincère.",t:"ผมมองหาความสัมพันธ์ที่จริงใจครับ"}]},
-  {id:3,n:"Noi",a:29,h:158,w:48,l:"Chiang Mai",g:"f",on:true,nw:false,lfr:"Un peu",len:"Moyen",b:"Artiste bijoutière à Chiang Mai. La famille est ma valeur essentielle.",s:[{f:"Je suis Noi, artiste bijoutière.",t:"ฉันชื่อน้อย ช่างทำเครื่องประดับค่ะ"},{f:"La famille est ma valeur principale.",t:"ครอบครัวคือสิ่งที่สำคัญที่สุดค่ะ"},{f:"Je cherche un homme sincère.",t:"ฉันมองหาผู้ชายที่จริงใจค่ะ"}]},
-  {id:4,n:"Marc",a:45,h:178,w:85,l:"Bordeaux",g:"h",on:true,nw:false,lth:"Non",len:"Bon",b:"Chef cuisinier à Bordeaux. Amoureux de la Thaïlande depuis 5 ans.",s:[{f:"Je suis Marc, chef cuisinier à Bordeaux.",t:"สวัสดีครับ ผมชื่อมาร์ก เชฟครับ"},{f:"J'aime la Thaïlande depuis 5 ans.",t:"ผมรักไทยมาก 5 ปีแล้วครับ"},{f:"Je cherche une femme sincère.",t:"ผมมองหาผู้หญิงที่จริงใจครับ"}]},
-  {id:5,n:"Pim",a:24,h:155,w:45,l:"Phuket",g:"f",on:false,nw:true,lfr:"Excellent",len:"Excellent",b:"Guide touristique trilingue à Phuket. Je parle français, anglais et thaï.",s:[{f:"Je suis Pim, guide touristique à Phuket.",t:"ฉันชื่อพิม ไกด์ที่ภูเก็ตค่ะ"},{f:"Je parle trois langues couramment.",t:"ฉันพูดได้สามภาษาค่ะ"},{f:"Je cherche quelqu'un de sincère.",t:"ฉันมองหาคนที่จริงใจค่ะ"}]},
-  {id:6,n:"Aom",a:31,h:160,w:52,l:"Pattaya",g:"f",on:true,nw:false,lfr:"Un peu",len:"Moyen",b:"Comptable à Pattaya. J'ai une fille de 6 ans. Je cherche une relation sincère.",s:[{f:"Je suis Aom, comptable à Pattaya.",t:"ฉันชื่ออ้อม นักบัญชีที่พัทยาค่ะ"},{f:"J'ai une fille de 6 ans.",t:"ฉันมีลูกสาว 6 ขวบค่ะ"},{f:"Je cherche une relation sincère.",t:"ฉันมองหาความสัมพันธ์ที่จริงใจค่ะ"}]},
-  {id:7,n:"Julien",a:29,h:183,w:78,l:"Marseille",g:"h",on:false,nw:true,lth:"Non",len:"Excellent",b:"Kiné à Marseille. 6 mois en Thaïlande. Je cherche une rencontre authentique.",s:[{f:"Je suis Julien, kiné à Marseille.",t:"สวัสดีครับ ผมชื่อจูลียงครับ"},{f:"J'ai passé 6 mois en Thaïlande.",t:"ผมอยู่ไทย 6 เดือนครับ"},{f:"Je cherche une rencontre authentique.",t:"ผมมองหาความรักที่แท้จริงครับ"}]}
+  {id:1,n:"Ning",e:"🌸",a:26,h:162,w:52,l:"Bangkok",g:"f",on:true,nw:true,lfr:"Moyen",len:"Un peu",lth:"Excellent",b:"Enseignante de yoga passionnée, je vis avec ma famille. J'adore la cuisine thaïe et la méditation. Je cherche un homme sincère et attentionné, ouvert à notre culture.",s:[{f:"Bonjour, je m'appelle Ning et j'ai 26 ans.",t:"สวัสดีค่ะ ฉันชื่อนิ่ง อายุ 26 ปีค่ะ"},{f:"Je suis professeure de yoga à Bangkok.",t:"ฉันเป็นครูสอนโยคะที่กรุงเทพฯ ค่ะ"},{f:"Je n'ai pas d'enfant et je vis avec ma famille.",t:"ฉันไม่มีลูก อาศัยอยู่กับครอบครัวค่ะ"},{f:"Je cherche un homme sincère et attentionné.",t:"ฉันมองหาผู้ชายที่จริงใจและใส่ใจค่ะ"}]},
+  {id:2,n:"Pierre",e:"🇫🇷",a:38,h:180,w:80,l:"Lyon",g:"h",on:false,nw:true,lfr:"Excellent",len:"Excellent",lth:"Un peu",b:"Ingénieur à Lyon, j'ai vécu deux ans en Thaïlande. Sans enfant. Je cherche une relation authentique et durable avec une femme sincère.",s:[{f:"Bonjour, je suis Pierre, ingénieur à Lyon.",t:"สวัสดีครับ ผมชื่อปิแอร์ วิศวกรที่ลียงครับ"},{f:"J'ai vécu deux ans en Thaïlande.",t:"ผมอาศัยอยู่ในไทยสองปีครับ"},{f:"Je cherche une femme sincère pour une vraie relation.",t:"ผมมองหาผู้หญิงที่จริงใจครับ"}]},
+  {id:3,n:"Noi",e:"🌺",a:29,h:158,w:48,l:"Chiang Mai",g:"f",on:true,nw:false,lfr:"Un peu",len:"Moyen",lth:"Excellent",b:"Artiste bijoutière à Chiang Mai. Je vis avec mes parents et un frère. La famille est ma valeur essentielle. J'aime cuisiner et me promener dans la nature.",s:[{f:"Je suis Noi, artiste bijoutière à Chiang Mai.",t:"ฉันชื่อน้อย ช่างทำเครื่องประดับที่เชียงใหม่ค่ะ"},{f:"La famille est ma valeur la plus importante.",t:"ครอบครัวคือสิ่งที่สำคัญที่สุดค่ะ"},{f:"Je cherche un homme sincère.",t:"ฉันมองหาผู้ชายที่จริงใจค่ะ"}]},
+  {id:4,n:"Marc",e:"🧔",a:45,h:178,w:85,l:"Bordeaux",g:"h",on:true,nw:false,lfr:"Excellent",len:"Bon",lth:"Non",b:"Chef cuisinier à Bordeaux, père de 2 enfants adultes. Amoureux de la Thaïlande depuis 5 ans. Je cherche une femme sincère pour partager une vie simple et belle.",s:[{f:"Je suis Marc, chef cuisinier à Bordeaux.",t:"สวัสดีครับ ผมชื่อมาร์ก เชฟที่บอร์โดครับ"},{f:"J'ai découvert la Thaïlande il y a cinq ans.",t:"ผมค้นพบไทยเมื่อห้าปีก่อนครับ"},{f:"Je cherche une femme pour partager la vie.",t:"ผมมองหาผู้หญิงที่จะมาแบ่งปันชีวิตครับ"}]},
+  {id:5,n:"Pim",e:"🌼",a:24,h:155,w:45,l:"Phuket",g:"f",on:false,nw:true,lfr:"Excellent",len:"Excellent",lth:"Excellent",b:"Guide touristique trilingue à Phuket. Je parle couramment français, anglais et thaï. Sans enfant, j'adore la mer et les voyages. Je cherche quelqu'un de sincère.",s:[{f:"Je suis Pim, j'ai 24 ans et je vis à Phuket.",t:"ฉันชื่อพิม อายุ 24 ปี อยู่ที่ภูเก็ตค่ะ"},{f:"Je parle français, anglais et thaï couramment.",t:"ฉันพูดฝรั่งเศส อังกฤษ และไทยได้คล่องค่ะ"},{f:"Je cherche quelqu'un de sincère.",t:"ฉันมองหาคนที่จริงใจค่ะ"}]},
+  {id:6,n:"Aom",e:"🏵️",a:31,h:160,w:52,l:"Pattaya",g:"f",on:true,nw:false,lfr:"Un peu",len:"Moyen",lth:"Excellent",b:"Comptable indépendante à Pattaya. J'ai une fille de 6 ans. Je valorise la stabilité et la sincérité dans une relation. Je cherche un homme sérieux.",s:[{f:"Je suis Aom, comptable à Pattaya.",t:"ฉันชื่ออ้อม นักบัญชีที่พัทยาค่ะ"},{f:"J'ai une fille de 6 ans.",t:"ฉันมีลูกสาวอายุ 6 ขวบค่ะ"},{f:"Je cherche une relation sincère.",t:"ฉันมองหาความสัมพันธ์ที่จริงใจค่ะ"}]},
+  {id:7,n:"Julien",e:"🏄",a:29,h:183,w:78,l:"Marseille",g:"h",on:false,nw:true,lfr:"Excellent",len:"Excellent",lth:"Non",b:"Kiné à Marseille, j'ai passé 6 mois en Thaïlande. Sans enfant. J'adore la plongée et la nature. Je cherche une rencontre authentique.",s:[{f:"Je suis Julien, kiné à Marseille.",t:"สวัสดีครับ ผมชื่อจูลียง นักกายภาพบำบัดครับ"},{f:"J'ai passé six mois en Thaïlande.",t:"ผมอยู่ที่ไทยหกเดือนครับ"},{f:"Je cherche une rencontre authentique.",t:"ผมมองหาความรักที่แท้จริงครับ"}]}
 ];
-var CV=[{id:1,pid:1,u:true,msgs:[{f:'t',fr:"Bonjour ! Je suis Ning !",tr:"สวัสดีค่ะ",t:'10:32'},{f:'m',fr:"Bonjour Ning ! Votre profil est touchant.",tr:"",t:'10:35'}]},{id:2,pid:3,u:true,msgs:[{f:'t',fr:"Bonsoir ! Votre profil m'a touchée.",tr:"สวัสดีค่ะ",t:'Hier'}]},{id:3,pid:5,u:false,msgs:[{f:'m',fr:"Bonjour Pim !",tr:"",t:'Lun.'},{f:'t',fr:"Bonjour ! Vous parlez thaï ?",tr:"สวัสดีค่ะ",t:'Lun.'}]}];
-var U=null,FL='all',CID=null,CV2=null,VI=0,VP2=true,VL='fr',VTM=null,QS=0,QA={},QV=false,QD=false,QST=null,QMR=null,QCH=[],QRT=null,QRS=0;
+var CV=[
+  {id:1,pid:1,u:true,msgs:[{f:'t',fr:"Bonjour ! Je suis Ning, ravie de vous lire !",tr:"สวัสดีค่ะ ฉันชื่อนิ่ง",t:'10:32'},{f:'m',fr:"Bonjour Ning ! Votre présentation est très touchante.",tr:"",t:'10:35'}]},
+  {id:2,pid:3,u:true,msgs:[{f:'t',fr:"Bonsoir ! Votre profil m'a beaucoup touchée.",tr:"สวัสดีตอนเย็นค่ะ",t:'Hier'}]},
+  {id:3,pid:5,u:false,msgs:[{f:'m',fr:"Bonjour Pim !",tr:"",t:'Lun.'},{f:'t',fr:"Bonjour ! Vous parlez un peu thaï ?",tr:"สวัสดีค่ะ",t:'Lun.'}]}
+];
+var U=null,FL='all',CID=null,CV2=null,VI=0,VPL=true,VLG='fr',VTM=null;
+var QS=0,QA={},QV=false,QD=false,QST=null,QMR=null,QCH=[],QRT=null,QRS=0;
 function g(id){return document.getElementById(id)}
-function show(m){var t=g('T');t.textContent=m;t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(function(){t.classList.remove('on')},3000)}
-function goP(p){document.querySelectorAll('.pg').forEach(function(x){x.classList.remove('on')});g('p'+p).classList.add('on');['H','F','M','P'].forEach(function(x){var b=g('B'+x);if(b)b.classList.remove('on')});var mp={h:'H',f:'F',m:'M',p:'P'};if(mp[p])g('B'+mp[p]).classList.add('on');window.scrollTo(0,0);if(p==='p')updP();if(p==='m'){g('MLK').style.display=U?'none':'block';g('ML').style.display=U?'block':'none'}if(p==='q'){QS=0;QA={};QV=false;QD=false;bQ()}}
+function show(msg){var t=g('T');t.textContent=msg;t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(function(){t.classList.remove('on')},3100)}
+
+function goP(p){
+  document.querySelectorAll('.pg').forEach(function(x){x.classList.remove('on')});
+  g('p'+p).classList.add('on');
+  ['H','F','M','P'].forEach(function(x){var b=g('B'+x);if(b)b.classList.remove('on')});
+  var mp={h:'H',f:'F',m:'M',p:'P'};if(mp[p])g('B'+mp[p]).classList.add('on');
+  window.scrollTo(0,0);
+  if(p==='p')updP();
+  if(p==='m'){g('MLK').style.display=U?'none':'block';g('ML').style.display=U?'block':'none'}
+  if(p==='q'){QS=0;QA={};QV=false;QD=false;buildQ()}
+}
+
 window.addEventListener('load',function(){
-  g('LG').onclick=function(){goP('h')};
+  g('LOGO').onclick=function(){goP('h')};
   g('LF').onclick=function(){g('LF').classList.add('on');g('LF').classList.remove('off');g('LT').classList.remove('on');g('LT').classList.add('off')};
   g('LT').onclick=function(){g('LT').classList.add('on');g('LT').classList.remove('off');g('LF').classList.remove('on');g('LF').classList.add('off')};
-  g('BL').onclick=function(){goP('lo')};g('BI').onclick=function(){goP('q')};
+  g('BLG').onclick=function(){goP('lo')};g('BCD').onclick=function(){goP('q')};
   g('BH').onclick=function(){goP('h')};g('BF').onclick=function(){goP('f')};
   g('BM').onclick=function(){goP('m')};g('BP').onclick=function(){goP('p')};
   g('HC').onclick=function(){goP('q')};g('HF').onclick=function(){goP('f')};
-  g('PC').onclick=function(){goP('q')};g('PCB').onclick=function(){goP('q')};g('PLB').onclick=function(){goP('lo')};g('PLO').onclick=logout;
-  g('LB').onclick=doLogin;g('LC').onclick=function(){goP('q')};g('MLB').onclick=function(){goP('q')};
-  g('PPB').onclick=function(){g('PPG').classList.remove('on')};g('PPCAND').onclick=function(){g('PPG').classList.remove('on');goP('q')};
-  g('VCL').onclick=closeV;g('VP').onclick=function(){VP2=!VP2;g('VP').textContent=VP2?'⏸':'▶'};
-  g('VLF').onclick=function(){sVL('fr')};g('VLT').onclick=function(){sVL('th')};
-  g('VLK').onclick=function(){if(CV2)sLike(CV2.id)};
+  g('PC').onclick=function(){goP('q')};
+  g('PCB').onclick=function(){goP('q')};g('PLB').onclick=function(){goP('lo')};g('PLO').onclick=logout;
+  g('LB').onclick=doLogin;g('LC').onclick=function(){goP('q')};
+  g('MLB').onclick=function(){goP('q')};
+  g('PPB').onclick=function(){g('PPG').classList.remove('on')};
+  g('VCL').onclick=closeV;
+  g('VP').onclick=function(){VPL=!VPL;g('VP').textContent=VPL?'⏸':'▶'};
+  g('VLF').onclick=function(){setVL('fr')};g('VLT').onclick=function(){setVL('th')};
+  g('VLK').onclick=function(){if(CV2)sndLike(CV2.id)};
   g('CHB').onclick=closeChat;g('CSB').onclick=sndMsg;
   g('CI').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sndMsg()}});
-  var m=0,c=0,o=0;var ti=setInterval(function(){m=Math.min(m+7,247);c=Math.min(c+1,31);o=Math.min(o+1,7);g('CM').textContent=m;g('CC').textContent=c;g('CO').textContent=o;if(m>=247)clearInterval(ti)},40);
-  rFF();rM();bQ();
+  var m=0,c=0,o=0;
+  var ti=setInterval(function(){m=Math.min(m+7,247);c=Math.min(c+1,31);o=Math.min(o+1,7);
+    g('CM').textContent=m;g('CC').textContent=c;g('CO').textContent=o;if(m>=247)clearInterval(ti)},40);
+  rndFF();rndM();buildQ();
 });
-function rFF(){var lb=['Tous','Femmes thaï','Hommes français','En ligne'],vl=['all','f','h','on'];g('FF').innerHTML=vl.map(function(v,i){return'<button class="fc '+(FL===v?'on':'')+'" data-fv="'+v+'">'+lb[i]+'</button>'}).join('');g('FF').querySelectorAll('[data-fv]').forEach(function(b){b.onclick=function(){FL=b.getAttribute('data-fv');rFF();rFG()}});rFG()}
-function rFG(){
-  var pr=PR.filter(function(p){return FL==='all'||(FL==='f'&&p.g==='f')||(FL==='h'&&p.g==='h')||(FL==='on'&&p.on)});
-  g('FG').innerHTML=pr.map(function(p,i){
-    var bl=!U,ls=p.g==='f'?'🇫🇷 '+p.lfr+' · 🇬🇧 '+p.len:'🇹🇭 '+p.lth+' · 🇬🇧 '+p.len;
-    return'<div class="pc" data-pid="'+p.id+'"><div class="ph" style="background:'+BG[i%7]+'"><div class="sw2">'+(p.g==='f'?SF:SH)+'</div><div class="so"></div>'+(p.nw&&!p.on?'<div class="bd bn2">Nouveau</div>':'')+(p.on?'<div class="bd bo2">● Live</div>':'')+( bl?'<div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px"><div class="sl2">🔒 Inscription requise</div><button class="sb" data-bc="1">M\'inscrire</button></div>':'<div class="vd">▶ Vidéo</div>')+'</div><div class="pif"><div class="pnm">'+p.n+', '+p.a+' ans</div><div class="plc">📍 '+p.l+' · '+p.h+'cm · '+p.w+'kg</div><div class="plg">'+ls+'</div><div class="pds">'+p.b+'</div><button class="lb" data-lid="'+p.id+'">❤️ Coup de cœur</button></div></div>'
-  }).join('');
-  g('FG').querySelectorAll('[data-pid]').forEach(function(el){el.onclick=function(){oPP(parseInt(el.getAttribute('data-pid')))}});
-  g('FG').querySelectorAll('[data-bc]').forEach(function(el){el.onclick=function(e){e.stopPropagation();goP('q')}});
-  g('FG').querySelectorAll('[data-lid]').forEach(function(el){el.onclick=function(e){e.stopPropagation();sLike(parseInt(el.getAttribute('data-lid')))}});
+
+var FL='all';
+function rndFF(){
+  var lb=['Tous','Femmes thaï','Hommes français','En ligne'];
+  var vl=['all','f','h','on'];
+  g('FF').innerHTML=vl.map(function(v,i){return'<button class="fc '+(FL===v?'on':'')+'" data-fv="'+v+'">'+lb[i]+'</button>'}).join('');
+  g('FF').querySelectorAll('[data-fv]').forEach(function(b){b.onclick=function(){FL=b.getAttribute('data-fv');rndFF();rndFG()}});
+  rndFG();
 }
-function oPP(id){
+
+function langTag(lbl,flag){
+  return'<span class="pp-tag lang">'+flag+' '+lbl+'</span>';
+}
+
+function rndFG(){
+  var pr=PR.filter(function(p){return FL==='all'||(FL==='f'&&p.g==='f')||(FL==='h'&&p.g==='h')||(FL==='on'&&p.on)});
+  g('FG').innerHTML=pr.map(function(p){
+    var bl=!U;
+    var langInfo=p.g==='f'?'🇫🇷 '+p.lfr+' · 🇬🇧 '+p.len:'🇹🇭 '+p.lth+' · 🇬🇧 '+p.len;
+    return'<div class="pcard" data-pid="'+p.id+'">'
+      +'<div class="pphoto">'
+      +'<span style="filter:'+(bl?'blur(10px)':'none')+';font-size:3.5rem">'+p.e+'</span>'
+      +(p.nw&&!p.on?'<div class="pbadge pnew">Nouveau</div>':'')
+      +(p.on?'<div class="pbadge pon">● Live</div>':'')
+      +(bl?'<div class="pblur"><div class="pblur-ic">🔒</div><div class="pblur-t">Candidatez pour voir</div><button class="pblur-btn" data-bc="1">Candidater</button></div>':'<div class="pbadge pvid">▶ Vidéo</div>')
+      +'</div>'
+      +'<div class="pinfo">'
+      +'<div class="pname">'+p.n+', '+p.a+' ans</div>'
+      +'<div class="page">📍 '+p.l+' · '+p.h+'cm · '+p.w+'kg</div>'
+      +'<div class="ptags"><span class="ptag">'+langInfo+'</span></div>'
+      +'<div class="pdesc">'+p.b+'</div>'
+      +'<button class="lbtn" data-lid="'+p.id+'">❤️ Coup de cœur</button>'
+      +'</div></div>'
+  }).join('');
+  g('FG').querySelectorAll('[data-pid]').forEach(function(el){el.onclick=function(){openPP(parseInt(el.getAttribute('data-pid')))}});
+  g('FG').querySelectorAll('[data-bc]').forEach(function(el){el.onclick=function(e){e.stopPropagation();goP('q')}});
+  g('FG').querySelectorAll('[data-lid]').forEach(function(el){el.onclick=function(e){e.stopPropagation();sndLike(parseInt(el.getAttribute('data-lid')))}});
+}
+
+function openPP(id){
   var p=PR.find(function(x){return x.id===id});if(!p)return;
-  g('PPT').textContent=p.n+', '+p.a+' ans';g('PPCB').innerHTML=p.g==='f'?SF:SH;g('PPCL').style.display=U?'none':'flex';g('PPAV').innerHTML=p.g==='f'?'🌸':'👨';
-  var ol=g('PPOL');ol.textContent=p.on?'● En ligne':'● Hors ligne';ol.style.color=p.on?'var(--gn)':'var(--td)';
-  var lt=p.g==='f'?'<span style="padding:3px 9px;border-radius:13px;font-size:.68rem;background:var(--gd);color:var(--g);font-weight:500">🇫🇷 FR: '+p.lfr+'</span><span style="padding:3px 9px;border-radius:13px;font-size:.68rem;background:var(--gd);color:var(--g);font-weight:500;margin-left:5px">🇬🇧 EN: '+p.len+'</span>':'<span style="padding:3px 9px;border-radius:13px;font-size:.68rem;background:var(--gd);color:var(--g);font-weight:500">🇹🇭 TH: '+p.lth+'</span><span style="padding:3px 9px;border-radius:13px;font-size:.68rem;background:var(--gd);color:var(--g);font-weight:500;margin-left:5px">🇬🇧 EN: '+p.len+'</span>';
-  g('PPINFO').innerHTML='<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.45rem;font-weight:600;color:var(--nv);margin-bottom:2px">'+p.n+'</div><div style="font-size:.73rem;color:var(--td);margin-bottom:9px">📍 '+p.l+' · '+p.a+' ans · '+p.h+'cm · '+p.w+'kg</div><div style="margin-bottom:11px">'+lt+'</div>'+(U?'<div style="font-size:.8rem;color:var(--tm);line-height:1.7;margin-bottom:13px;padding:12px;background:var(--b2);border-radius:10px">'+p.b+'</div>':'<div style="font-size:.8rem;color:var(--tm);line-height:1.7;margin-bottom:13px;padding:12px;background:var(--b2);border-radius:10px;filter:blur(4px);user-select:none">'+p.b+'</div>')+'<div style="display:flex;gap:8px;margin-bottom:13px"><button style="flex:1;padding:10px;background:var(--nv);color:#fff;border:none;border-radius:10px;font-family:\'DM Sans\',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer" id="PPMSG">💬 Message</button><button style="flex:1;padding:10px;background:#fff;color:var(--rd);border:1.5px solid rgba(192,57,43,.2);border-radius:10px;font-family:\'DM Sans\',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer" id="PPLK">❤️ Coup de cœur</button></div>'+(U?'<div id="PPVID" style="background:var(--nv);border-radius:13px;aspect-ratio:9/16;max-height:280px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.35);font-size:.78rem;cursor:pointer"><div style="text-align:center"><div style="font-size:1.8rem;margin-bottom:7px">🎬</div><div>Voir la vidéo FR↔TH</div></div></div>':'<div style="padding:12px;background:var(--b2);border-radius:11px;font-size:.76rem;color:var(--tm);text-align:center">🔒 Vidéo accessible après inscription</div>');
+  g('PP-TITLE').textContent=p.n;
+  g('PP-COVER').innerHTML='<span style="font-size:5rem;'+(U?'':'filter:blur(12px)')+'">'+p.e+'</span>';
+  g('PP-AV').textContent=p.e;
+  var ol=g('PP-ONLINE');
+  ol.textContent=p.on?'● En ligne':'● Hors ligne';
+  ol.style.color=p.on?'var(--grn)':'var(--td)';
+  var langTags=p.g==='f'?'<span class="pp-tag lang">🇫🇷 Français : '+p.lfr+'</span><span class="pp-tag lang">🇬🇧 Anglais : '+p.len+'</span>':'<span class="pp-tag lang">🇹🇭 Thaï : '+p.lth+'</span><span class="pp-tag lang">🇬🇧 Anglais : '+p.len+'</span>';
+  g('PP-INFOS').innerHTML='<div class="pp-name">'+p.n+'</div>'
+    +'<div class="pp-handle" style="color:var(--td)">📍 '+p.l+' · '+p.a+' ans · '+p.h+'cm · '+p.w+'kg</div>'
+    +'<div class="pp-tags">'+langTags+'</div>'
+    +(U?'<div class="pp-desc">'+p.b+'</div>':'<div class="pp-desc" style="filter:blur(4px);user-select:none">'+p.b+'</div>')
+    +'<div class="pp-btns">'
+    +'<button class="pp-msg" id="PP-MSG">💬 Message</button>'
+    +'<button class="pp-like" id="PP-LK">❤️ Coup de cœur</button>'
+    +'</div>'
+    +(U?'<div class="pp-vid" id="PP-VID" style="cursor:pointer"><div style="text-align:center"><div style="font-size:2rem;margin-bottom:8px">🎬</div><div style="font-size:.8rem">Voir la vidéo FR↔TH</div></div></div>':'<div style="padding:13px;background:var(--bg2);border-radius:12px;font-size:.78rem;color:var(--tm);text-align:center;border:1px solid rgba(26,26,46,.07)">🔒 Vidéo accessible après candidature validée par Patrick</div>');
   setTimeout(function(){
-    if(g('PPMSG'))g('PPMSG').onclick=function(){if(!U){goP('q');g('PPG').classList.remove('on')}else{oChatP(p.id);g('PPG').classList.remove('on')}};
-    if(g('PPLK'))g('PPLK').onclick=function(){sLike(p.id)};
-    if(g('PPVID'))g('PPVID').onclick=function(){oV(p.id)};
+    if(g('PP-MSG'))g('PP-MSG').onclick=function(){if(!U){goP('q');g('PPG').classList.remove('on')}else{openChatPid(p.id);g('PPG').classList.remove('on')}};
+    if(g('PP-LK'))g('PP-LK').onclick=function(){sndLike(p.id)};
+    if(g('PP-VID'))g('PP-VID').onclick=function(){openV(p.id)};
   },50);
   g('PPG').classList.add('on');
 }
-function oChatP(pid){var c=CV.find(function(x){return x.pid===pid});if(!c){c={id:Date.now(),pid:pid,u:false,msgs:[]};CV.push(c)}goP('m');setTimeout(function(){oChat(c.id)},60)}
-async function sLike(id){var p=PR.find(function(x){return x.id===id});show('❤️ Coup de cœur pour '+p.n+' — votre consultant est notifié !');try{await emailjs.send(ES,ET,{to_email:PE,from_name:U?U.name:'Visiteur',from_email:U?U.email:'noreply@lovesiam.com',subject:'❤️ Coup de cœur → '+p.n,message:'De: '+(U?U.name:'Visiteur')+'\nPour: '+p.n+', '+p.a+' ans — '+p.l})}catch(e){}}
-function oV(id){
-  var p=PR.find(function(x){return x.id===id});if(!p)return;if(!U){goP('q');return}
-  CV2=p;VI=0;VP2=true;VL='fr';g('VEM').textContent=p.g==='f'?'🌸':'👨';g('VNM').textContent=p.n+', '+p.a+' ans';g('VLC2').innerHTML='📍 '+p.l+(p.on?' · <span style="color:var(--gn)">● En ligne</span>':'');
-  g('VLF').classList.add('on');g('VLF').classList.remove('off');g('VLT').classList.remove('on');g('VLT').classList.add('off');g('VP').textContent='⏸';
-  clearInterval(VTM);shS(p,0);VTM=setInterval(function(){VI=(VI+1)%p.s.length;shS(p,VI);g('VPF').style.width=(((VI+1)/p.s.length)*100)+'%'},3200);
+
+function openChatPid(pid){
+  var c=CV.find(function(x){return x.pid===pid});
+  if(!c){c={id:Date.now(),pid:pid,u:false,msgs:[]};CV.push(c)}
+  goP('m');setTimeout(function(){opnChat(c.id)},60);
+}
+
+async function sndLike(id){
+  var p=PR.find(function(x){return x.id===id});
+  show('❤️ Coup de cœur pour '+p.n+' — Patrick est notifié !');
+  try{await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:ES,template_id:ET,user_id:EK,template_params:{to_email:PE,from_name:U?U.name:'Visiteur',from_email:U?U.email:'noreply@lovesiam.com',subject:'❤️ Coup de cœur — '+(U?U.name:'Visiteur')+' → '+p.n,message:'COUP DE COEUR\nDe: '+(U?U.name+' ('+U.email+')':'Visiteur')+'\nPour: '+p.n+', '+p.a+' ans — '+p.l+'\nAction: Organiser une introduction.'}})})}catch(e){}
+}
+
+function openV(id){
+  var p=PR.find(function(x){return x.id===id});if(!p)return;
+  if(!U){goP('q');return}
+  CV2=p;VI=0;VPL=true;VLG='fr';
+  g('VS').style.background='linear-gradient(145deg,#1A1A2E,#2D2B4E)';
+  g('VEM').textContent=p.e;g('VNM').textContent=p.n+', '+p.a+' ans';
+  g('VLC').innerHTML='📍 '+p.l+(p.on?' · <span style="color:#27AE60">● En ligne</span>':'');
+  g('VTG').innerHTML=[];g('VLF').classList.add('on');g('VLF').classList.remove('off');
+  g('VLT').classList.remove('on');g('VLT').classList.add('off');g('VP').textContent='⏸';
+  clearInterval(VTM);shwSub(p,0);
+  VTM=setInterval(function(){VI=(VI+1)%p.s.length;shwSub(p,VI);g('VPF').style.width=(((VI+1)/p.s.length)*100)+'%'},3200);
   g('VM').classList.add('on');document.body.style.overflow='hidden';
 }
-function shS(p,i){var s=p.s[i];g('VFR').style.opacity='0';g('VTH').style.opacity='0';setTimeout(function(){g('VFR').textContent=VL==='fr'?s.f:s.t;g('VTH').textContent=VL==='fr'?s.t:s.f;g('VFR').style.opacity='1';g('VTH').style.opacity='.88'},160)}
-function sVL(l){VL=l;g('VLF').classList.toggle('on',l==='fr');g('VLF').classList.toggle('off',l!=='fr');g('VLT').classList.toggle('on',l==='th');g('VLT').classList.toggle('off',l!=='th');if(CV2)shS(CV2,VI)}
-function closeV(){g('VM').classList.remove('on');document.body.style.overflow='';clearInterval(VTM)}
-function rM(){
-  var un=CV.filter(function(c){return c.u}).length;var ub=g('MUB');ub.style.display=un>0?'block':'none';if(un>0)ub.textContent=un+' non lus';
-  g('BMI').innerHTML='💬'+(un>0?'<div style="position:absolute;top:-2px;right:-4px;width:7px;height:7px;background:var(--g);border-radius:50%"></div>':'');
-  g('ML').innerHTML=CV.map(function(c){var p=PR.find(function(x){return x.id===c.pid});var l=c.msgs[c.msgs.length-1];return'<div><div class="mt" data-cid="'+c.id+'"><div class="ma '+(c.u?'u':'')+'">'+(p.g==='f'?'🌸':'👨')+(p.on?'<div class="od"></div>':'')+'</div><div style="flex:1;min-width:0"><div class="mn">'+p.n+'</div><div class="mp '+(c.u?'u':'')+'">'+l.fr.substring(0,34)+'…</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><div style="font-size:.6rem;color:var(--td)">'+l.t+'</div>'+(c.u?'<div class="mb"></div>':'')+'</div></div><div style="height:1px;background:rgba(26,39,68,.06);margin:0 13px"></div></div>'}).join('');
-  g('ML').querySelectorAll('[data-cid]').forEach(function(b){b.onclick=function(){oChat(parseInt(b.getAttribute('data-cid')))}});
+function shwSub(p,i){
+  var s=p.s[i];
+  g('VFR').style.opacity='0';g('VTH').style.opacity='0';
+  setTimeout(function(){g('VFR').textContent=VLG==='fr'?s.f:s.t;g('VTH').textContent=VLG==='fr'?s.t:s.f;g('VFR').style.transition='opacity .35s';g('VTH').style.transition='opacity .35s';g('VFR').style.opacity='1';g('VTH').style.opacity='.9'},180);
 }
-function oChat(id){CV=CV.map(function(c){return c.id===id?Object.assign({},c,{u:false}):c});CID=id;var c=CV.find(function(x){return x.id===id}),p=PR.find(function(x){return x.id===c.pid});g('CAV').innerHTML=p.g==='f'?'🌸':'👨';g('CNM').textContent=p.n;var st=g('CST');st.textContent=p.on?'● En ligne':'● Hors ligne';st.style.color=p.on?'var(--gn)':'var(--td)';rCM(c);g('CH').classList.add('on');rM()}
-function rCM(c){var el=g('CMS');el.innerHTML=c.msgs.map(function(m){return'<div class="cm '+(m.f==='m'?'s':'r')+'">'+m.fr+(m.f==='t'&&m.tr?'<div class="cr">'+m.tr+'</div>':'')+'<span class="ct2">'+m.t+'</span></div>'}).join('');el.scrollTop=el.scrollHeight}
+function setVL(l){VLG=l;g('VLF').classList.toggle('on',l==='fr');g('VLF').classList.toggle('off',l!=='fr');g('VLT').classList.toggle('on',l==='th');g('VLT').classList.toggle('off',l!=='th');if(CV2)shwSub(CV2,VI)}
+function closeV(){g('VM').classList.remove('on');document.body.style.overflow='';clearInterval(VTM)}
+
+function rndM(){
+  var un=CV.filter(function(c){return c.u}).length;
+  var ub=g('MUB');ub.style.display=un>0?'block':'none';if(un>0)ub.textContent=un+' non lus';
+  g('BMI').innerHTML='💬'+(un>0?'<div style="position:absolute;top:-2px;right:-4px;width:8px;height:8px;background:var(--g);border-radius:50%"></div>':'');
+  g('ML').innerHTML=CV.map(function(c){
+    var p=PR.find(function(x){return x.id===c.pid});var l=c.msgs[c.msgs.length-1];
+    return'<div><div class="mt" data-cid="'+c.id+'">'
+      +'<div class="mav '+(c.u?'u':'')+'">'+p.e+(p.on?'<div class="od"></div>':'')+'</div>'
+      +'<div style="flex:1;min-width:0"><div class="mn">'+p.n+'</div><div class="mp '+(c.u?'u':'')+'">'+l.fr.substring(0,36)+'…</div></div>'
+      +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><div style="font-size:.61rem;color:var(--td)">'+l.t+'</div>'+(c.u?'<div class="mbd"></div>':'')+'</div>'
+      +'</div><div style="height:1px;background:rgba(26,26,46,.07);margin:0 14px"></div></div>'
+  }).join('');
+  g('ML').querySelectorAll('[data-cid]').forEach(function(b){b.onclick=function(){opnChat(parseInt(b.getAttribute('data-cid')))}});
+}
+function opnChat(id){
+  CV=CV.map(function(c){return c.id===id?Object.assign({},c,{u:false}):c});
+  CID=id;var c=CV.find(function(x){return x.id===id}),p=PR.find(function(x){return x.id===c.pid});
+  g('CAV').textContent=p.e;g('CNM').textContent=p.n;
+  var st=g('CST');st.textContent=p.on?'● En ligne':'● Hors ligne';st.style.color=p.on?'var(--grn)':'var(--td)';
+  rndCM(c);g('CH').classList.add('on');rndM();
+}
+function rndCM(c){
+  var el=g('CMS');
+  el.innerHTML=c.msgs.map(function(m){return'<div class="cm '+(m.f==='m'?'s':'r')+'">'+m.fr+(m.f==='t'&&m.tr?'<div class="ctr">'+m.tr+'</div>':'')+'<span class="ct">'+m.t+'</span></div>'}).join('');
+  el.scrollTop=el.scrollHeight;
+}
 function closeChat(){g('CH').classList.remove('on');CID=null}
-function sndMsg(){var inp=g('CI'),txt=inp.value.trim();if(!txt||!CID)return;var now=new Date(),t=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');CV=CV.map(function(c){return c.id===CID?Object.assign({},c,{msgs:c.msgs.concat([{f:'m',fr:txt,tr:'',t:t}])}):c});inp.value='';var c=CV.find(function(x){return x.id===CID});rCM(c);rM();var rs=[{fr:"Merci !",tr:""},{fr:"Je suis contente !",tr:""},{fr:"Êtes-vous déjà venu en Thaïlande ?",tr:"คุณเคยมาไทยไหมคะ"}];setTimeout(function(){var r=rs[Math.floor(Math.random()*rs.length)];CV=CV.map(function(c){return c.id===CID?Object.assign({},c,{msgs:c.msgs.concat([Object.assign({},r,{f:'t',t:t})])}):c});rCM(CV.find(function(x){return x.id===CID}));rM()},1200)}
-function doLogin(){var e=g('LE').value.trim();if(!e){show('⚠️ Email requis');return}U={name:e.split('@')[0],city:'France',bio:'',gender:'h',email:e,status:'active'};updNav();updP();goP('h');rFG();show('✅ Connexion réussie !')}
-function logout(){U=null;updNav();updP();rFG();show('👋 À bientôt !')}
-function updNav(){var na=g('NA');if(U){na.innerHTML='<span style="font-size:.7rem;color:var(--tm);margin-right:4px">'+U.name+'</span><button class="nb nb0" id="NPB">👤</button>';g('NPB').onclick=function(){goP('p')}}else{na.innerHTML='<button class="nb nb0" id="BL2" style="margin-right:4px">Connexion</button><button class="nb nb1" id="BI2">M\'inscrire</button>';g('BL2').onclick=function(){goP('lo')};g('BI2').onclick=function(){goP('q')}}}
-function updP(){if(U){g('PO').style.display='none';g('PI').style.display='block';g('PAV').textContent='👤';g('PNM').textContent=U.name;g('PLC').textContent='📍 '+(U.city||'France');g('PBIO').textContent=U.bio||'—';var ip=U.status==='pending';g('PDT').style.background=ip?'#F39C12':'var(--gn)';g('PSL').textContent=ip?'En attente':'Profil actif';g('PSL').style.color=ip?'#F39C12':'var(--gn)';g('PSC').innerHTML='<div class="ms2">Statut</div><div class="ms3">'+(ip?'⏳ Dossier en cours d\'étude. Réponse sous 48h.':'✅ Profil actif et visible.')+'</div>'}else{g('PO').style.display='block';g('PI').style.display='none'}}
-var QT=8;
-function bQ(){
-  var pb=g('QP');if(pb)pb.style.width=((QS+1)/QT*100)+'%';
-  if(QD){g('QB').innerHTML='<div class="su"><i>🎉</i><h3>Inscription envoyée !</h3><p>Votre dossier a bien été reçu à <strong style="color:var(--g)">'+PE+'</strong>. Réponse sous 48h.</p><div class="ns"><div class="ni"><i>📋</i><div><h5>Étude du dossier</h5><p>Votre candidature est lue et étudiée.</p></div></div><div class="ni"><i>✅</i><div><h5>Validation et publication</h5><p>Votre profil est publié avec vidéo FR↔TH.</p></div></div><div class="ni"><i>💞</i><div><h5>Les rencontres commencent</h5><p>Des profils compatibles vous sont présentés.</p></div></div></div><button class="qx qf" id="SHB">Retour à l\'accueil</button></div>';if(pb)pb.style.width='100%';g('SHB').onclick=function(){goP('h')};return}
-  var iF=QA.g==='f',h='';
-  if(QS===0){h='<div class="qe">✦ Étape 1/'+QT+'</div><div class="qt">Je suis <em>un…</em></div><p class="qs">Le formulaire s\'adapte à votre profil.</p><div class="cs2"><div class="cd '+(QA.g==='h'?'sl':'')+'" data-cd="g:h"><div class="ci2">👨</div><div><div class="cl">Homme français</div><div class="cs3">Je recherche une femme thaïlandaise sincère</div></div><div class="ck">'+(QA.g==='h'?'✓':'')+'</div></div><div class="cd '+(QA.g==='f'?'sl':'')+'" data-cd="g:f"><div class="ci2">👩</div><div><div class="cl">Femme thaïlandaise</div><div class="cs3">Je recherche un homme français sincère</div></div><div class="ck">'+(QA.g==='f'?'✓':'')+'</div></div></div><div class="qn"><button class="qx qf" id="QNX">Continuer →</button></div>';}
-  else if(QS===1){var hO='',wO='';for(var hi=140;hi<=200;hi++)hO+='<option value="'+hi+'"'+(QA.height==hi?' selected':'')+'>'+hi+' cm</option>';for(var wi=35;wi<=120;wi++)wO+='<option value="'+wi+'"'+(QA.weight==wi?' selected':'')+'>'+wi+' kg</option>';h='<div class="qe">✦ Étape 2/'+QT+'</div><div class="qt">Votre <em>identité</em></div><div style="display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:14px;background:var(--gd);border:1px solid rgba(196,150,42,.22);font-size:.67rem;color:var(--g);margin-bottom:14px;font-weight:500">'+(iF?'👩 Femme thaïlandaise':'👨 Homme français')+'</div><div class="fg"><label class="fl">Prénom</label><input class="fi" id="QN" type="text" placeholder="Votre prénom" value="'+(QA.name||'')+'"></div><div class="fg"><label class="fl">Âge</label><select class="fsl" id="QAG"><option value="">— Sélectionnez —</option></select></div><div class="fg"><label class="fl">'+(iF?'Ville (Thaïlande)':'Ville (France)')+'</label><input class="fi" id="QV" type="text" placeholder="'+(iF?'Ex: Bangkok…':'Ex: Paris, Lyon…')+'" value="'+(QA.ville||'')+'"></div><div class="r2"><div class="fg"><label class="fl">Taille</label><select class="fsl" id="QH"><option value="">— cm —</option>'+hO+'</select></div><div class="fg"><label class="fl">Poids</label><select class="fsl" id="QW"><option value="">— kg —</option>'+wO+'</select></div></div><div class="ds"><div class="dl"></div><div class="dt">Niveaux de langue</div><div class="dl"></div></div>'+(iF?'<div class="lr"><div class="lh"><span>🇫🇷</span><span style="font-size:.82rem;font-weight:500;color:var(--nv)">Français</span></div><div class="lp">'+['Non','Un peu','Moyen','Excellent'].map(function(lb){return'<button class="lp2 '+(QA.lfr===lb?'sl':'')+'" data-lp="lfr:'+lb+'">'+lb+'</button>'}).join('')+'</div></div><div class="lr"><div class="lh"><span>🇬🇧</span><span style="font-size:.82rem;font-weight:500;color:var(--nv)">Anglais</span></div><div class="lp">'+['Non','Un peu','Moyen','Excellent'].map(function(lb){return'<button class="lp2 '+(QA.len===lb?'sl':'')+'" data-lp="len:'+lb+'">'+lb+'</button>'}).join('')+'</div></div>':'<div class="lr"><div class="lh"><span>🇹🇭</span><span style="font-size:.82rem;font-weight:500;color:var(--nv)">Thaïlandais</span></div><div class="lp">'+['Non','Un peu','Moyen','Excellent'].map(function(lb){return'<button class="lp2 '+(QA.lth===lb?'sl':'')+'" data-lp="lth:'+lb+'">'+lb+'</button>'}).join('')+'</div></div><div class="lr"><div class="lh"><span>🇬🇧</span><span style="font-size:.82rem;font-weight:500;color:var(--nv)">Anglais</span></div><div class="lp">'+['Non','Un peu','Moyen','Excellent'].map(function(lb){return'<button class="lp2 '+(QA.len===lb?'sl':'')+'" data-lp="len:'+lb+'">'+lb+'</button>'}).join('')+'</div></div>')+'<div class="qn"><button class="qb" id="QBK">← Retour</button><button class="qx" id="QNX">Continuer →</button></div>';}
-  else if(QS===2){h='<div class="qe">✦ Étape 3/'+QT+'</div><div class="qt">Votre <em>description</em></div><p class="qs">Présentez-vous sincèrement. Apparaîtra sur votre profil.</p><div class="fg"><label class="fl">Ma description</label><textarea class="fa" id="QDESC" rows="5" placeholder="Votre famille, vos loisirs, ce que vous cherchez…">'+(QA.desc||'')+'</textarea></div><div class="qn"><button class="qb" id="QBK">← Retour</button><button class="qx" id="QNX">Continuer →</button></div>';}
-  else if(QS===3){h='<div class="qe">✦ Étape 4/'+QT+'</div><div class="qt">Ce que vous <em>cherchez</em></div><div class="cs2">'+[{ic:'💍',lb:'Un mariage',sb:'Engagement sérieux',vl:'mariage'},{ic:'💞',lb:'Une relation sérieuse',sb:'Construire quelque chose de solide',vl:'serieux'},{ic:'🌱',lb:'Je veux explorer',sb:"Ouvert(e) à une belle rencontre",vl:'explorer'}].map(function(o){return'<div class="cd '+(QA.looking===o.vl?'sl':'')+'" data-cd="looking:'+o.vl+'"><div class="ci2">'+o.ic+'</div><div><div class="cl">'+o.lb+'</div><div class="cs3">'+o.sb+'</div></div><div class="ck">'+(QA.looking===o.vl?'✓':'')+'</div></div>'}).join('')+'</div><div class="fg"><div class="fl">Tranche d\'âge recherchée</div><div class="pl">'+['18–25','25–30','30–35','35–40','40–50','50–60','60+'].map(function(v){return'<button class="pi2 '+((QA.sk||[]).includes(v)?'sl':'')+'" data-tg="sk:'+v+'">'+v+'</button>'}).join('')+'</div></div><div class="qn"><button class="qb" id="QBK">← Retour</button><button class="qx" id="QNX">Continuer →</button></div>';}
-  else if(QS===4){var lo=[{ic:'🇫🇷',lb:'En France',vl:'france'},{ic:'🇹🇭',lb:'En Thaïlande',vl:'thai'},{ic:'✈️',lb:'Entre les deux',vl:'both'},{ic:'🤔',lb:'Je ne sais pas',vl:'unknown'}];h='<div class="qe">✦ Étape 5/'+QT+'</div><div class="qt">'+(iF?'Votre lien avec la <em>France</em>':'Votre lien avec la <em>Thaïlande</em>')+'</div>'+(iF?'<div class="cs2">'+[{ic:'🗼',lb:'Je veux découvrir la France',vl:'dec'},{ic:'📚',lb:'Je connais la culture française',vl:'con'},{ic:'🌍',lb:'Prête à vivre en France',vl:'viv'}].map(function(o){return'<div class="cd '+(QA.fl===o.vl?'sl':'')+'" data-cd="fl:'+o.vl+'"><div class="ci2">'+o.ic+'</div><div><div class="cl">'+o.lb+'</div></div><div class="ck">'+(QA.fl===o.vl?'✓':'')+'</div></div>'}).join('')+'</div>':'<div class="cs2">'+[{ic:'✈️',lb:'Jamais visité',vl:'never'},{ic:'🌺',lb:'1 à 3 voyages',vl:'few'},{ic:'🏡',lb:'Je connais bien',vl:'often'}].map(function(o){return'<div class="cd '+(QA.th===o.vl?'sl':'')+'" data-cd="th:'+o.vl+'"><div class="ci2">'+o.ic+'</div><div><div class="cl">'+o.lb+'</div></div><div class="ck">'+(QA.th===o.vl?'✓':'')+'</div></div>'}).join('')+'</div><div class="fg"><div class="fl">Prêt à voyager ?</div><div class="pl">'+[['Oui','oui'],['Peut-être','maybe'],['Pas encore','non']].map(function(x){return'<button class="pi2 '+(QA.tv===x[1]?'sl':'')+'" data-pl="tv:'+x[1]+'">'+x[0]+'</button>'}).join('')+'</div></div>')+'<div class="fg"><div class="fl">Où vivre ?</div><div class="cs2">'+lo.map(function(o){return'<div class="cd '+(QA.vv===o.vl?'sl':'')+'" data-cd="vv:'+o.vl+'"><div class="ci2">'+o.ic+'</div><div><div class="cl">'+o.lb+'</div></div><div class="ck">'+(QA.vv===o.vl?'✓':'')+'</div></div>'}).join('')+'</div></div><div class="qn"><button class="qb" id="QBK">← Retour</button><button class="qx" id="QNX">Continuer →</button></div>';}
-  else if(QS===5){h='<div class="qe">✦ Étape 6/'+QT+'</div><div class="qt">Votre <em>situation</em></div><div class="fg"><div class="fl">Situation familiale</div><div class="cs2">'+[{ic:'🧑',lb:'Célibataire sans enfant',vl:'single'},{ic:'👶',lb:"J'ai des enfants",vl:'kids'},{ic:'💔',lb:'Divorcé(e)',vl:'divorced'},{ic:'💑',lb:'Veuf / Veuve',vl:'widowed'}].map(function(o){return'<div class="cd '+(QA.fam===o.vl?'sl':'')+'" data-cd="fam:'+o.vl+'"><div class="ci2">'+o.ic+'</div><div><div class="cl">'+o.lb+'</div></div><div class="ck">'+(QA.fam===o.vl?'✓':'')+'</div></div>'}).join('')+'</div></div><div class="fg"><div class="fl">Situation professionnelle</div><div class="cs2">'+[{ic:'💼',lb:'Salarié(e)',vl:'salarie'},{ic:'🏢',lb:'Indépendant(e)',vl:'independant'},{ic:'🎓',lb:"Étudiant(e)",vl:'etudiant'},{ic:'🌿',lb:'Autre',vl:'autre'}].map(function(o){return'<div class="cd '+(QA.job===o.vl?'sl':'')+'" data-cd="job:'+o.vl+'"><div class="ci2">'+o.ic+'</div><div><div class="cl">'+o.lb+'</div></div><div class="ck">'+(QA.job===o.vl?'✓':'')+'</div></div>'}).join('')+'</div></div><div class="qn"><button class="qb" id="QBK">← Retour</button><button class="qx" id="QNX">Continuer →</button></div>';}
-  else if(QS===6){h='<div class="qe">✦ Étape 7/'+QT+'</div><div class="qt">Votre <em>vidéo</em></div><p class="qs">Publiée avec traduction FR↔TH après validation.</p><div style="margin-bottom:10px"><div class="gt"><span style="flex-shrink:0">📍</span><div><strong>Lieu lumineux</strong><span>Filmez près d\'une fenêtre.</span></div></div><div class="gt"><span style="flex-shrink:0">👁️</span><div><strong>Regardez l\'objectif</strong><span>Regardez la caméra, pas votre image.</span></div></div><div class="gt"><span style="flex-shrink:0">🎯</span><div><strong>60 secondes</strong><span>'+(iF?'① Prénom, âge, ville ② Métier ③ Famille ④ Loisirs ⑤ Ce que vous cherchez ⑥ Une phrase en français':'① Prénom, âge, ville ② Métier ③ Famille ④ Loisirs ⑤ Thaïlande ⑥ Ce que vous cherchez ⑦ Un mot en thaï')+'</span></div></div></div><div style="margin-bottom:9px;padding:9px;background:var(--gd);border:1px solid rgba(196,150,42,.16);border-radius:8px;font-size:.71rem;color:var(--tm)">ℹ️ Sous-titres FR↔TH ajoutés lors de la publication.</div><div class="ds"><div class="dl"></div><div class="dt">Option 1 — Caméra live</div><div class="dl"></div></div><div class="ca" id="QCA"><div class="cp" id="QCP">Appuyez sur "Activer la caméra"</div><video id="QCV" style="display:none;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)" muted playsinline></video><video id="QCR" style="display:none;width:100%;height:100%;object-fit:cover" controls></video><div class="rb" id="QRB" style="display:none"><div class="rd2"></div><span id="QRL">REC 0s</span></div><div class="cpb" id="QCP2" style="display:none"><div class="cpf" id="QCPF" style="width:0%"></div></div><div style="color:var(--rd);font-size:.73rem;text-align:center;padding:12px;display:none" id="QCE"></div></div><div style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"><button id="QBA" class="qx qf">📷 Activer la caméra</button><button id="QBR2" class="qx qf" style="display:none;background:linear-gradient(135deg,var(--rd),#E74C3C)">⏺ Démarrer</button><button id="QBS" style="display:none;padding:11px;border-radius:10px;border:1.5px solid var(--rd);background:transparent;color:var(--rd);font-family:\'DM Sans\',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer">⏹ Arrêter</button><button id="QBRT" style="display:none;padding:11px;border-radius:10px;border:1.5px solid rgba(26,39,68,.1);background:transparent;color:var(--td);font-family:\'DM Sans\',sans-serif;font-size:.8rem;cursor:pointer">🔄 Recommencer</button></div><div class="ds"><div class="dl"></div><div class="dt">Option 2 — Upload</div><div class="dl"></div></div><div class="uz" id="QUZ"><div style="font-size:1.7rem;margin-bottom:5px">📤</div><div style="font-size:.8rem;font-weight:500;color:var(--nv)">Choisir une vidéo</div><div style="font-size:.68rem;color:var(--td)">MP4, MOV — max 100MB</div><input type="file" id="QUF" accept="video/*" style="display:none"></div><div id="QUS" style="display:none;padding:8px 11px;border-radius:8px;margin-bottom:8px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.18);font-size:.73rem;color:var(--gn)"></div><div style="text-align:center;margin-bottom:8px"><span style="font-size:.7rem;color:var(--td);cursor:pointer;text-decoration:underline" id="QSK">Passer → vidéo enregistrée plus tard</span></div><div class="qn"><button class="qb" id="QBK">← Retour</button><button class="qx" id="QNX">Continuer →</button></div>';}
-  else if(QS===7){var rws=[['Profil',iF?'👩 Femme thaïlandaise':'👨 Homme français'],['Prénom',QA.name||'—'],['Âge',QA.age?QA.age+' ans':'—'],['Ville',QA.ville||'—'],['Taille/Poids',(QA.height||'—')+'cm / '+(QA.weight||'—')+'kg'],['Langues',iF?'🇫🇷 '+QA.lfr+' / 🇬🇧 '+QA.len:'🇹🇭 '+QA.lth+' / 🇬🇧 '+QA.len],['Recherche',QA.looking||'—'],['Vidéo',QV?'✅ Prête':'À enregistrer']];h='<div class="qe">✦ Étape 8/'+QT+'</div><div class="qt">Votre <em>contact</em></div><p class="qs">Vous serez contacté(e) à cette adresse pour valider votre inscription.</p>'+(QV?'<div style="padding:8px 11px;border-radius:8px;margin-bottom:11px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.18);font-size:.73rem;color:var(--gn)">✅ Vidéo prête</div>':'<div style="padding:8px 11px;border-radius:8px;margin-bottom:11px;background:var(--gd);border:1px solid rgba(196,150,42,.16);font-size:.73rem;color:var(--tm)">📹 Vidéo à enregistrer plus tard</div>')+'<div class="fg"><label class="fl">Email *</label><input class="fi" id="QE" type="email" placeholder="votre@email.com" value="'+(QA.email||'')+'"></div><div class="fg"><label class="fl">WhatsApp <span style="color:var(--td);font-size:.59rem">(optionnel)</span></label><input class="fi" id="QWH" type="tel" placeholder="+33 6 xx xx xx xx" value="'+(QA.whats||'')+'"></div><div class="sr"><div style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:8px;font-weight:500">📋 Récapitulatif</div>'+rws.map(function(r){return'<div class="r"><span class="sk">'+r[0]+'</span><span class="sv">'+r[1]+'</span></div>'}).join('')+'</div><div class="qn"><button class="qb" id="QBK">← Retour</button><button class="qx" id="QSND">Envoyer mon inscription ✦</button></div>';}
-  g('QB').innerHTML=h;if(g('QP'))g('QP').style.width=((QS+1)/QT*100)+'%';
-  if(g('QNX'))g('QNX').onclick=function(){if(QS===0){if(!QA.g){show('⚠️ Choisissez votre profil');return}QS++;bQ()}else if(QS===1){qNI()}else if(QS===2){var d=g('QDESC');if(d)QA.desc=d.value.trim();QS++;bQ()}else if(QS===3){if(!QA.looking){show('⚠️ Choisissez ce que vous cherchez');return}QS++;bQ()}else{QS=Math.min(QS+1,QT-1);bQ()}};
-  if(g('QBK'))g('QBK').onclick=function(){qCC();QS=Math.max(QS-1,0);bQ()};
+function sndMsg(){
+  var inp=g('CI');var txt=inp.value.trim();if(!txt||!CID)return;
+  var now=new Date();var t=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  CV=CV.map(function(c){return c.id===CID?Object.assign({},c,{msgs:c.msgs.concat([{f:'m',fr:txt,tr:'',t:t}])}):c});
+  inp.value='';var c=CV.find(function(x){return x.id===CID});rndCM(c);rndM();
+  var rs=[{fr:"Merci beaucoup !",tr:""},{fr:"Je suis contente de vous parler !",tr:""},{fr:"Êtes-vous déjà venu en Thaïlande ?",tr:"คุณเคยมาประเทศไทยไหมคะ"}];
+  setTimeout(function(){var r=rs[Math.floor(Math.random()*rs.length)];CV=CV.map(function(c){return c.id===CID?Object.assign({},c,{msgs:c.msgs.concat([Object.assign({},r,{f:'t',t:t})])}):c});rndCM(CV.find(function(x){return x.id===CID}));rndM()},1200);
+}
+
+function doLogin(){
+  var e=g('LE').value.trim();if(!e){show('⚠️ Email requis');return}
+  U={name:e.split('@')[0],city:'France',bio:'',gender:'h',emoji:'👨',email:e,status:'active'};
+  updNav();updP();goP('h');rndFG();show('✅ Connexion réussie !');
+}
+function logout(){U=null;updNav();updP();rndFG();show('👋 À bientôt !')}
+function updNav(){
+  var na=g('NA');
+  if(U){na.innerHTML='<span style="font-size:.73rem;color:var(--tm);margin-right:5px">'+U.name+'</span><button class="nb nb-o" id="NPB">'+U.emoji+'</button>';g('NPB').onclick=function(){goP('p')}}
+  else{na.innerHTML='<button class="nb nb-o" id="BLG2" style="margin-right:5px">Connexion</button><button class="nb nb-p" id="BCD2">Candidater</button>';g('BLG2').onclick=function(){goP('lo')};g('BCD2').onclick=function(){goP('q')}}
+}
+function updP(){
+  if(U){
+    g('PO').style.display='none';g('PI').style.display='block';
+    g('PAV').textContent=U.emoji;g('PNM').textContent=U.name;g('PLC').textContent='📍 '+(U.city||'France');g('PBIO').textContent=U.bio||'—';
+    var ip=U.status==='pending';
+    g('PDT').style.background=ip?'#F39C12':'var(--grn)';g('PSL').textContent=ip?'En attente de validation':'Profil actif';g('PSL').style.color=ip?'#F39C12':'var(--grn)';
+    g('PSC').innerHTML='<div class="mpsl2">Statut</div><div class="mpsv">'+(ip?'⏳ Patrick examine votre dossier. Réponse sous 48h.':'✅ Profil actif et visible.')+'</div>';
+  } else {g('PO').style.display='block';g('PI').style.display='none'}
+}
+
+var QTOTAL=8;
+function buildQ(){
+  var prog=((QS+1)/QTOTAL*100)+'%';var pb=g('QP');if(pb)pb.style.width=prog;
+  if(QD){
+    g('QB').innerHTML='<div class="su"><div class="su-i">🎉</div><div class="su-t">Candidature envoyée !</div><p class="su-s">Patrick a bien reçu votre dossier à <strong style="color:var(--g)">'+PE+'</strong>. Il vous répond sous 48h.</p><div class="ns"><div class="ni"><div class="ni-ic">📋</div><div class="ni-t"><h5>Étude du dossier</h5><p>Patrick lit votre questionnaire personnellement.</p></div></div><div class="ni"><div class="ni-ic">📞</div><div class="ni-t"><h5>Appel avec Patrick</h5><p>Il vous contacte pour valider votre profil.</p></div></div><div class="ni"><div class="ni-ic">🎬</div><div class="ni-t"><h5>Publication vidéo FR↔TH</h5><p>Votre vidéo publiée avec traduction intégrée.</p></div></div><div class="ni"><div class="ni-ic">💞</div><div class="ni-t"><h5>Les rencontres commencent</h5><p>Patrick vous présente des profils compatibles.</p></div></div></div><button class="qnx qfl" id="SHB">Retour à l\'accueil</button></div>';
+    if(pb)pb.style.width='100%';g('SHB').onclick=function(){goP('h')};return;
+  }
+  var iF=QA.g==='f';var h='';
+
+  if(QS===0){
+    h='<div class="qeye">✦ Étape 1 / '+QTOTAL+'</div><div class="qttl">Je suis <em>un…</em></div><p class="qsub">Le questionnaire s\'adapte à votre profil.</p><div class="cards"><div class="card '+(QA.g==='h'?'sel':'')+'" data-cd="g:h"><div class="cic">👨</div><div><div class="clb">Homme français</div><div class="csb">Je recherche une femme thaïlandaise sincère</div></div><div class="cck">'+(QA.g==='h'?'✓':'')+'</div></div><div class="card '+(QA.g==='f'?'sel':'')+'" data-cd="g:f"><div class="cic">👩</div><div><div class="clb">Femme thaïlandaise</div><div class="csb">Je recherche un homme français sincère</div></div><div class="cck">'+(QA.g==='f'?'✓':'')+'</div></div></div><div class="qnav"><button class="qnx qfl" id="QNX">Continuer →</button></div>';
+  }
+  else if(QS===1){
+    var hOpts='',wOpts='';
+    for(var hi=140;hi<=200;hi+=1){hOpts+='<option value="'+hi+'"'+(QA.height==hi?' selected':'')+'>'+hi+' cm</option>'}
+    for(var wi=35;wi<=120;wi+=1){wOpts+='<option value="'+wi+'"'+(QA.weight==wi?' selected':'')+'>'+wi+' kg</option>'}
+    h='<div class="qeye">✦ Étape 2 / '+QTOTAL+'</div><div class="qttl">Votre <em>identité</em></div>'
+      +'<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:16px;background:var(--gd);border:1px solid rgba(184,134,11,.25);font-size:.7rem;color:var(--g);margin-bottom:16px;font-weight:500">'+(iF?'👩 Femme thaïlandaise':'👨 Homme français')+'</div>'
+      +'<div class="fg"><label class="fl">Prénom</label><input class="fi" id="QN" type="text" placeholder="Votre prénom" value="'+(QA.name||'')+'"></div>'
+      +'<div class="fg"><label class="fl">Âge</label><select class="fsl" id="QAG"><option value="">— Sélectionnez —</option></select></div>'
+      +'<div class="fg"><label class="fl">'+(iF?'Ville (Thaïlande)':'Ville (France)')+'</label><input class="fi" id="QV" type="text" placeholder="'+(iF?'Ex: Bangkok, Chiang Mai…':'Ex: Paris, Lyon, Marseille…')+'" value="'+(QA.ville||'')+'"></div>'
+      +'<div class="row2"><div class="fg"><label class="fl">Taille</label><select class="fsl" id="QH"><option value="">— cm —</option>'+hOpts+'</select></div>'
+      +'<div class="fg"><label class="fl">Poids</label><select class="fsl" id="QW"><option value="">— kg —</option>'+wOpts+'</select></div></div>'
+      +'<div class="ds"><div class="dl"></div><div class="dt">Niveaux de langue</div><div class="dl"></div></div>'
+      +(iF?
+        '<div class="lrow"><div class="lhd"><span style="font-size:1rem">🇫🇷</span><span style="font-size:.84rem;font-weight:500;color:var(--tx)">Français</span></div><div class="lps">'+['Non','Un peu','Moyen','Excellent'].map(function(lb,j){var v=['Non','Un peu','Moyen','Excellent'][j];return'<button class="lp '+(QA.lfr===v?'sel':'')+'" data-lp="lfr:'+v+'">'+lb+'</button>'}).join('')+'</div></div>'
+        +'<div class="lrow"><div class="lhd"><span style="font-size:1rem">🇬🇧</span><span style="font-size:.84rem;font-weight:500;color:var(--tx)">Anglais</span></div><div class="lps">'+['Non','Un peu','Moyen','Excellent'].map(function(lb,j){var v=['Non','Un peu','Moyen','Excellent'][j];return'<button class="lp '+(QA.len===v?'sel':'')+'" data-lp="len:'+v+'">'+lb+'</button>'}).join('')+'</div></div>'
+        :
+        '<div class="lrow"><div class="lhd"><span style="font-size:1rem">🇹🇭</span><span style="font-size:.84rem;font-weight:500;color:var(--tx)">Thaïlandais</span></div><div class="lps">'+['Non','Un peu','Moyen','Excellent'].map(function(lb,j){var v=['Non','Un peu','Moyen','Excellent'][j];return'<button class="lp '+(QA.lth===v?'sel':'')+'" data-lp="lth:'+v+'">'+lb+'</button>'}).join('')+'</div></div>'
+        +'<div class="lrow"><div class="lhd"><span style="font-size:1rem">🇬🇧</span><span style="font-size:.84rem;font-weight:500;color:var(--tx)">Anglais</span></div><div class="lps">'+['Non','Un peu','Moyen','Excellent'].map(function(lb,j){var v=['Non','Un peu','Moyen','Excellent'][j];return'<button class="lp '+(QA.len===v?'sel':'')+'" data-lp="len:'+v+'">'+lb+'</button>'}).join('')+'</div></div>')
+      +'<div class="qnav"><button class="qbk" id="QBK">← Retour</button><button class="qnx" id="QNX">Continuer →</button></div>';
+  }
+  else if(QS===2){
+    h='<div class="qeye">✦ Étape 3 / '+QTOTAL+'</div><div class="qttl">Votre <em>description</em></div><p class="qsub">Cette description apparaîtra sur votre profil. Parlez de vous, de votre famille, vos loisirs, ce que vous cherchez chez l\'autre.</p>'
+      +'<div class="fg"><label class="fl">Ma description</label><textarea class="fa" id="QDESC" rows="5" placeholder="Ex: Je suis une femme active, j\'aime la cuisine et le yoga. Je vis avec ma famille à Bangkok. Je cherche un homme sincère, respectueux et ouvert à la culture thaïe…">'+(QA.desc||'')+'</textarea></div>'
+      +'<div class="qnav"><button class="qbk" id="QBK">← Retour</button><button class="qnx" id="QNX">Continuer →</button></div>';
+  }
+  else if(QS===3){
+    h='<div class="qeye">✦ Étape 4 / '+QTOTAL+'</div><div class="qttl">Ce que vous <em>cherchez</em></div><p class="qsub">Soyez honnête — c\'est ce qui crée les meilleures rencontres.</p>'
+      +'<div class="cards">'+[{ic:'💍',lb:'Un mariage',sb:'Engagement sérieux et durable',vl:'mariage'},{ic:'💞',lb:'Une relation sérieuse',sb:'Construire quelque chose de solide',vl:'serieux'},{ic:'🌱',lb:'Je veux explorer',sb:"Ouvert(e) à une belle rencontre",vl:'explorer'}].map(function(o){return'<div class="card '+(QA.looking===o.vl?'sel':'')+'" data-cd="looking:'+o.vl+'"><div class="cic">'+o.ic+'</div><div><div class="clb">'+o.lb+'</div><div class="csb">'+o.sb+'</div></div><div class="cck">'+(QA.looking===o.vl?'✓':'')+'</div></div>'}).join('')+'</div>'
+      +'<div class="fg"><div class="fl">Tranche d\'âge recherchée <span style="color:var(--td);font-size:.61rem">(pour Patrick)</span></div><div class="pills">'+['18–25','25–30','30–35','35–40','40–50','50–60','60+'].map(function(v){return'<button class="pill '+((QA.sk||[]).includes(v)?'sel':'')+'" data-tg="sk:'+v+'">'+v+' ans</button>'}).join('')+'</div></div>'
+      +'<div class="qnav"><button class="qbk" id="QBK">← Retour</button><button class="qnx" id="QNX">Continuer →</button></div>';
+  }
+  else if(QS===4){
+    var lo=[{ic:'🇫🇷',lb:'En France',vl:'france'},{ic:'🇹🇭',lb:'En Thaïlande',vl:'thai'},{ic:'✈️',lb:'Entre les deux',vl:'both'},{ic:'🤔',lb:'Je ne sais pas encore',vl:'unknown'}];
+    h='<div class="qeye">✦ Étape 5 / '+QTOTAL+'</div><div class="qttl">'+(iF?'Votre lien avec la <em>France</em>':'Votre lien avec la <em>Thaïlande</em>')+'</div>'
+      +(iF?'<div class="cards">'+[{ic:'🗼',lb:'Je veux découvrir la France',sb:"La France m'intéresse",vl:'dec'},{ic:'📚',lb:'Je connais la culture française',sb:"J'ai travaillé avec des Français",vl:'con'},{ic:'🌍',lb:'Prête à vivre en France',sb:"J'envisage une vie en France",vl:'viv'}].map(function(o){return'<div class="card '+(QA.fl===o.vl?'sel':'')+'" data-cd="fl:'+o.vl+'"><div class="cic">'+o.ic+'</div><div><div class="clb">'+o.lb+'</div><div class="csb">'+o.sb+'</div></div><div class="cck">'+(QA.fl===o.vl?'✓':'')+'</div></div>'}).join('')+'</div>'
+      :'<div class="cards">'+[{ic:'✈️',lb:'Jamais visité',sb:'Mais très attiré par cette culture',vl:'never'},{ic:'🌺',lb:'1 à 3 voyages',sb:"J'ai commencé à découvrir",vl:'few'},{ic:'🏡',lb:'Je connais bien',sb:"J'y vis ou retourne souvent",vl:'often'}].map(function(o){return'<div class="card '+(QA.th===o.vl?'sel':'')+'" data-cd="th:'+o.vl+'"><div class="cic">'+o.ic+'</div><div><div class="clb">'+o.lb+'</div><div class="csb">'+o.sb+'</div></div><div class="cck">'+(QA.th===o.vl?'✓':'')+'</div></div>'}).join('')+'</div>'
+      +'<div class="fg"><div class="fl">Prêt à voyager pour une rencontre ?</div><div class="pills">'+[['Oui, absolument','oui'],['Peut-être','maybe'],['Pas pour l\'instant','non']].map(function(x){return'<button class="pill '+(QA.tv===x[1]?'sel':'')+'" data-pl="tv:'+x[1]+'">'+x[0]+'</button>'}).join('')+'</div></div>')
+      +'<div class="fg"><div class="fl">Où envisagez-vous de vivre ?</div><div class="cards">'+lo.map(function(o){return'<div class="card '+(QA.vv===o.vl?'sel':'')+'" data-cd="vv:'+o.vl+'"><div class="cic">'+o.ic+'</div><div><div class="clb">'+o.lb+'</div></div><div class="cck">'+(QA.vv===o.vl?'✓':'')+'</div></div>'}).join('')+'</div></div>'
+      +'<div class="qnav"><button class="qbk" id="QBK">← Retour</button><button class="qnx" id="QNX">Continuer →</button></div>';
+  }
+  else if(QS===5){
+    h='<div class="qeye">✦ Étape 6 / '+QTOTAL+'</div><div class="qttl">Votre <em>situation</em></div><p class="qsub">Ces informations aident Patrick à trouver les meilleures correspondances.</p>'
+      +'<div class="fg"><div class="fl">Situation familiale</div><div class="cards">'+[{ic:'🧑',lb:'Célibataire sans enfant',vl:'single'},{ic:'👶',lb:"J'ai des enfants",vl:'kids'},{ic:'💔',lb:'Divorcé(e)',vl:'divorced'},{ic:'💑',lb:'Veuf/Veuve',vl:'widowed'}].map(function(o){return'<div class="card '+(QA.fam===o.vl?'sel':'')+'" data-cd="fam:'+o.vl+'"><div class="cic">'+o.ic+'</div><div><div class="clb">'+o.lb+'</div></div><div class="cck">'+(QA.fam===o.vl?'✓':'')+'</div></div>'}).join('')+'</div></div>'
+      +'<div class="fg"><div class="fl">Situation professionnelle</div><div class="cards">'+[{ic:'💼',lb:'Salarié(e)',vl:'salarie'},{ic:'🏢',lb:'Indépendant(e)',vl:'independant'},{ic:'🎓',lb:"Étudiant(e)",vl:'etudiant'},{ic:'🌿',lb:'Autre',vl:'autre'}].map(function(o){return'<div class="card '+(QA.job===o.vl?'sel':'')+'" data-cd="job:'+o.vl+'"><div class="cic">'+o.ic+'</div><div><div class="clb">'+o.lb+'</div></div><div class="cck">'+(QA.job===o.vl?'✓':'')+'</div></div>'}).join('')+'</div></div>'
+      +'<div class="qnav"><button class="qbk" id="QBK">← Retour</button><button class="qnx" id="QNX">Continuer →</button></div>';
+  }
+  else if(QS===6){
+    var tips=iF?[
+      {ic:'📍',t:'Lieu & lumière',d:'Filmez dans un endroit lumineux et calme. Lumière naturelle près d\'une fenêtre, idéale.'},
+      {ic:'👁️',t:'Regardez l\'objectif',d:"Regardez la caméra, pas votre image. Cela crée une connexion naturelle."},
+      {ic:'🎯',t:'Structure 60 secondes',d:'① Présentez-vous ② Votre métier ③ Votre famille / situation ④ Vos loisirs ⑤ Ce que vous cherchez chez un homme ⑥ Une phrase en français'},
+      {ic:'❤️',t:'Ce que vous appréciez chez un homme',d:'Sincérité, respect, humour, stabilité, ouverture culturelle… Soyez honnête et spécifique.'}
+    ]:[
+      {ic:'📍',t:'Lieu & lumière',d:'Filmez dans un endroit lumineux et calme. Lumière naturelle, idéale.'},
+      {ic:'👁️',t:'Regardez l\'objectif',d:"Regardez la caméra, pas votre image. Cela crée une connexion naturelle."},
+      {ic:'🎯',t:'Structure 60 secondes',d:'① Présentez-vous ② Votre métier ③ Votre situation familiale ④ Vos loisirs ⑤ Votre lien avec la Thaïlande ⑥ Ce que vous cherchez ⑦ Un mot en thaï'},
+      {ic:'❤️',t:'Ce que vous appréciez chez une femme',d:'Sincérité, douceur, culture familiale, ouverture, humour… Soyez honnête et spécifique.'}
+    ];
+    var bi=iF?[{a:"Bonjour, je m'appelle [prénom], j'ai [âge] ans.",b:"Je vis à [ville] et je suis [métier]."},{a:"J'aime [loisir] et je vis avec [famille].",b:"Je cherche un homme [qualité 1] et [qualité 2]."}]:[{a:"Bonjour, je m'appelle [prénom], j'ai [âge] ans.",b:"Je vis à [ville], je suis [métier]."},{a:"J'ai découvert la Thaïlande en [année].",b:"Je cherche une femme [qualité 1] et [qualité 2]."}];
+    h='<div class="qeye">✦ Étape 7 / '+QTOTAL+'</div><div class="qttl">Préparez votre <em>vidéo</em></div><p class="qsub">Patrick publiera votre vidéo avec traduction FR↔TH. Lisez les conseils puis filmez ou uploadez.</p>'
+      +'<div style="margin-bottom:11px">'+tips.map(function(t){return'<div class="gtip"><span style="font-size:.9rem;flex-shrink:0">'+t.ic+'</span><div><strong>'+t.t+'</strong><span>'+t.d+'</span></div></div>'}).join('')+'</div>'
+      +'<div class="bi"><div class="bi-t">Phrases clés pour votre vidéo</div>'+bi.map(function(b){return'<div class="bi-r"><div class="bi-c"><div class="bi-f">💬</div><div class="bi-p">'+b.a+'</div></div><div class="bi-c"><div class="bi-f">💬</div><div class="bi-p">'+b.b+'</div></div></div>'}).join('')+'</div>'
+      +'<div class="ds"><div class="dl"></div><div class="dt">Option 1 — Caméra live</div><div class="dl"></div></div>'
+      +'<div class="ca" id="QCA"><div class="cph" id="QCP">Appuyez sur "Activer la caméra"</div><video id="QCV" style="display:none;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)" muted playsinline></video><video id="QCR" style="display:none;width:100%;height:100%;object-fit:cover" controls></video><div class="rb" id="QRB" style="display:none"><div class="rd"></div><span id="QRL">REC 0s / 60s</span></div><div class="cp" id="QCP2" style="display:none"><div class="cpf" id="QCPF" style="width:0%"></div></div><div style="color:var(--red);font-size:.76rem;text-align:center;padding:14px;display:none;line-height:1.5" id="QCE"></div></div>'
+      +'<div style="margin-bottom:9px;padding:10px;background:rgba(184,134,11,.06);border:1px solid rgba(184,134,11,.15);border-radius:9px;font-size:.74rem;color:var(--tm)">ℹ️ Les sous-titres FR↔TH sont ajoutés par Patrick lors de la publication de votre vidéo.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:7px;margin-bottom:9px"><button id="QBA" class="qnx qfl">📷 Activer la caméra</button><button id="QBR" class="qnx qfl" style="display:none;background:linear-gradient(135deg,var(--red),#E74C3C)">⏺ Démarrer l\'enregistrement</button><button id="QBS" style="display:none;padding:12px;border-radius:12px;border:1.5px solid var(--red);background:transparent;color:var(--red);font-family:\'DM Sans\',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer">⏹ Arrêter</button><button id="QBRT" style="display:none;padding:12px;border-radius:12px;border:1.5px solid rgba(26,26,46,.12);background:transparent;color:var(--td);font-family:\'DM Sans\',sans-serif;font-size:.82rem;cursor:pointer">🔄 Recommencer</button></div>'
+      +'<div class="ds"><div class="dl"></div><div class="dt">Option 2 — Upload</div><div class="dl"></div></div>'
+      +'<div class="uz" id="QUZ"><div style="font-size:1.8rem;margin-bottom:6px">📤</div><div style="font-size:.82rem;font-weight:500;margin-bottom:3px;color:var(--tx)">Choisir une vidéo depuis votre téléphone</div><div style="font-size:.7rem;color:var(--td)">MP4, MOV — max 100MB</div><input type="file" id="QUF" accept="video/*" style="display:none"></div>'
+      +'<div id="QUS" style="display:none;padding:9px 12px;border-radius:9px;margin-bottom:9px;background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.2);font-size:.76rem;color:var(--grn)"></div>'
+      +'<div style="text-align:center;margin-bottom:9px"><span style="font-size:.72rem;color:var(--td);cursor:pointer;text-decoration:underline;text-underline-offset:3px" id="QSK">Passer → Patrick m\'aidera à filmer</span></div>'
+      +'<div class="qnav"><button class="qbk" id="QBK">← Retour</button><button class="qnx" id="QNX">Continuer →</button></div>';
+  }
+  else if(QS===7){
+    var rws=[['Profil',iF?'👩 Femme thaïlandaise':'👨 Homme français'],['Prénom',QA.name||'—'],['Âge',QA.age?QA.age+' ans':'—'],['Ville',QA.ville||'—'],['Taille / Poids',(QA.height||'—')+' cm / '+(QA.weight||'—')+' kg'],['Langues',iF?'🇫🇷 '+QA.lfr+' / 🇬🇧 '+QA.len:'🇹🇭 '+QA.lth+' / 🇬🇧 '+QA.len],['Recherche',QA.looking||'—'],['Vidéo',QV?'✅ Prête':'À enregistrer avec Patrick']];
+    h='<div class="qeye">✦ Étape 8 / '+QTOTAL+'</div><div class="qttl">Votre <em>email</em></div><p class="qsub">Patrick vous contactera à cette adresse pour valider votre candidature.</p>'
+      +(QV?'<div style="padding:9px 12px;border-radius:9px;margin-bottom:12px;background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.2);font-size:.76rem;color:var(--grn)">✅ Vidéo prête à l\'envoi</div>':'<div style="padding:9px 12px;border-radius:9px;margin-bottom:12px;background:var(--gd);border:1px solid rgba(184,134,11,.18);font-size:.76rem;color:var(--tm)">📹 Patrick vous aidera à enregistrer votre vidéo</div>')
+      +'<div class="fg"><label class="fl">Email *</label><input class="fi" id="QE" type="email" placeholder="votre@email.com" value="'+(QA.email||'')+'"></div>'
+      +'<div class="fg"><label class="fl">WhatsApp <span style="color:var(--td);font-size:.61rem">(optionnel mais recommandé)</span></label><input class="fi" id="QWH" type="tel" placeholder="+33 6 xx xx xx xx" value="'+(QA.whats||'')+'"></div>'
+      +'<div class="sr"><div style="font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--g);margin-bottom:9px;font-weight:500">📋 Récapitulatif</div>'+rws.map(function(r){return'<div class="sr-r"><span class="sr-k">'+r[0]+'</span><span class="sr-v">'+r[1]+'</span></div>'}).join('')+'</div>'
+      +'<div class="qnav"><button class="qbk" id="QBK">← Retour</button><button class="qnx" id="QSND">Envoyer ma candidature ✦</button></div>';
+  }
+
+  g('QB').innerHTML=h;
+  if(g('QP'))g('QP').style.width=((QS+1)/QTOTAL*100)+'%';
+
+  if(g('QNX'))g('QNX').onclick=function(){
+    if(QS===0){if(!QA.g){show('⚠️ Choisissez votre profil');return}QS++;buildQ()}
+    else if(QS===1){qNI()}
+    else if(QS===2){var d=g('QDESC');if(d)QA.desc=d.value.trim();QS++;buildQ()}
+    else if(QS===3){if(!QA.looking){show('⚠️ Choisissez ce que vous cherchez');return}QS++;buildQ()}
+    else{QS=Math.min(QS+1,QTOTAL-1);buildQ()}
+  };
+  if(g('QBK'))g('QBK').onclick=function(){qCC();QS=Math.max(QS-1,0);buildQ()};
   if(g('QSND'))g('QSND').onclick=qSub;
-  if(g('QBA'))g('QBA').onclick=qCamOn;if(g('QBR2'))g('QBR2').onclick=qCamRec;if(g('QBS'))g('QBS').onclick=qCamStop;if(g('QBRT'))g('QBRT').onclick=qCamRetry;
-  if(g('QSK'))g('QSK').onclick=function(){QV=false;qCC();QS++;bQ()};
+  if(g('QBA'))g('QBA').onclick=qCamOn;
+  if(g('QBR'))g('QBR').onclick=qCamRec;
+  if(g('QBS'))g('QBS').onclick=qCamStop;
+  if(g('QBRT'))g('QBRT').onclick=qCamRetry;
+  if(g('QSK'))g('QSK').onclick=function(){QV=false;qCC();QS++;buildQ()};
   if(g('QUZ'))g('QUZ').onclick=function(){g('QUF').click()};
-  if(g('QUF'))g('QUF').onchange=function(){var f=this.files[0];if(!f)return;QV=true;QA.vidFile=f;var s=g('QUS');s.style.display='block';s.textContent='✅ Vidéo "'+f.name+'" sélectionnée.';show('✅ Vidéo sélectionnée !')};
-  g('QB').querySelectorAll('[data-cd]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-cd').split(':'),k=p[0],v=p[1];b.closest('.cs2').querySelectorAll('.cd').forEach(function(c){c.classList.remove('sl');c.querySelector('.ck').textContent=''});b.classList.add('sl');b.querySelector('.ck').textContent='✓';QA[k]=v}});
-  g('QB').querySelectorAll('[data-pl]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-pl').split(':');b.closest('.pl').querySelectorAll('.pi2').forEach(function(x){x.classList.remove('sl')});b.classList.add('sl');QA[p[0]]=p[1]}});
-  g('QB').querySelectorAll('[data-tg]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-tg').split(':'),k=p[0],v=p[1];if(!Array.isArray(QA[k]))QA[k]=[];b.classList.toggle('sl');if(b.classList.contains('sl')){if(!QA[k].includes(v))QA[k].push(v)}else QA[k]=QA[k].filter(function(x){return x!==v})}});
-  g('QB').querySelectorAll('[data-lp]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-lp').split(':');b.closest('.lp').querySelectorAll('.lp2').forEach(function(x){x.classList.remove('sl')});b.classList.add('sl');QA[p[0]]=p[1]}});
+  if(g('QUF'))g('QUF').onchange=function(){var f=this.files[0];if(!f)return;QV=true;var s=g('QUS');s.style.display='block';s.textContent='✅ Vidéo "'+f.name+'" sélectionnée.';show('✅ Vidéo sélectionnée !')};
+
+  g('QB').querySelectorAll('[data-cd]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-cd').split(':'),k=p[0],v=p[1];b.closest('.cards').querySelectorAll('.card').forEach(function(c){c.classList.remove('sel');c.querySelector('.cck').textContent=''});b.classList.add('sel');b.querySelector('.cck').textContent='✓';QA[k]=v}});
+  g('QB').querySelectorAll('[data-pl]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-pl').split(':');b.closest('.pills').querySelectorAll('.pill').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');QA[p[0]]=p[1]}});
+  g('QB').querySelectorAll('[data-tg]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-tg').split(':'),k=p[0],v=p[1];if(!Array.isArray(QA[k]))QA[k]=[];b.classList.toggle('sel');if(b.classList.contains('sel')){if(!QA[k].includes(v))QA[k].push(v)}else QA[k]=QA[k].filter(function(x){return x!==v})}});
+  g('QB').querySelectorAll('[data-lp]').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-lp').split(':');b.closest('.lps').querySelectorAll('.lp').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');QA[p[0]]=p[1]}});
   if(g('QAG')){var s=g('QAG');for(var a=18;a<=75;a++){var o=document.createElement('option');o.value=a;o.textContent=a+' ans';if(QA.age&&parseInt(QA.age)===a)o.selected=true;s.appendChild(o)}}
 }
-function qNI(){var n=g('QN'),a=g('QAG'),h2=g('QH'),w=g('QW');if(!n||!n.value.trim()){show('⚠️ Prénom requis');return}if(!a||!a.value){show('⚠️ Âge requis');return}QA.name=n.value.trim();QA.age=a.value;var v=g('QV');if(v)QA.ville=v.value.trim();if(h2&&h2.value)QA.height=h2.value;if(w&&w.value)QA.weight=w.value;QS++;bQ()}
-async function uploadVideo(){
-  if(!QCH.length&&!QA.vidFile)return null;
-  try{
-    var blob=QA.vidFile||new Blob(QCH,{type:'video/webm'});
-    var fd=new FormData();fd.append('file',blob);fd.append('upload_preset','lovesiam_videos');fd.append('folder','lovesiam');
-    var r=await fetch('https://api.cloudinary.com/v1_1/dfxxg3dk4/video/upload',{method:'POST',body:fd});
-    var d=await r.json();return d.secure_url||null;
-  }catch(e){return null}
+
+function qNI(){
+  var n=g('QN'),a=g('QAG'),h=g('QH'),w=g('QW');
+  if(!n||!n.value.trim()){show('⚠️ Prénom requis');return}
+  if(!a||!a.value){show('⚠️ Âge requis');return}
+  QA.name=n.value.trim();QA.age=a.value;
+  var v=g('QV');if(v)QA.ville=v.value.trim();
+  if(h&&h.value)QA.height=h.value;
+  if(w&&w.value)QA.weight=w.value;
+  QS++;buildQ();
 }
+
 async function qSub(){
   var em=g('QE'),wh=g('QWH');if(!em)return;
   var ev=em.value.trim(),wv=wh?wh.value.trim():'';
@@ -526,18 +811,32 @@ async function qSub(){
   QA.email=ev;QA.whats=wv;
   var btn=g('QSND');btn.textContent='Envoi…';btn.disabled=true;
   var iF=QA.g==='f';
-  var vidUrl=null;
-  if(QV){
-    btn.textContent='Upload vidéo…';
-    vidUrl=await uploadVideo();
-  }
-  var msg='NOUVELLE INSCRIPTION LOVESIAM\n\nProfil: '+(iF?'Femme thaïlandaise':'Homme français')+'\nPrénom: '+QA.name+'\nÂge: '+QA.age+' ans\nVille: '+QA.ville+'\nTaille: '+QA.height+' cm / Poids: '+QA.weight+' kg\nLangues: '+(iF?'FR:'+QA.lfr+' / EN:'+QA.len:'TH:'+QA.lth+' / EN:'+QA.len)+'\nDescription: '+(QA.desc||'')+'\nRecherche: '+QA.looking+'\nSituation: '+(QA.fam||'')+' / '+(QA.job||'')+'\n\n🎬 VIDÉO: '+(vidUrl?vidUrl:'Non uploadée — à enregistrer avec le candidat')+'\n\nℹ️ Les sous-titres FR↔TH seront ajoutés par Patrick avant publication.\n\nEmail: '+ev+'\nWhatsApp: '+(wv||'—');
-  try{await emailjs.send(ES,ET,{to_email:PE,from_name:QA.name,from_email:ev,subject:'Nouvelle inscription LoveSiam — '+QA.name,message:msg});show('✅ Inscription envoyée !')}catch(e2){show('✅ Dossier enregistré !')}
-  U={name:QA.name,city:QA.ville||'France',bio:QA.desc||'',gender:QA.g,email:ev,status:'pending'};
-  updNav();QD=true;bQ();rFG();
+  var msg='CANDIDATURE LOVESIAM\n====================\nProfil: '+(iF?'Femme thaïlandaise':'Homme français')+'\nPrénom: '+QA.name+'\nÂge: '+QA.age+' ans\nVille: '+QA.ville+'\nTaille: '+QA.height+' cm / Poids: '+QA.weight+' kg\nLangues: '+(iF?'🇫🇷 FR:'+QA.lfr+' / 🇬🇧 EN:'+QA.len:'🇹🇭 TH:'+QA.lth+' / 🇬🇧 EN:'+QA.len)+'\nDescription: '+QA.desc+'\nRecherche: '+QA.looking+'\nSituation: '+QA.fam+' / '+QA.job+'\nVidéo: '+(QV?'✅':'À enregistrer')+'\n\nEmail: '+ev+'\nWhatsApp: '+(wv||'Non fourni');
+  try{await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:ES,template_id:ET,user_id:EK,template_params:{to_email:PE,from_name:QA.name,from_email:ev,subject:'Candidature LoveSiam — '+QA.name,message:msg}})})}catch(e2){}
+  U={name:QA.name,city:QA.ville||'France',bio:QA.desc||'',gender:QA.g,emoji:iF?'🌸':'👨',email:ev,status:'pending'};
+  updNav();QD=true;buildQ();rndFG();
 }
-async function qCamOn(){var er=g('QCE');er.style.display='none';try{QST=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true});var v=g('QCV');v.srcObject=QST;v.style.display='block';v.play();g('QCP').style.display='none';g('QBA').style.display='none';g('QBR2').style.display='block'}catch(e){er.style.display='block';er.textContent="❌ Impossible d'accéder à la caméra.";g('QCP').style.display='none'}}
-function qCamRec(){QCH=[];var mt=MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')?'video/webm;codecs=vp8,opus':'video/webm';QMR=new MediaRecorder(QST,{mimeType:mt});QMR.ondataavailable=function(e){if(e.data.size>0)QCH.push(e.data)};QMR.onstop=function(){var bl=new Blob(QCH,{type:'video/webm'});var rv=g('QCR');rv.src=URL.createObjectURL(bl);rv.style.display='block';g('QCV').style.display='none';g('QRB').style.display='none';g('QCP2').style.display='none';g('QBS').style.display='none';g('QBRT').style.display='block';QV=true;if(QST){QST.getTracks().forEach(function(t){t.stop()});QST=null}show('✅ Vidéo enregistrée !')};QMR.start();QRS=0;g('QRB').style.display='flex';g('QCP2').style.display='block';g('QBR2').style.display='none';g('QBS').style.display='block';QRT=setInterval(function(){QRS++;g('QRL').textContent='REC '+QRS+'s / 60s';g('QCPF').style.width=(QRS/60*100)+'%';if(QRS>=60)qCamStop()},1000)}
+
+async function qCamOn(){
+  var er=g('QCE');er.style.display='none';
+  try{
+    QST=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true});
+    var v=g('QCV');v.srcObject=QST;v.style.display='block';v.play();
+    g('QCP').style.display='none';g('QBA').style.display='none';g('QBR').style.display='block';
+  }catch(e){er.style.display='block';er.textContent="❌ Impossible d'accéder à la caméra. Vérifiez les permissions de votre navigateur.";g('QCP').style.display='none'}
+}
+function qCamRec(){
+  QCH=[];var mt=MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')?'video/webm;codecs=vp8,opus':'video/webm';
+  QMR=new MediaRecorder(QST,{mimeType:mt});
+  QMR.ondataavailable=function(e){if(e.data.size>0)QCH.push(e.data)};
+  QMR.onstop=function(){
+    var bl=new Blob(QCH,{type:'video/webm'});var rv=g('QCR');rv.src=URL.createObjectURL(bl);rv.style.display='block';
+    g('QCV').style.display='none';g('QRB').style.display='none';g('QCP2').style.display='none';g('QBS').style.display='none';g('QBRT').style.display='block';
+    QV=true;if(QST){QST.getTracks().forEach(function(t){t.stop()});QST=null}show('✅ Vidéo enregistrée !');
+  };
+  QMR.start();QRS=0;g('QRB').style.display='flex';g('QCP2').style.display='block';g('QBR').style.display='none';g('QBS').style.display='block';
+  QRT=setInterval(function(){QRS++;g('QRL').textContent='REC '+QRS+'s / 60s';g('QCPF').style.width=(QRS/60*100)+'%';if(QRS>=60)qCamStop()},1000);
+}
 function qCamStop(){clearInterval(QRT);if(QMR&&QMR.state!=='inactive')QMR.stop()}
 function qCamRetry(){QV=false;g('QCR').style.display='none';g('QBRT').style.display='none';g('QCPF').style.width='0%';qCamOn()}
 function qCC(){clearInterval(QRT);if(QST){QST.getTracks().forEach(function(t){t.stop()});QST=null}}
