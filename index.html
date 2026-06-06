@@ -10,7 +10,92 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--g:#C4962A;--gl:#E8B84B;--gd:rgba(196,150,42,.1);--nv:#1A2744;--bg:#fff;--b2:#F8F6F2;--b3:#F0EDE6;--tm:#4A5568;--td:#8A95A8;--rd:#C0392B;--gn:#27AE60;--mw:480px}
-body{background:var(--bg);color:var(--nv);font-family:'DM Sans',sans-serif;overflow-x:hidden;font-size:16px}
+body{background:var(--bg);color:var(--nv);font-family:'DM Sans',sans-serif;overflow-x:hidden;font-size:16px;-webkit-font-smoothing:antialiased}
+
+/* GLOBAL TYPOGRAPHY SCALE - uniform across all pages */
+p, div, span, label, input, select, textarea, button{font-size:inherit}
+.small{font-size:.875rem}
+.tiny{font-size:.75rem}
+
+/* QUESTIONNAIRE - uniform */
+.qt{font-family:'Cormorant Garamond',serif;font-size:1.8rem !important;font-weight:300;line-height:1.15;margin-bottom:8px;color:var(--nv)}
+.qs{font-size:.95rem !important;color:var(--tm);line-height:1.7;margin-bottom:16px}
+.qe{font-size:.75rem !important;letter-spacing:.18em;text-transform:uppercase;color:var(--g);margin-bottom:6px;font-weight:600}
+.cl{font-size:.95rem !important;font-weight:500;margin-bottom:2px;color:var(--nv)}
+.cs3{font-size:.8rem !important;color:var(--td);line-height:1.5}
+.fl{font-size:.72rem !important;letter-spacing:.12em;text-transform:uppercase;color:var(--nv);display:block;margin-bottom:6px;font-weight:600}
+.fi,.fsl,.fa{font-size:.95rem !important}
+.lp2{font-size:.85rem !important}
+.pi2{font-size:.88rem !important}
+
+/* PROFILE CARDS - uniform */
+.pnm{font-family:'Cormorant Garamond',serif;font-size:1.2rem !important;font-weight:600;color:var(--nv);margin-bottom:3px}
+.plc{font-size:.82rem !important;color:var(--td);margin-bottom:5px}
+.plg{font-size:.75rem !important;padding:3px 9px;border-radius:6px;background:var(--b2);color:var(--nv);font-weight:500;display:inline-block;margin-bottom:7px}
+.pds{font-size:.85rem !important;color:var(--tm);line-height:1.55;margin-bottom:8px}
+.lb-like{font-size:.85rem !important;padding:9px !important}
+
+/* ADMIN */
+.admin-name{font-size:.95rem !important;font-weight:600;color:var(--nv)}
+.admin-sub{font-size:.78rem !important;color:var(--td)}
+.btn-validate{font-size:.82rem !important}
+.btn-reject{font-size:.82rem !important}
+.badge-pending,.badge-active,.badge-rejected{font-size:.72rem !important}
+
+/* MATCH PAGE */
+.match-name{font-size:1rem !important;font-weight:600;color:var(--nv);margin-bottom:3px}
+.match-sub{font-size:.82rem !important;color:var(--td)}
+.match-badge{font-size:.72rem !important}
+.match-empty{font-size:.9rem !important}
+
+/* PROFILE PAGE */
+.mnm{font-family:'Cormorant Garamond',serif;font-size:1.5rem !important}
+.mlc{font-size:.82rem !important}
+.msn{font-family:'Cormorant Garamond',serif;font-size:1.5rem !important;color:var(--g)}
+.msl{font-size:.68rem !important;color:var(--td);font-weight:500}
+.ms2{font-size:.68rem !important;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:5px;font-weight:500}
+.ms3{font-size:.9rem !important;color:var(--tm);line-height:1.6}
+
+/* CHAT */
+.cm{font-size:.9rem !important;line-height:1.58}
+.mn{font-size:.95rem !important;font-weight:600;margin-bottom:2px;color:var(--nv)}
+.mp{font-size:.8rem !important;color:var(--td)}
+
+/* LOGIN */
+.lc .fl{font-size:.78rem !important}
+
+/* BOTTOM NAV */
+.bi span{font-size:.68rem !important;letter-spacing:.04em;text-transform:uppercase;color:var(--td);font-weight:500}
+
+/* SECTION CARDS */
+.dc h4{font-size:1rem !important;font-weight:600;margin-bottom:5px;color:var(--nv)}
+.dc p{font-size:.88rem !important;color:var(--tm);line-height:1.65}
+.pt h4{font-size:1rem !important;font-weight:600;margin-bottom:5px;color:#fff}
+.pt p{font-size:.9rem !important;color:rgba(255,255,255,.65);line-height:1.68}
+
+/* POPUP PROFILE */
+.ph2{font-size:.95rem}
+.pb-back{font-size:1rem !important}
+
+/* VIDEO MODAL */
+.vf{font-size:.9rem !important;color:#fff;line-height:1.55}
+.vt{font-size:.85rem !important;color:var(--gl);line-height:1.55}
+.vn{font-family:'Cormorant Garamond',serif;font-size:1.5rem !important;margin-bottom:3px;color:#fff}
+.vlo{font-size:.82rem !important;color:rgba(255,255,255,.6)}
+
+/* FILTERS */
+.fc{font-size:.82rem !important;padding:7px 14px !important}
+.ft{font-family:'Cormorant Garamond',serif;font-size:1.7rem !important;font-weight:400;color:var(--nv)}
+.fb{font-size:.88rem !important}
+
+/* SUCCESS PAGE */
+.su h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem !important}
+.su p{font-size:.9rem !important;color:var(--tm);line-height:1.68}
+.ni h5{font-size:.9rem !important;font-weight:600;margin-bottom:2px;color:var(--nv)}
+.ni p{font-size:.8rem !important;color:var(--tm);line-height:1.5}
+
+/* LEGAL MODALS */
+#ML_CONTENT{font-size:.88rem !important;line-height:1.8}
 
 /* RESPONSIVE LAYOUT */
 @media(min-width:768px){
@@ -50,7 +135,7 @@ body{background:var(--bg);color:var(--nv);font-family:'DM Sans',sans-serif;overf
 nav{position:fixed;top:0;left:0;right:0;z-index:99;height:56px;background:rgba(255,255,255,.97);border-bottom:1px solid rgba(196,150,42,.12)}
 nav .nw{max-width:var(--mw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 16px}
 @media(min-width:768px){nav{height:64px}nav .nw{height:64px;padding:0 32px}}
-.ltx{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--nv);font-weight:600;letter-spacing:.08em;cursor:pointer}
+.ltx{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--nv);font-weight:600;letter-spacing:.08em;cursor:pointer}
 .ltx em{color:var(--g);font-weight:300;font-style:italic}
 .lw{display:flex;border-radius:16px;overflow:hidden;border:1px solid rgba(26,39,68,.15)}
 .lb-lang{padding:4px 9px;font-size:.65rem;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
@@ -63,7 +148,7 @@ nav .nw{max-width:var(--mw);margin:0 auto;display:flex;align-items:center;justif
 .bi{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:5px 12px;opacity:.3}
 .bi.on{opacity:1}
 .bi i{font-size:1.1rem;position:relative}
-.bi span{font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;color:var(--td);font-weight:500}
+.bi span{font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;color:var(--td);font-weight:500}
 .bi.on span{color:var(--g)}
 .pg{display:none;padding:56px 0 64px;min-height:100vh}.pg.on{display:block}
 .tk{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-10px);background:var(--nv);border-radius:9px;padding:9px 16px;font-size:.77rem;z-index:999;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none;color:#fff}
@@ -74,10 +159,10 @@ nav .nw{max-width:var(--mw);margin:0 auto;display:flex;align-items:center;justif
 @media(min-width:768px){.hero{min-height:calc(100vh - 64px);padding:60px 0}}
 .hero-inner{width:100%}
 .hero-left{display:flex;flex-direction:column;align-items:center}
-.ey{font-size:.61rem;letter-spacing:.26em;text-transform:uppercase;color:var(--g);margin-bottom:14px;font-weight:500}
+.ey{font-size:.78rem;letter-spacing:.26em;text-transform:uppercase;color:var(--g);margin-bottom:14px;font-weight:500}
 h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,8vw,4.8rem);font-weight:300;line-height:1.06;margin-bottom:12px;color:var(--nv)}
 h1 em{font-style:italic;color:var(--g)}
-.hs{font-size:1rem;color:var(--tm);line-height:1.8;max-width:380px;margin:0 auto 28px}
+.hs{font-size:1.05rem;color:var(--tm);line-height:1.8;max-width:380px;margin:0 auto 28px}
 @media(min-width:768px){.hs{margin:0 0 28px;max-width:440px}}
 .ct{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
 .bg-btn{padding:14px 28px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:30px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;box-shadow:0 5px 16px rgba(196,150,42,.28)}
@@ -86,7 +171,7 @@ h1 em{font-style:italic;color:var(--g)}
 .st{flex:1;padding:18px 8px;text-align:center;position:relative}
 .st:not(:last-child)::after{content:'';position:absolute;right:0;top:20%;height:60%;width:1px;background:rgba(196,150,42,.15)}
 .sn{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--g);font-weight:600;line-height:1}
-.sl-stat{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--nv);margin-top:6px;font-weight:600}
+.sl-stat{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--nv);margin-top:6px;font-weight:600}
 .hero-right{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;margin-top:16px}
 @media(min-width:768px){
   .hero-right{display:flex;flex-direction:column;gap:16px}
@@ -95,9 +180,9 @@ h1 em{font-style:italic;color:var(--g)}
   .hp-profiles{display:flex;gap:10px}
   .hp-card{flex:1;background:var(--b2);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(196,150,42,.1)}
   .hp-av{font-size:2rem;margin-bottom:6px}
-  .hp-name{font-size:.75rem;font-weight:600;color:var(--nv);margin-bottom:2px}
-  .hp-loc{font-size:.62rem;color:var(--td)}
-  .hp-badge{font-size:.55rem;padding:2px 7px;background:var(--gd);color:var(--g);border-radius:8px;display:inline-block;margin-top:4px;border:1px solid rgba(196,150,42,.2)}
+  .hp-name{font-size:.9rem;font-weight:600;color:var(--nv);margin-bottom:3px}
+  .hp-loc{font-size:.72rem;color:var(--td)}
+  .hp-badge{font-size:.68rem;padding:3px 9px;background:var(--gd);color:var(--g);border-radius:8px;display:inline-block;margin-top:5px;border:1px solid rgba(196,150,42,.2);font-weight:500}
 }
 
 /* SECTIONS */
@@ -106,31 +191,31 @@ h1 em{font-style:italic;color:var(--g)}
 .sc.n{background:var(--nv);color:#fff}
 @media(min-width:768px){.sc{padding:80px 40px}}
 .sc-inner{max-width:var(--mw)}
-.se{font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:var(--g);margin-bottom:6px;font-weight:500}
-h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:7px;color:var(--nv)}
+.se{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--g);margin-bottom:8px;font-weight:600}
+h2{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;margin-bottom:10px;color:var(--nv)}
 @media(min-width:768px){h2{font-size:2.8rem}}
 h2 em{font-style:italic;color:var(--g)}
 .n h2{color:#fff}
-.ss{font-size:.9rem;color:var(--tm);line-height:1.7;margin-bottom:20px}
+.ss{font-size:1rem;color:var(--tm);line-height:1.72;margin-bottom:22px}
 .n .ss{color:rgba(255,255,255,.6)}
 .dg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;max-width:560px;margin-left:auto;margin-right:auto}
 .dc{background:#fff;border-radius:13px;padding:16px;border:1px solid rgba(26,39,68,.07);box-shadow:0 2px 7px rgba(0,0,0,.04);text-align:left}
-.dc i{font-size:1.5rem;margin-bottom:7px;display:block}
-.dc h4{font-size:.84rem;font-weight:600;margin-bottom:4px;color:var(--nv)}
-.dc p{font-size:.72rem;color:var(--tm);line-height:1.62}
+.dc i{font-size:1.8rem;margin-bottom:8px;display:block}
+.dc h4{font-size:.95rem;font-weight:600;margin-bottom:5px;color:var(--nv)}
+.dc p{font-size:.82rem;color:var(--tm);line-height:1.65}
 .pi-step{display:flex;gap:13px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left;max-width:560px;margin:0 auto;width:100%}
 .pi-step:last-child{border:none}
 .pn{font-family:'Cormorant Garamond',serif;font-size:2rem;color:rgba(196,150,42,.4);width:36px;flex-shrink:0;line-height:1}
-.pt h4{font-size:.9rem;font-weight:600;margin-bottom:4px;color:#fff}
-.pt p{font-size:.76rem;color:rgba(255,255,255,.6);line-height:1.65}
+.pt h4{font-size:1rem;font-weight:600;margin-bottom:5px;color:#fff}
+.pt p{font-size:.86rem;color:rgba(255,255,255,.65);line-height:1.68}
 
 /* PROFILES */
 .fh{padding:13px 16px 7px;display:flex;align-items:center;justify-content:space-between}
-.ft{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--nv)}
-.fb{margin:0 12px 11px;padding:10px 13px;background:var(--gd);border:1px solid rgba(196,150,42,.18);border-radius:10px;font-size:.73rem;color:var(--tm);line-height:1.58;text-align:center}
+.ft{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--nv)}
+.fb{margin:0 12px 11px;padding:12px 14px;background:var(--gd);border:1px solid rgba(196,150,42,.18);border-radius:10px;font-size:.85rem;color:var(--tm);line-height:1.58;text-align:center}
 .fs{display:flex;gap:5px;padding:0 12px 11px;overflow-x:auto;scrollbar-width:none;flex-wrap:wrap}
 .fs::-webkit-scrollbar{display:none}
-.fc{padding:5px 12px;border-radius:15px;font-size:.68rem;white-space:nowrap;cursor:pointer;border:1px solid rgba(26,39,68,.12);background:transparent;color:var(--td);font-family:'DM Sans',sans-serif}
+.fc{padding:7px 14px;border-radius:15px;font-size:.78rem;white-space:nowrap;cursor:pointer;border:1px solid rgba(26,39,68,.12);background:transparent;color:var(--td);font-family:'DM Sans',sans-serif}
 .fc.on{background:var(--nv);border-color:var(--nv);color:#fff}
 .adv-filters{padding:0 12px 8px}
 .gr{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding:0 11px}
@@ -145,11 +230,11 @@ h2 em{font-style:italic;color:var(--g)}
 .bn2-badge{background:var(--rd);color:#fff}.bo2-badge{background:var(--gn);color:#fff}
 .vd-badge{position:absolute;bottom:7px;right:7px;background:rgba(196,150,42,.88);color:#fff;font-size:.53rem;padding:2px 6px;border-radius:4px;font-weight:600}
 .pif{padding:10px}
-.pnm{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--nv);margin-bottom:2px}
-.plc{font-size:.75rem;color:var(--td);margin-bottom:4px}
-.plg{font-size:.6rem;padding:2px 7px;border-radius:6px;background:var(--b2);color:var(--nv);font-weight:500;display:inline-block;margin-bottom:6px}
-.pds{font-size:.77rem;color:var(--tm);line-height:1.48;margin-bottom:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.lb-like{width:100%;padding:7px;border-radius:8px;border:1px solid rgba(196,150,42,.22);background:rgba(196,150,42,.08);color:var(--g);font-size:.69rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600}
+.pnm{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--nv);margin-bottom:2px}
+.plc{font-size:.82rem;color:var(--td);margin-bottom:4px}
+.plg{font-size:.72rem;padding:2px 7px;border-radius:6px;background:var(--b2);color:var(--nv);font-weight:500;display:inline-block;margin-bottom:6px}
+.pds{font-size:.84rem;color:var(--tm);line-height:1.48;margin-bottom:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lb-like{width:100%;padding:9px;border-radius:8px;border:1px solid rgba(196,150,42,.22);background:rgba(196,150,42,.08);color:var(--g);font-size:.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600}
 .lb-like.liked{background:rgba(196,150,42,.2);border-color:var(--g)}
 
 /* PROFILE POPUP */
@@ -193,8 +278,8 @@ h2 em{font-style:italic;color:var(--g)}
 .match-av{width:48px;height:48px;border-radius:50%;background:var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;border:2px solid rgba(196,150,42,.2)}
 .match-av.mutual{border-color:var(--g);box-shadow:0 0 0 3px rgba(196,150,42,.15)}
 .match-info{flex:1;min-width:0}
-.match-name{font-size:.88rem;font-weight:600;color:var(--nv);margin-bottom:2px}
-.match-sub{font-size:.68rem;color:var(--td)}
+.match-name{font-size:1rem;font-weight:600;color:var(--nv);margin-bottom:2px}
+.match-sub{font-size:.78rem;color:var(--td)}
 .match-badge{padding:3px 9px;border-radius:10px;font-size:.6rem;font-weight:600;white-space:nowrap}
 .match-badge.heart{background:rgba(196,150,42,.1);color:var(--g);border:1px solid rgba(196,150,42,.2)}
 .match-badge.mutual{background:rgba(39,174,96,.1);color:var(--gn);border:1px solid rgba(39,174,96,.2)}
@@ -281,7 +366,7 @@ h2 em{font-style:italic;color:var(--g)}
 .ni h5{font-size:.77rem;font-weight:600;margin-bottom:2px;color:var(--nv)}
 .ni p{font-size:.68rem;color:var(--tm);line-height:1.48}
 .ab{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;text-align:left}
-.af{display:flex;gap:7px;font-size:.75rem;color:rgba(255,255,255,.78)}
+.af{display:flex;gap:10px;font-size:1rem;color:rgba(255,255,255,.9)}
 
 /* ADMIN */
 .admin-page{padding:72px 20px 80px;max-width:900px;margin:0 auto}
@@ -302,6 +387,75 @@ h2 em{font-style:italic;color:var(--g)}
 /* LEGAL */
 #ML_BG{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;align-items:center;justify-content:center;padding:20px}
 </style>
+<script>
+// City autocomplete using a simple approach with open data
+// No API key needed - uses nominatim (OpenStreetMap free API)
+function setupCityAutocomplete(inputId, country) {
+  var input = document.getElementById(inputId);
+  if (!input) return;
+  
+  // Create dropdown
+  var dropdown = document.createElement('div');
+  dropdown.style.cssText = 'position:absolute;background:#fff;border:1px solid rgba(196,150,42,.3);border-radius:9px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:999;width:100%;max-height:200px;overflow-y:auto;display:none;margin-top:2px';
+  dropdown.id = inputId + '_drop';
+  
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:relative';
+  input.parentNode.insertBefore(wrapper, input);
+  wrapper.appendChild(input);
+  wrapper.appendChild(dropdown);
+  
+  var timer = null;
+  input.addEventListener('input', function() {
+    clearTimeout(timer);
+    var val = input.value.trim();
+    if (val.length < 2) { dropdown.style.display='none'; return; }
+    timer = setTimeout(function() {
+      fetchCities(val, country, dropdown, input);
+    }, 300);
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!wrapper.contains(e.target)) dropdown.style.display = 'none';
+  });
+}
+
+function fetchCities(query, country, dropdown, input) {
+  var countryCode = country === 'th' ? 'th' : 'fr,be,ch,lu,mc';
+  var url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&countrycodes=' + countryCode + '&featuretype=city&format=json&limit=6&addressdetails=1';
+  
+  fetch(url, {headers: {'Accept-Language': 'fr'}})
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      dropdown.innerHTML = '';
+      if (!data || !data.length) { dropdown.style.display='none'; return; }
+      
+      var seen = new Set();
+      data.forEach(function(item) {
+        var city = item.address && (item.address.city || item.address.town || item.address.village || item.address.municipality);
+        var country_name = item.address && (item.address.country || '');
+        if (!city || seen.has(city)) return;
+        seen.add(city);
+        
+        var div = document.createElement('div');
+        div.style.cssText = 'padding:10px 14px;cursor:pointer;font-size:.9rem;color:#1A2744;border-bottom:1px solid rgba(26,39,68,.05);display:flex;align-items:center;justify-content:space-between';
+        div.innerHTML = '<span>' + city + '</span><span style="font-size:.75rem;color:#8A95A8">' + country_name + '</span>';
+        div.addEventListener('mouseenter', function() { div.style.background='rgba(196,150,42,.07)'; });
+        div.addEventListener('mouseleave', function() { div.style.background=''; });
+        div.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          input.value = city;
+          dropdown.style.display = 'none';
+          // Store in QA
+          if (typeof QA !== 'undefined') QA.ville = city;
+        });
+        dropdown.appendChild(div);
+      });
+      dropdown.style.display = data.length ? 'block' : 'none';
+    })
+    .catch(function() { dropdown.style.display='none'; });
+}
+</script>
 </head>
 <body>
 <div class="tk" id="T"></div>
@@ -338,17 +492,54 @@ h2 em{font-style:italic;color:var(--g)}
         </div>
       </div>
       <div class="hero-right">
-        <div class="hero-preview">
-          <div class="hp-title"><span data-t="preview_title">✨ Profils récents</span></div>
-          <div class="hp-profiles">
-            <div class="hp-card"><div class="hp-av">🌸</div><div class="hp-name">Ning, 26</div><div class="hp-loc">📍 Bangkok</div><div class="hp-badge">● En ligne</div></div>
-            <div class="hp-card"><div class="hp-av">🌸</div><div class="hp-name">Pim, 24</div><div class="hp-loc">📍 Phuket</div><div class="hp-badge">🇫🇷 Excellent</div></div>
-            <div class="hp-card"><div class="hp-av">🌸</div><div class="hp-name">Noi, 29</div><div class="hp-loc">📍 Chiang Mai</div><div class="hp-badge">Nouveau</div></div>
+        <div style="width:100%;max-width:480px">
+          <div style="font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g);font-weight:600;margin-bottom:14px;text-align:center" data-t="preview_title">✦ Profils récents</div>
+          <div style="display:flex;gap:12px;justify-content:center">
+            <div style="flex:1;max-width:148px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.1);border:1px solid rgba(196,150,42,.15)">
+              <div style="height:110px;background:linear-gradient(160deg,#E8D5C4 0%,#C4A080 100%);display:flex;align-items:center;justify-content:center;position:relative">
+                <div style="font-size:3.2rem;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))">👩</div>
+                <div style="position:absolute;top:8px;right:8px;background:var(--gn);width:9px;height:9px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 2px rgba(39,174,96,.3)"></div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,.15))"></div>
+              </div>
+              <div style="padding:11px">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--nv)">Ning, 26</div>
+                <div style="font-size:.75rem;color:var(--td);margin-bottom:7px">📍 Bangkok</div>
+                <div style="font-size:.68rem;padding:3px 9px;background:var(--gd);color:var(--g);border-radius:8px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">🇫🇷 Moyen</div>
+              </div>
+            </div>
+            <div style="flex:1;max-width:148px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,.14);border:2px solid rgba(196,150,42,.25);margin-top:-10px">
+              <div style="height:110px;background:linear-gradient(160deg,#D4C4E8 0%,#9080B8 100%);display:flex;align-items:center;justify-content:center;position:relative">
+                <div style="font-size:3.2rem;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))">👩</div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,.15))"></div>
+              </div>
+              <div style="padding:11px">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--nv)">Pim, 24</div>
+                <div style="font-size:.75rem;color:var(--td);margin-bottom:7px">📍 Phuket</div>
+                <div style="font-size:.68rem;padding:3px 9px;background:var(--gd);color:var(--g);border-radius:8px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">🇫🇷 Excellent</div>
+              </div>
+            </div>
+            <div style="flex:1;max-width:148px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.1);border:1px solid rgba(196,150,42,.15)">
+              <div style="height:110px;background:linear-gradient(160deg,#C4D8E8 0%,#7090A8 100%);display:flex;align-items:center;justify-content:center;position:relative">
+                <div style="font-size:3.2rem;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))">👩</div>
+                <div style="position:absolute;top:8px;left:8px;background:var(--rd);color:#fff;font-size:.55rem;padding:2px 7px;border-radius:6px;font-weight:600">Nouveau</div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,.15))"></div>
+              </div>
+              <div style="padding:11px">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--nv)">Noi, 29</div>
+                <div style="font-size:.75rem;color:var(--td);margin-bottom:7px">📍 Chiang Mai</div>
+                <div style="font-size:.68rem;padding:3px 9px;background:var(--gd);color:var(--g);border-radius:8px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">🇫🇷 Un peu</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div style="background:linear-gradient(135deg,var(--nv),#243156);border-radius:16px;padding:20px;color:#fff;width:320px">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin-bottom:8px"><span data-t="why_box">Pourquoi </span><em style="color:var(--gl)" data-t="why_box_em">LoveSiam</em><span> ?</span></div>
-          <div style="font-size:.76rem;color:rgba(255,255,255,.7);line-height:1.7">✓ Profils 100% vérifiés<br>✓ Vidéos FR↔TH<br>✓ Accompagnement personnalisé<br>✓ Zéro faux profil</div>
+        <div style="background:linear-gradient(135deg,var(--nv),#243156);border-radius:18px;padding:22px;color:#fff;width:100%;max-width:480px;margin-top:4px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:14px;text-align:center">Pourquoi <em style="color:var(--gl)">LoveSiam</em> ?</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="display:flex;align-items:center;gap:9px;font-size:.88rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span>Profils vérifiés</div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:.88rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span>Vidéos FR↔TH</div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:.88rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span>Accompagnement</div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:.88rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span>Zéro faux profil</div>
+          </div>
         </div>
       </div>
     </div>
@@ -386,12 +577,12 @@ h2 em{font-style:italic;color:var(--g)}
       <h2><span data-t="consult_h2">Un accompagnement </span><em data-t="consult_h2_em">sur-mesure</em></h2>
       <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid rgba(26,39,68,.07);box-shadow:0 2px 9px rgba(0,0,0,.05);max-width:480px;margin:0 auto">
         <div style="font-size:2.6rem;text-align:center;margin-bottom:6px">👨‍💼</div>
-        <p style="font-size:.82rem;color:var(--g);font-weight:600;text-align:center;margin-bottom:11px"><span data-t="consult_sub">Vous souhaitez aller plus loin ?</span></p>
-        <p style="font-size:.81rem;color:var(--tm);line-height:1.7;margin-bottom:13px;text-align:center"><span data-t="consult_text">Spécialiste des relations franco-thaïlandaises, votre consultant vous accompagne de l'inscription à la rencontre.</span></p>
+        <p style="font-size:1.05rem;color:var(--g);font-weight:600;text-align:center;margin-bottom:11px"><span data-t="consult_sub">Vous souhaitez aller plus loin ?</span></p>
+        <p style="font-size:1rem;color:var(--tm);line-height:1.72;margin-bottom:14px;text-align:center"><span data-t="consult_text">Spécialiste des relations franco-thaïlandaises, votre consultant vous accompagne de l'inscription à la rencontre.</span></p>
         <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:14px">
-          <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.67rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500"><span data-t="badge_coach">💞 Love Coach</span></span>
-          <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.67rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500"><span data-t="badge_expert">🇹🇭 Expert Thaïlande</span></span>
-          <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.67rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500"><span data-t="badge_consult">🤝 Consultant</span></span>
+          <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.98rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500"><span data-t="badge_coach">💞 Love Coach</span></span>
+          <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.98rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500"><span data-t="badge_expert">🇹🇭 Expert Thaïlande</span></span>
+          <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.98rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500"><span data-t="badge_consult">🤝 Consultant</span></span>
         </div>
         <button class="bg-btn" style="width:100%" id="PC"><span data-t="btn_contact">Prendre contact</span></button>
       </div>
@@ -403,17 +594,17 @@ h2 em{font-style:italic;color:var(--g)}
       <div class="se" data-t="premium_tag">✦ Accès Premium</div>
       <h2><span data-t="premium_h2">Rejoignez </span><em data-t="premium_h2_em">LoveSiam</em></h2>
       <p class="ss"><span data-t="premium_sub">L'inscription est <strong style="color:var(--gl)">gratuite pour les femmes thaïlandaises</strong>. Un accès premium est proposé aux hommes français.</span></p>
-      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(196,150,42,.22);border-radius:16px;padding:20px;max-width:480px;margin:0 auto">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#fff;margin-bottom:5px;font-weight:300"><span data-t="premium_access">Accès </span><em style="color:var(--gl)" data-t="premium_access_em">Complet</em></div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:2.3rem;color:var(--gl);font-weight:600;margin-bottom:3px" data-t="premium_soon">À venir</div>
-        <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:16px" data-t="premium_soon_sub">Tarifs en cours de finalisation</div>
-        <div class="ab">
-          <div class="af"><span style="color:var(--gl)">✓</span><span data-t="perk1">Accès aux vidéos complètes FR↔TH</span></div>
-          <div class="af"><span style="color:var(--gl)">✓</span><span data-t="perk2">Introduction par votre consultant</span></div>
-          <div class="af"><span style="color:var(--gl)">✓</span><span data-t="perk3">Messagerie avec traduction intégrée</span></div>
-          <div class="af"><span style="color:var(--gl)">✓</span><span data-t="perk4">Coaching relationnel personnalisé</span></div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(196,150,42,.22);border-radius:16px;padding:24px;max-width:480px;margin:0 auto">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:6px;font-weight:300"><span data-t="premium_access">Accès </span><em style="color:var(--gl)" data-t="premium_access_em">Complet</em></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.6rem;color:var(--gl);font-weight:600;margin-bottom:5px" data-t="premium_soon">À venir</div>
+        <div style="font-size:1rem;color:rgba(255,255,255,.55);margin-bottom:20px" data-t="premium_soon_sub">Tarifs en cours de finalisation</div>
+        <div class="ab" style="gap:12px;margin-bottom:20px">
+          <div class="af" style="font-size:1rem;color:rgba(255,255,255,.9);gap:10px"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span><span data-t="perk1">Accès aux vidéos complètes FR↔TH</span></div>
+          <div class="af" style="font-size:1rem;color:rgba(255,255,255,.9);gap:10px"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span><span data-t="perk2">Introduction par votre consultant</span></div>
+          <div class="af" style="font-size:1rem;color:rgba(255,255,255,.9);gap:10px"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span><span data-t="perk3">Messagerie avec traduction intégrée</span></div>
+          <div class="af" style="font-size:1rem;color:rgba(255,255,255,.9);gap:10px"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span><span data-t="perk4">Coaching relationnel personnalisé</span></div>
         </div>
-        <button class="bg-btn" style="width:100%;opacity:.55;cursor:not-allowed"><span data-t="btn_soon">Bientôt disponible</span></button>
+        <button class="bg-btn" style="width:100%;opacity:.55;cursor:not-allowed;font-size:1rem;padding:14px"><span data-t="btn_soon">Bientôt disponible</span></button>
       </div>
     </div>
   </div>
@@ -596,15 +787,15 @@ h2 em{font-style:italic;color:var(--g)}
   <div class="footer-inner" style="max-width:var(--mw);margin:0 auto">
     <div style="text-align:center;margin-bottom:16px">
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#fff;font-weight:400">Love<em style="color:#E8B84B;font-style:italic">Siam</em></div>
-      <div style="font-size:.6rem;color:rgba(255,255,255,.35);letter-spacing:.15em;text-transform:uppercase;margin-top:3px"><span data-t="footer_tagline">Rencontres Franco-Thaïlandaises</span></div>
+      <div style="font-size:.98rem;color:rgba(255,255,255,.35);letter-spacing:.15em;text-transform:uppercase;margin-top:3px"><span data-t="footer_tagline">Rencontres Franco-Thaïlandaises</span></div>
     </div>
     <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:16px">
-      <button onclick="openMl('ml')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer">Mentions légales</button>
-      <button onclick="openMl('cgu')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer">CGU</button>
-      <button onclick="openMl('rgpd')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer">Confidentialité & RGPD</button>
-      <button onclick="openMl('cookies')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer">Cookies</button>
+      <button onclick="openMl('ml')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer">Mentions légales</button>
+      <button onclick="openMl('cgu')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer">CGU</button>
+      <button onclick="openMl('rgpd')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer">Confidentialité & RGPD</button>
+      <button onclick="openMl('cookies')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer">Cookies</button>
     </div>
-    <div style="text-align:center;font-size:.65rem;color:rgba(255,255,255,.3)"><span data-t="footer_copy">© 2026 LoveSiam — Tous droits réservés</span></div>
+    <div style="text-align:center;font-size:.98rem;color:rgba(255,255,255,.3)"><span data-t="footer_copy">© 2026 LoveSiam — Tous droits réservés</span></div>
   </div>
 </div>
 
@@ -1235,6 +1426,28 @@ async function transcribeVideo(videoUrl, sourceLang, profileId){
   }
 }
 
+function adminTranscribe(btn){
+  var vid=btn.getAttribute('data-vid');
+  var lang=btn.getAttribute('data-lang');
+  var uid=btn.getAttribute('data-uid');
+  transcribeVideo(vid,lang,uid);
+}
+function adminValidate(btn){
+  var uid=btn.getAttribute('data-uid');
+  var email=btn.getAttribute('data-email');
+  var name=btn.getAttribute('data-name');
+  validateProfile(uid,email,name);
+}
+function adminReject(btn){
+  var uid=btn.getAttribute('data-uid');
+  var email=btn.getAttribute('data-email');
+  rejectProfile(uid,email);
+}
+function adminDeactivate(btn){
+  var uid=btn.getAttribute('data-uid');
+  deactivateProfile(uid);
+}
+
 async function loadAdmin(){
   try{
     const{data:pending}=await supa.from('users').select('*').eq('en_ligne',false).order('created_at',{ascending:false});
@@ -1255,7 +1468,7 @@ async function loadAdmin(){
         var hasVideo=!!u.video_url;
         return '<div class="admin-profile-row" style="flex-direction:column;align-items:stretch">'
           +'<div style="display:flex;align-items:center;gap:12px">'
-          +'<div class="admin-av">'+(u.genre==='femme'?'🌸':'👨')+'</div>'
+          +'<div class="admin-av">'+(u.genre==='femme'?'👤':'👨')+'</div>'
           +'<div class="admin-info">'
           +'<div class="admin-name">'+(u.prenom||u.nom||'—')+', '+(u.age||'?')+' ans</div>'
           +'<div class="admin-sub">📍 '+(u.ville||'—')+' · '+u.email+'</div>'
@@ -1264,14 +1477,14 @@ async function loadAdmin(){
           +'<span class="badge-pending">En attente</span>'
           +'</div>'
           +(hasVideo?'<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--b2)">'
-          +'<button id="TRANS_BTN_'+u.id+'" class="btn-validate" style="background:var(--nv);margin-bottom:6px;width:100%" onclick="transcribeVideo(''+u.video_url+'',''+srcLang+'',''+u.id+'')">'
+          +'<button id="TRANS_BTN_'+u.id+'" class="btn-validate" style="background:var(--nv);margin-bottom:6px;width:100%" data-vid="'+u.video_url+'" data-lang="'+srcLang+'" data-uid="'+u.id+'" onclick="adminTranscribe(this)">'
           +'🤖 Transcrire + Traduire automatiquement</button>'
           +'<div id="TRANS_STATUS_'+u.id+'"></div>'
-          +'<button id="VAL_BTN_'+u.id+'" class="btn-validate" style="display:none;margin-top:8px;width:100%" onclick="validateProfile(''+u.id+'',''+u.email+'',''+(u.prenom||u.nom||'')+'')">✓ Valider et publier</button>'
+          +'<button id="VAL_BTN_'+u.id+'" class="btn-validate" style="display:none;margin-top:8px;width:100%" data-uid="'+u.id+'" data-email="'+u.email+'" data-name="'+(u.prenom||u.nom||'')+'" onclick="adminValidate(this)">✓ Valider et publier</button>'
           +'</div>':'')
           +'<div style="display:flex;gap:6px;margin-top:8px">'
-          +(hasVideo?'':'<button class="btn-validate" onclick="validateProfile(''+u.id+'',''+u.email+'',''+(u.prenom||u.nom||'')+'')">✓ Valider sans vidéo</button>')
-          +'<button class="btn-reject" style="flex:1" onclick="rejectProfile(''+u.id+'',''+u.email+'')">✗ Refuser</button>'
+          +'<button id="VAL_BTN_'+u.id+'" class="btn-validate" style="display:none;margin-top:8px;width:100%" data-uid="'+u.id+'" data-email="'+u.email+'" data-name="'+(u.prenom||u.nom||'')+'" onclick="adminValidate(this)">✓ Valider et publier</button>'
+          +'<button class="btn-reject" style="flex:1" data-uid="'+u.id+'" data-email="'+u.email+'" onclick="adminReject(this)">✗ Refuser</button>'
           +'</div>'
           +'</div>';
       }).join('');
@@ -1284,7 +1497,7 @@ async function loadAdmin(){
     } else {
       activeList.innerHTML=active.map(u=>`
         <div class="admin-profile-row">
-          <div class="admin-av">${u.genre==='femme'?'🌸':'👨'}</div>
+          <div class="admin-av">${u.genre==='femme'?'👤':'👨'}</div>
           <div class="admin-info">
             <div class="admin-name">${u.prenom||u.nom||'—'}, ${u.age||'?'} ans</div>
             <div class="admin-sub">📍 ${u.ville||'—'} · ${u.email}</div>
@@ -1474,7 +1687,7 @@ function oPP(id){
   g('PPT').textContent=`${p.n}, ${p.a} ans`;
   g('PPCB').innerHTML=p.g==='f'?SF:SH;
   g('PPCL').style.display=U?'none':'flex';
-  g('PPAV').innerHTML=p.g==='f'?'🌸':'👨';
+  g('PPAV').innerHTML=p.g==='f'?'👤':'👨';
   const ol=g('PPOL');
   ol.textContent=p.on?'● En ligne':'● Hors ligne';
   ol.style.color=p.on?'var(--gn)':'var(--td)';
@@ -1537,14 +1750,14 @@ function renderMatchsPage(){
   if(MY_MUTUAL.length===0){
     mutualEl.innerHTML='<div class="match-empty"><i>💞</i>Pas encore de match mutuel.</div>';
   }else{
-    mutualEl.innerHTML=MY_MUTUAL.map(p=>`<div class="match-card" onclick="oPP(${p.id})"><div class="match-av mutual">${p.g==='f'?'🌸':'👨'}</div><div class="match-info"><div class="match-name">${p.n}, ${p.a} ans</div><div class="match-sub">📍 ${p.l}</div></div><span class="match-badge mutual">✓ Match</span></div>`).join('');
+    mutualEl.innerHTML=MY_MUTUAL.map(p=>`<div class="match-card" onclick="oPP(${p.id})"><div class="match-av mutual">${p.g==='f'?'👤':'👨'}</div><div class="match-info"><div class="match-name">${p.n}, ${p.a} ans</div><div class="match-sub">📍 ${p.l}</div></div><span class="match-badge mutual">✓ Match</span></div>`).join('');
   }
   const heartsEl=g('PM_HEARTS');
   const liked=[...MY_LIKES].map(id=>PR.find(x=>x.id===id)).filter(Boolean);
   if(liked.length===0){
     heartsEl.innerHTML='<div class="match-empty"><i>❤️</i>Aucun coup de cœur pour l\'instant.</div>';
   }else{
-    heartsEl.innerHTML=liked.map(p=>`<div class="match-card" onclick="oPP(${p.id})"><div class="match-av">${p.g==='f'?'🌸':'👨'}</div><div class="match-info"><div class="match-name">${p.n}, ${p.a} ans</div><div class="match-sub">📍 ${p.l}</div></div><span class="match-badge heart">❤️ Liké</span></div>`).join('');
+    heartsEl.innerHTML=liked.map(p=>`<div class="match-card" onclick="oPP(${p.id})"><div class="match-av">${p.g==='f'?'👤':'👨'}</div><div class="match-info"><div class="match-name">${p.n}, ${p.a} ans</div><div class="match-sub">📍 ${p.l}</div></div><span class="match-badge heart">❤️ Liké</span></div>`).join('');
   }
 }
 
@@ -1555,7 +1768,7 @@ function oV(id){
   const p=PR.find(x=>x.id===id);if(!p)return;
   if(!U){goP('q');return}
   window._vidProfile=p;VI=0;VP2=true;VL='fr';
-  g('VEM').textContent=p.g==='f'?'🌸':'👨';
+  g('VEM').textContent=p.g==='f'?'👤':'👨';
   g('VNM').textContent=`${p.n}, ${p.a} ans`;
   g('VLC2').innerHTML=`📍 ${p.l}${p.on?' · <span style="color:var(--gn)">● En ligne</span>':''}`;
   g('VLF').className='vl2 on';g('VLT').className='vl2 off';g('VP').textContent='⏸';
@@ -1863,6 +2076,16 @@ function bQ(){
     };
   });
   setupPhotoUploads();
+  // Setup city autocomplete
+  if(g('QV2')){
+    var ctry = (typeof QA !== 'undefined' && QA.g === 'f') ? 'th' : 'fr';
+    setupCityAutocomplete('QV2', ctry);
+  }
+  // Setup filter city autocomplete  
+  if(g('F_CITY') && !g('F_CITY')._autocomplete){
+    g('F_CITY')._autocomplete = true;
+    setupCityAutocomplete('F_CITY', 'th');
+  }
   if(g('QAG')){
     var s=g('QAG');
     for(var a=18;a<=75;a++){
