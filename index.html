@@ -1426,6 +1426,35 @@ async function transcribeVideo(videoUrl, sourceLang, profileId){
   }
 }
 
+function onCountryChange(sel){
+  var val = sel.value;
+  var iF = typeof QA !== 'undefined' && QA.g === 'f';
+  var inp = document.getElementById('QV2');
+  var wrap = document.getElementById('QV2_WRAP');
+  if(!inp) return;
+  
+  // Update placeholder
+  var placeholders = {
+    'TH': 'Bangkok, Chiang Mai, Phuket…',
+    'FR': 'Paris, Lyon, Marseille…',
+    'BE': 'Bruxelles, Liège, Gand…',
+    'CH': 'Genève, Zurich, Lausanne…',
+    'LU': 'Luxembourg, Esch-sur-Alzette…',
+    'OTHER': typeof LANG !== 'undefined' && LANG === 'th' ? 'ระบุเมือง…' : 'Votre ville…'
+  };
+  inp.placeholder = placeholders[val] || 'Votre ville…';
+  inp.value = '';
+  if(typeof QA !== 'undefined') { QA.country = val; QA.ville = ''; }
+  
+  // Update autocomplete country
+  var countryMap = {'TH':'th','FR':'fr','BE':'be','CH':'ch','LU':'lu','OTHER':''};
+  var drop = document.getElementById('QV2_drop');
+  if(drop) drop.style.display = 'none';
+  if(val !== 'OTHER') {
+    setupCityAutocomplete('QV2', countryMap[val]||'fr');
+  }
+}
+
 function adminTranscribe(btn){
   var vid=btn.getAttribute('data-vid');
   var lang=btn.getAttribute('data-lang');
@@ -1856,16 +1885,2329 @@ function bQ(){
     }
     var cityLabel=iF?(tq.q2_city_f||'Ville (Thaïlande)'):(tq.q2_city_h||'Ville (France)');
     var cityPh=iF?'Bangkok…':'Paris, Lyon…';
+    // Language names always in display language
+    var lbl_th = LANG==='th' ? 'ภาษาไทย' : 'Thaïlandais';
+    var lbl_fr_lang = LANG==='th' ? 'ภาษาฝรั่งเศส' : 'Français';
+    var lbl_en = LANG==='th' ? 'ภาษาอังกฤษ' : 'Anglais';
     var langBlock=iF
-      ?'<div class="lr"><div class="lh"><span>🇫🇷</span><span style="font-size:.82rem;font-weight:500">Français</span></div><div class="lp">'+langFR+'</div></div>'
-       +'<div class="lr"><div class="lh"><span>🇬🇧</span><span style="font-size:.82rem;font-weight:500">Anglais</span></div><div class="lp">'+langEN+'</div></div>'
-      :'<div class="lr"><div class="lh"><span>🇹🇭</span><span style="font-size:.82rem;font-weight:500">ภาษาไทย</span></div><div class="lp">'+langTH+'</div></div>'
-       +'<div class="lr"><div class="lh"><span>🇬🇧</span><span style="font-size:.82rem;font-weight:500">English</span></div><div class="lp">'+langEN+'</div></div>';
+      ?'<div class="lr"><div class="lh"><span>🇫🇷</span><span style="font-size:.9rem;font-weight:500">'+lbl_fr_lang+'</span></div><div class="lp">'+langFR+'</div></div>'
+       +'<div class="lr"><div class="lh"><span>🇬🇧</span><span style="font-size:.9rem;font-weight:500">'+lbl_en+'</span></div><div class="lp">'+langEN+'</div></div>'
+      :'<div class="lr"><div class="lh"><span>🇹🇭</span><span style="font-size:.9rem;font-weight:500">'+lbl_th+'</span></div><div class="lp">'+langTH+'</div></div>'
+       +'<div class="lr"><div class="lh"><span>🇬🇧</span><span style="font-size:.9rem;font-weight:500">'+lbl_en+'</span></div><div class="lp">'+langEN+'</div></div>';
     h='<div class="qe">'+stepLabel+' 2/'+QT_STEPS+'</div>'
      +'<div class="qt">'+tq.q2_title+'</div>'
      +'<div class="fg"><label class="fl">'+tq.q2_name+'</label><input class="fi" id="QN" type="text" placeholder="'+tq.q2_name+'" value="'+(QA.name||'')+'"></div>'
      +'<div class="fg"><label class="fl">'+tq.q2_age+'</label><select class="fsl" id="QAG"><option value="">—</option></select></div>'
-     +'<div class="fg"><label class="fl">'+cityLabel+'</label><input class="fi" id="QV2" type="text" placeholder="'+cityPh+'" value="'+(QA.ville||'')+'"></div>'
+     +'<div class="fg"><label class="fl">'+(LANG==="th"?"ประเทศ":"Pays")+'</label>'
+    +'<select class="fsl" id="QCOUNTRY" onchange="onCountryChange(this)">'
+    +(iF
+      ?'<option value="TH" '+((!QA.country||QA.country==="TH")?"selected":"")+'>🇹🇭 Thaïlande</option>'
+       +'<option value="FR" '+(QA.country==="FR"?"selected":"")+'>🇫🇷 France</option>'
+       +'<option value="OTHER" '+(QA.country==="OTHER"?"selected":"")+'>🌍 '+(LANG==="th"?"อื่นๆ":"Autre pays")+'</option>'
+      :'<option value="FR" '+((!QA.country||QA.country==="FR")?"selected":"")+'>🇫🇷 France</option>'
+       +'<option value="BE" '+(QA.country==="BE"?"selected":"")+'>🇧🇪 Belgique</option>'
+       +'<option value="CH" '+(QA.country==="CH"?"selected":"")+'>🇨🇭 Suisse</option>'
+       +'<option value="LU" '+(QA.country==="LU"?"selected":"")+'>🇱🇺 Luxembourg</option>'
+       +'<option value="TH" '+(QA.country==="TH"?"selected":"")+'>🇹🇭 Thaïlande</option>'
+       +'<option value="OTHER" '+(QA.country==="OTHER"?"selected":"")+'>🌍 '+(LANG==="th"?"อื่นๆ":"Autre pays")+'</option>'
+    )
+    +'</select></div>'
+    +'<div class="fg" id="QV2_WRAP"><label class="fl">'+cityLabel+'</label><input class="fi" id="QV2" type="text" placeholder="'+cityPh+'" value="'+(QA.ville||'')+'"></div>'
+     +'<div class="r2"><div class="fg"><label class="fl">'+tq.q2_height+'</label><select class="fsl" id="QH"><option value="">cm</option>'+hO+'</select></div>'
+     +'<div class="fg"><label class="fl">'+tq.q2_weight+'</label><select class="fsl" id="QW"><option value="">kg</option>'+wO+'</select></div></div>'
+     +'<div class="ds"><div class="dl"></div><div class="dt">'+tq.q2_photos+'</div><div class="dl"></div></div>'
+     +'<div style="margin-bottom:14px">'
+     +'<div style="font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--nv);margin-bottom:7px;font-weight:600">'+tq.q2_photo1+'</div>'
+     +'<div id="PH1" style="width:100%;height:120px;border:2px dashed rgba(196,150,42,.25);border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--b2);gap:5px;position:relative" onclick="document.getElementById(\'PI1\').click()">'
+     +'<div style="font-size:1.8rem">📷</div><div style="font-size:.78rem;color:var(--nv);font-weight:500">'+tq.q2_photo_add+'</div><div style="font-size:.67rem;color:var(--td)">'+tq.q2_photo_size+'</div>'
+     +'</div><input type="file" id="PI1" accept="image/*" style="display:none">'
+     +'<div id="PP1" style="display:none;margin-top:8px;padding:8px 11px;border-radius:8px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.18);font-size:.73rem;color:var(--gn)"></div></div>'
+     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px">'
+     +'<div><div style="font-size:.6rem;color:var(--td);margin-bottom:6px">'+tq.q2_add+' 2</div>'
+     +'<div id="PH2" style="height:90px;border:2px dashed rgba(196,150,42,.18);border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--b2);gap:3px;position:relative" onclick="document.getElementById(\'PI2\').click()">'
+     +'<div style="font-size:1.4rem">📷</div><div style="font-size:.65rem;color:var(--td)">'+tq.q2_add+'</div>'
+     +'</div><input type="file" id="PI2" accept="image/*" style="display:none">'
+     +'<div id="PP2" style="display:none;margin-top:5px;font-size:.68rem;color:var(--gn)"></div></div>'
+     +'<div><div style="font-size:.6rem;color:var(--td);margin-bottom:6px">'+tq.q2_add+' 3</div>'
+     +'<div id="PH3" style="height:90px;border:2px dashed rgba(196,150,42,.18);border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--b2);gap:3px;position:relative" onclick="document.getElementById(\'PI3\').click()">'
+     +'<div style="font-size:1.4rem">📷</div><div style="font-size:.65rem;color:var(--td)">'+tq.q2_add+'</div>'
+     +'</div><input type="file" id="PI3" accept="image/*" style="display:none">'
+     +'<div id="PP3" style="display:none;margin-top:5px;font-size:.68rem;color:var(--gn)"></div></div></div>'
+     +'<div class="ds"><div class="dl"></div><div class="dt">'+tq.q2_lang+'</div><div class="dl"></div></div>'
+     +langBlock
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+  }
+  else if(QS===2){
+    h='<div class="qe">'+stepLabel+' 3/'+QT_STEPS+'</div>'
+     +'<div class="qt">'+tq.q3_title+'</div>'
+     +'<p class="qs">'+tq.q3_sub+'</p>'
+     +'<div class="fg"><label class="fl">'+tq.q3_title+'</label><textarea class="fa" id="QDESC" rows="5" placeholder="'+tq.q3_placeholder+'">'+(QA.desc||'')+'</textarea></div>'
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+  }
+  else if(QS===3){
+    var lookOpts=LANG==='th'
+      ?[{ic:'💍',lb:'การแต่งงาน',sb:'ความผูกพันที่จริงจัง',vl:'mariage'},{ic:'💞',lb:'ความสัมพันธ์ที่จริงจัง',sb:'สร้างบางสิ่งที่มั่นคง',vl:'serieux'},{ic:'🌱',lb:'อยากสำรวจ',sb:'เปิดรับการพบที่ดี',vl:'explorer'}]
+      :[{ic:'💍',lb:'Un mariage',sb:'Engagement sérieux',vl:'mariage'},{ic:'💞',lb:'Une relation sérieuse',sb:'Construire quelque chose de solide',vl:'serieux'},{ic:'🌱',lb:'Je veux explorer',sb:'Ouvert à une belle rencontre',vl:'explorer'}];
+    var lookHtml='';
+    for(var oi=0;oi<lookOpts.length;oi++){var o=lookOpts[oi];lookHtml+='<div class="cd '+(QA.looking===o.vl?'sl':'')+'" data-cd="looking:'+o.vl+'"><div class="ci2">'+o.ic+'</div><div><div class="cl">'+o.lb+'</div><div class="cs3">'+o.sb+'</div></div><div class="ck">'+(QA.looking===o.vl?'✓':'')+'</div></div>';}
+    var ageRanges=['18–25','25–30','30–35','35–40','40–50','50–60','60+'];
+    var ageHtml='';for(var ai=0;ai<ageRanges.length;ai++){var av=ageRanges[ai];ageHtml+='<button class="pi2 '+((QA.sk||[]).includes(av)?'sl':'')+'" data-tg="sk:'+av+'">'+av+'</button>';}
+    var ageLbl=LANG==='th'?'ช่วงอายุที่ต้องการ':'Tranche d\'âge recherchée';
+    h='<div class="qe">'+stepLabel+' 4/'+QT_STEPS+'</div>'
+     +'<div class="qt">'+tq.q4_title+'</div>'
+     +'<div class="cs2">'+lookHtml+'</div>'
+     +'<div class="fg"><div class="fl">'+ageLbl+'</div><div class="pl">'+ageHtml+'</div></div>'
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+  }
+  else if(QS===4){
+    var loOpts=LANG==='th'
+      ?[{ic:'🇫🇷',lb:'ในฝรั่งเศส',vl:'france'},{ic:'🇹🇭',lb:'ในไทย',vl:'thai'},{ic:'✈️',lb:'ระหว่างสองประเทศ',vl:'both'},{ic:'🤔',lb:'ไม่แน่ใจ',vl:'unknown'}]
+      :[{ic:'🇫🇷',lb:'En France',vl:'france'},{ic:'🇹🇭',lb:'En Thaïlande',vl:'thai'},{ic:'✈️',lb:'Entre les deux',vl:'both'},{ic:'🤔',lb:'Je ne sais pas',vl:'unknown'}];
+    var linkF=LANG==='th'
+      ?[{ic:'🗼',lb:'อยากค้นพบฝรั่งเศส',vl:'dec'},{ic:'📚',lb:'รู้จักวัฒนธรรมฝรั่งเศส',vl:'con'},{ic:'🌍',lb:'พร้อมอาศัยในฝรั่งเศส',vl:'viv'}]
+      :[{ic:'🗼',lb:'Je veux découvrir la France',vl:'dec'},{ic:'📚',lb:'Je connais la culture française',vl:'con'},{ic:'🌍',lb:'Prête à vivre en France',vl:'viv'}];
+    var linkH=LANG==='th'
+      ?[{ic:'✈️',lb:'ไม่เคยไป',vl:'never'},{ic:'🌺',lb:'1-3 ครั้ง',vl:'few'},{ic:'🏡',lb:'รู้จักดี',vl:'often'}]
+      :[{ic:'✈️',lb:'Jamais visité',vl:'never'},{ic:'🌺',lb:'1 à 3 voyages',vl:'few'},{ic:'🏡',lb:'Je connais bien',vl:'often'}];
+    var tvOpts=LANG==='th'?[['ใช่','oui'],['บางที','maybe'],['ยังไม่พร้อม','non']]:[['Oui','oui'],['Peut-être','maybe'],['Pas encore','non']];
+    var linkHtml='';
+    var srcLink=iF?linkF:linkH;
+    for(var li2=0;li2<srcLink.length;li2++){var lo2=srcLink[li2];var k2=iF?'fl':'th';linkHtml+='<div class="cd '+(QA[k2]===lo2.vl?'sl':'')+'" data-cd="'+k2+':'+lo2.vl+'"><div class="ci2">'+lo2.ic+'</div><div><div class="cl">'+lo2.lb+'</div></div><div class="ck">'+(QA[k2]===lo2.vl?'✓':'')+'</div></div>';}
+    var tvHtml='';for(var ti2=0;ti2<tvOpts.length;ti2++){var tv=tvOpts[ti2];tvHtml+='<button class="pi2 '+(QA.tv===tv[1]?'sl':'')+'" data-pl="tv:'+tv[1]+'">'+tv[0]+'</button>';}
+    var loHtml='';for(var loi=0;loi<loOpts.length;loi++){var lo3=loOpts[loi];loHtml+='<div class="cd '+(QA.vv===lo3.vl?'sl':'')+'" data-cd="vv:'+lo3.vl+'"><div class="ci2">'+lo3.ic+'</div><div><div class="cl">'+lo3.lb+'</div></div><div class="ck">'+(QA.vv===lo3.vl?'✓':'')+'</div></div>';}
+    var tvLbl=LANG==='th'?'พร้อมเดินทางไหม?':'Prêt à voyager ?';
+    var loLbl=LANG==='th'?'ที่อยู่อาศัย?':'Où vivre ?';
+    var q5title=iF?(tq.q5_title||''):(tq.q5_title_h||'');
+    h='<div class="qe">'+stepLabel+' 5/'+QT_STEPS+'</div>'
+     +'<div class="qt">'+q5title+'</div>'
+     +'<div class="cs2">'+linkHtml+'</div>'
+     +(iF?'':'<div class="fg"><div class="fl">'+tvLbl+'</div><div class="pl">'+tvHtml+'</div></div>')
+     +'<div class="fg"><div class="fl">'+loLbl+'</div><div class="cs2">'+loHtml+'</div></div>'
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+  }
+  else if(QS===5){
+    var famOpts=LANG==='th'
+      ?[{ic:'🧑',lb:'โสดไม่มีลูก',vl:'single'},{ic:'👶',lb:'มีลูก',vl:'kids'},{ic:'💔',lb:'หย่าร้าง',vl:'divorced'},{ic:'💑',lb:'หม้าย',vl:'widowed'}]
+      :[{ic:'🧑',lb:'Célibataire sans enfant',vl:'single'},{ic:'👶',lb:"J'ai des enfants",vl:'kids'},{ic:'💔',lb:'Divorcé(e)',vl:'divorced'},{ic:'💑',lb:'Veuf / Veuve',vl:'widowed'}];
+    var jobOpts=LANG==='th'
+      ?[{ic:'💼',lb:'พนักงาน',vl:'salarie'},{ic:'🏢',lb:'อิสระ',vl:'independant'},{ic:'🎓',lb:'นักศึกษา',vl:'etudiant'},{ic:'🌿',lb:'อื่นๆ',vl:'autre'}]
+      :[{ic:'💼',lb:'Salarié(e)',vl:'salarie'},{ic:'🏢',lb:'Indépendant(e)',vl:'independant'},{ic:'🎓',lb:'Étudiant(e)',vl:'etudiant'},{ic:'🌿',lb:'Autre',vl:'autre'}];
+    var famHtml='';for(var fi=0;fi<famOpts.length;fi++){var fo=famOpts[fi];famHtml+='<div class="cd '+(QA.fam===fo.vl?'sl':'')+'" data-cd="fam:'+fo.vl+'"><div class="ci2">'+fo.ic+'</div><div><div class="cl">'+fo.lb+'</div></div><div class="ck">'+(QA.fam===fo.vl?'✓':'')+'</div></div>';}
+    var jobHtml='';for(var ji=0;ji<jobOpts.length;ji++){var jo=jobOpts[ji];jobHtml+='<div class="cd '+(QA.job===jo.vl?'sl':'')+'" data-cd="job:'+jo.vl+'"><div class="ci2">'+jo.ic+'</div><div><div class="cl">'+jo.lb+'</div></div><div class="ck">'+(QA.job===jo.vl?'✓':'')+'</div></div>';}
+    var famLbl=LANG==='th'?'สถานะครอบครัว':'Situation familiale';
+    var jobLbl=LANG==='th'?'สถานะอาชีพ':'Situation professionnelle';
+    h='<div class="qe">'+stepLabel+' 6/'+QT_STEPS+'</div>'
+     +'<div class="qt">'+tq.q6_title+'</div>'
+     +'<div class="fg"><div class="fl">'+famLbl+'</div><div class="cs2">'+famHtml+'</div></div>'
+     +'<div class="fg"><div class="fl">'+jobLbl+'</div><div class="cs2">'+jobHtml+'</div></div>'
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+  }
+  else if(QS===6){
+    var tip1=LANG==='th'?'สถานที่สว่าง':'Lieu lumineux';
+    var tip1t=LANG==='th'?'ถ่ายใกล้หน้าต่าง':'Filmez près d\'une fenêtre.';
+    var tip2=LANG==='th'?'มองกล้อง':'Regardez l\'objectif';
+    var tip2t=LANG==='th'?'มองกล้อง ไม่ใช่ภาพของคุณ':'Regardez la caméra.';
+    var tip3t=iF
+      ?(LANG==='th'?'ชื่อ · อายุ · เมือง · อาชีพ · สิ่งที่มองหา · ประโยคภาษาฝรั่งเศส':'Prénom · Âge · Ville · Métier · Ce que vous cherchez · Une phrase en français')
+      :(LANG==='th'?'ชื่อ · อายุ · เมือง · อาชีพ · สิ่งที่มองหา · คำภาษาไทยหนึ่งคำ':'Prénom · Âge · Ville · Métier · Ce que vous cherchez · Un mot en thaï');
+    var skipLbl=LANG==='th'?'ข้าม → บันทึกวิดีโอภายหลัง':'Passer → vidéo plus tard';
+    var recLbl=LANG==='th'?'กดปุ่ม "เปิดกล้อง"':'Appuyez sur "Activer la caméra"';
+    var infoLbl=LANG==='th'?'คำบรรยาย FR↔TH จะถูกเพิ่มเมื่อเผยแพร่':'Sous-titres FR↔TH ajoutés lors de la publication.';
+    h='<div class="qe">'+stepLabel+' 7/'+QT_STEPS+'</div>'
+     +'<div class="qt">'+tq.q7_title+'</div>'
+     +'<p class="qs">'+tq.q7_sub+'</p>'
+     +'<div style="margin-bottom:10px">'
+     +'<div class="gt"><span>📍</span><div><strong>'+tip1+'</strong><span>'+tip1t+'</span></div></div>'
+     +'<div class="gt"><span>👁️</span><div><strong>'+tip2+'</strong><span>'+tip2t+'</span></div></div>'
+     +'<div class="gt"><span>🎯</span><div><strong>60s</strong><span>'+tip3t+'</span></div></div>'
+     +'</div>'
+     +'<div style="margin-bottom:9px;padding:9px;background:var(--gd);border:1px solid rgba(196,150,42,.16);border-radius:8px;font-size:.71rem;color:var(--tm)">ℹ️ '+infoLbl+'</div>'
+     +'<div class="ca" id="QCA">'
+     +'<div class="cp" id="QCP">'+recLbl+'</div>'
+     +'<video id="QCV" style="display:none;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)" muted playsinline autoplay webkit-playsinline></video>'
+     +'<video id="QCR" style="display:none;width:100%;height:100%;object-fit:cover" controls></video>'
+     +'<div class="rb" id="QRB" style="display:none"><div class="rd2"></div><span id="QRL">REC 0s</span></div>'
+     +'<div class="cpb" id="QCP2" style="display:none"><div class="cpf" id="QCPF" style="width:0%"></div></div>'
+     +'<div style="color:var(--rd);font-size:.73rem;text-align:center;padding:12px;display:none" id="QCE"></div>'
+     +'</div>'
+     +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px">'
+     +'<button id="QBA" class="qx qf">'+tq.q7_activate+'</button>'
+     +'<button id="QBR2" class="qx qf" style="display:none;background:linear-gradient(135deg,var(--rd),#E74C3C)">'+tq.q7_start+'</button>'
+     +'<button id="QBS" style="display:none;padding:11px;border-radius:10px;border:1.5px solid var(--rd);background:transparent;color:var(--rd);font-family:\'DM Sans\',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer">'+tq.q7_stop+'</button>'
+     +'<button id="QBRT" style="display:none;padding:11px;border-radius:10px;border:1.5px solid rgba(26,39,68,.1);background:transparent;color:var(--td);font-family:\'DM Sans\',sans-serif;font-size:.8rem;cursor:pointer">'+tq.q7_retry+'</button>'
+     +'</div>'
+     +'<div class="ds"><div class="dl"></div><div class="dt">'+tq.q7_upload_title+'</div><div class="dl"></div></div>'
+     +'<div class="uz" id="QUZ"><div style="font-size:1.7rem;margin-bottom:5px">📤</div><div style="font-size:.8rem;font-weight:500;color:var(--nv)">'+tq.q7_upload_btn+'</div><div style="font-size:.68rem;color:var(--td)">'+tq.q7_upload_size+'</div><input type="file" id="QUF" accept="video/*" style="display:none"></div>'
+     +'<div id="QUS" style="display:none;padding:8px 11px;border-radius:8px;margin-bottom:8px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.18);font-size:.73rem;color:var(--gn)"></div>'
+     +'<div style="text-align:center;margin-bottom:8px"><span style="font-size:.7rem;color:var(--td);cursor:pointer;text-decoration:underline" id="QSK">'+skipLbl+'</span></div>'
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+  }
+  else if(QS===7){
+    var vidOk=LANG==='th'?'วิดีโอพร้อมแล้ว':'Vidéo prête';
+    var vidNo=LANG==='th'?'บันทึกวิดีโอภายหลัง':'Vidéo à enregistrer plus tard';
+    var profLabel=iF?(LANG==='th'?'👩 ผู้หญิงไทย':'👩 Femme thaïlandaise'):(LANG==='th'?'👨 ผู้ชายฝรั่งเศส':'👨 Homme français');
+    var ageSuffix=LANG==='th'?' ปี':' ans';
+    var rws=[
+      [LANG==='th'?'โปรไฟล์':'Profil', profLabel],
+      [LANG==='th'?'ชื่อ':'Prénom', QA.name||'—'],
+      [LANG==='th'?'อายุ':'Âge', QA.age?QA.age+ageSuffix:'—'],
+      [LANG==='th'?'เมือง':'Ville', QA.ville||'—'],
+      [LANG==='th'?'ส่วนสูง / น้ำหนัก':'Taille / Poids', (QA.height||'—')+' cm / '+(QA.weight||'—')+' kg'],
+      [LANG==='th'?'ภาษา':'Langues', iF?'🇫🇷 '+(QA.lfr||'—')+' / 🇬🇧 '+(QA.len||'—'):'🇹🇭 '+(QA.lth||'—')+' / 🇬🇧 '+(QA.len||'—')],
+      [LANG==='th'?'มองหา':'Recherche', QA.looking||'—'],
+      [LANG==='th'?'วิดีโอ':'Vidéo', QV?'✅':vidNo]
+    ];
+    var rwHtml='';for(var ri=0;ri<rws.length;ri++){rwHtml+='<div class="r"><span class="sk">'+rws[ri][0]+'</span><span class="sv">'+rws[ri][1]+'</span></div>';}
+    h='<div class="qe">'+stepLabel+' 8/'+QT_STEPS+'</div>'
+     +'<div class="qt">'+tq.q8_title+'</div>'
+     +'<p class="qs">'+tq.q8_sub+'</p>'
+     +(QV?'<div style="padding:8px 11px;border-radius:8px;margin-bottom:11px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.18);font-size:.73rem;color:var(--gn)">✅ '+vidOk+'</div>':'<div style="padding:8px 11px;border-radius:8px;margin-bottom:11px;background:var(--gd);border:1px solid rgba(196,150,42,.16);font-size:.73rem;color:var(--tm)">📹 '+vidNo+'</div>')
+     +'<div class="fg"><label class="fl">'+tq.q8_email+'</label><input class="fi" id="QE" type="email" placeholder="votre@email.com" value="'+(QA.email||'')+'"></div>'
+     +'<div class="fg"><label class="fl">'+tq.q8_whatsapp+'</label><input class="fi" id="QWH" type="tel" placeholder="+33 6 xx xx xx xx" value="'+(QA.whats||'')+'"></div>'
+     +'<div class="sr"><div style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:8px;font-weight:500">'+tq.q8_recap+'</div>'+rwHtml+'</div>'
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QSND">'+tq.q_send+'</button></div>';
+  }
+
+  g('QB').innerHTML=h;
+  if(pb)pb.style.width=((QS+1)/QT_STEPS*100)+'%';
+
+  if(g('QNX'))g('QNX').onclick=function(){
+    if(QS===0){if(!QA.g){show('⚠️ '+(LANG==='th'?'เลือกโปรไฟล์ของคุณ':'Choisissez votre profil'));return;}QS++;bQ();}
+    else if(QS===1){qNI();}
+    else if(QS===2){var d=g('QDESC');if(d)QA.desc=d.value.trim();QS++;bQ();}
+    else if(QS===3){if(!QA.looking){show('⚠️ '+(LANG==='th'?'เลือกสิ่งที่คุณมองหา':'Choisissez ce que vous cherchez'));return;}QS++;bQ();}
+    else{QS=Math.min(QS+1,QT_STEPS-1);bQ();}
+  };
+  if(g('QBK'))g('QBK').onclick=function(){qCC();QS=Math.max(QS-1,0);bQ();};
+  if(g('QSND'))g('QSND').onclick=qSub;
+  if(g('QBA'))g('QBA').onclick=qCamOn;
+  if(g('QBR2'))g('QBR2').onclick=qCamRec;
+  if(g('QBS'))g('QBS').onclick=qCamStop;
+  if(g('QBRT'))g('QBRT').onclick=qCamRetry;
+  if(g('QSK'))g('QSK').onclick=function(){QV=false;qCC();QS++;bQ();};
+  if(g('QUZ'))g('QUZ').onclick=function(){g('QUF').click();};
+  if(g('QUF'))g('QUF').onchange=function(){
+    var f=this.files[0];if(!f)return;
+    QV=true;QA.vidFile=f;
+    var s=g('QUS');s.style.display='block';s.textContent='✅ "'+f.name+'"';
+    show('✅ '+(LANG==='th'?'เลือกวิดีโอแล้ว!':'Vidéo sélectionnée !'));
+  };
+  g('QB').querySelectorAll('[data-cd]').forEach(function(b){
+    b.onclick=function(){
+      var parts=b.getAttribute('data-cd').split(':');var k=parts[0];var v=parts[1];
+      b.closest('.cs2').querySelectorAll('.cd').forEach(function(c){c.classList.remove('sl');c.querySelector('.ck').textContent='';});
+      b.classList.add('sl');b.querySelector('.ck').textContent='✓';QA[k]=v;
+    };
+  });
+  g('QB').querySelectorAll('[data-pl]').forEach(function(b){
+    b.onclick=function(){
+      var p=b.getAttribute('data-pl').split(':');
+      b.closest('.pl').querySelectorAll('.pi2').forEach(function(x){x.classList.remove('sl');});
+      b.classList.add('sl');QA[p[0]]=p[1];
+    };
+  });
+  g('QB').querySelectorAll('[data-tg]').forEach(function(b){
+    b.onclick=function(){
+      var parts=b.getAttribute('data-tg').split(':');var k=parts[0];var v=parts[1];
+      if(!Array.isArray(QA[k]))QA[k]=[];
+      b.classList.toggle('sl');
+      if(b.classList.contains('sl')){if(!QA[k].includes(v))QA[k].push(v);}
+      else{QA[k]=QA[k].filter(function(x){return x!==v;});}
+    };
+  });
+  g('QB').querySelectorAll('[data-lp]').forEach(function(b){
+    b.onclick=function(){
+      var p=b.getAttribute('data-lp').split(':');
+      b.closest('.lp').querySelectorAll('.lp2').forEach(function(x){x.classList.remove('sl');});
+      b.classList.add('sl');QA[p[0]]=p[1];
+    };
+  });
+  setupPhotoUploads();
+  // Setup city autocomplete
+  if(g('QV2')){
+    var ctry = (typeof QA !== 'undefined' && QA.g === 'f') ? 'th' : 'fr';
+    setupCityAutocomplete('QV2', ctry);
+  }
+  // Setup filter city autocomplete  
+  if(g('F_CITY') && !g('F_CITY')._autocomplete){
+    g('F_CITY')._autocomplete = true;
+    setupCityAutocomplete('F_CITY', 'th');
+  }
+  if(g('QAG')){
+    var s=g('QAG');
+    for(var a=18;a<=75;a++){
+      var o=document.createElement('option');
+      o.value=a;o.textContent=a+(LANG==='th'?' ปี':' ans');
+      if(QA.age&&parseInt(QA.age)===a)o.selected=true;
+      s.appendChild(o);
+    }
+  }
+}
+
+
+function qNI(){
+  const n=g('QN'),a=g('QAG'),h2=g('QH'),w=g('QW');
+  if(!n||!n.value.trim()){show('⚠️ Prénom requis');return}
+  if(!a||!a.value){show('⚠️ Âge requis');return}
+  QA.name=n.value.trim();QA.age=a.value;
+  const v=g('QV2');if(v)QA.ville=v.value.trim();
+  if(h2&&h2.value)QA.height=h2.value;
+  if(w&&w.value)QA.weight=w.value;
+  QS++;bQ();
+}
+
+async function saveToAirtable(d){
+  try{await fetch(`https://api.airtable.com/v0/${AT_BASE}/${encodeURIComponent(AT_TABLE)}`,{method:'POST',headers:{'Authorization':'Bearer '+AT_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({fields:{Prenom:d.name,Genre:d.g==='f'?'Femme thaïlandaise':'Homme français',Age:parseInt(d.age)||0,Ville:d.ville||'',Taille:parseInt(d.height)||0,Poids:parseInt(d.weight)||0,Langues:d.g==='f'?`FR:${d.lfr} / EN:${d.len}`:`TH:${d.lth} / EN:${d.len}`,Description:d.desc||'',Recherche:d.looking||'',Situation:`${d.fam||''} / ${d.job||''}`,Email:d.email||'',WhatsApp:d.whats||'',VideoURL:d.vidUrl||'',Photos:(d.photoUrls||[]).join(' | '),Statut:'En attente'}})})}catch(e){}
+}
+
+async function saveToSupabase(d){
+  try{
+    const{data}=await supa.from('users').insert({email:d.email,nom:d.name,prenom:d.name,genre:d.g==='f'?'femme':'homme',nationalite:d.g==='f'?'thaïlandaise':'française',age:parseInt(d.age)||0,ville:d.ville||'',bio:d.desc||'',photo_url:(d.photoUrls&&d.photoUrls[0])||'',photos:d.photoUrls||[],video_url:d.vidUrl||'',en_ligne:false,created_at:new Date().toISOString()}).select();
+    if(data&&data[0])return data[0].id;
+  }catch(e){}
+  return null;
+}
+
+async function uploadVideo(){
+  if(!QCH.length&&!QA.vidFile)return null;
+  try{const blob=QA.vidFile||new Blob(QCH,{type:'video/webm'});const fd=new FormData();fd.append('file',blob);fd.append('upload_preset',CLD_PRESET);fd.append('folder','lovesiam');const r=await fetch(`https://api.cloudinary.com/v1_1/${CLD_CLOUD}/video/upload`,{method:'POST',body:fd});const d=await r.json();return d.secure_url||null;}catch(e){return null}
+}
+
+async function uploadPhoto(file){
+  if(!file)return null;
+  try{const fd=new FormData();fd.append('file',file);fd.append('upload_preset',CLD_PRESET);fd.append('folder','lovesiam/photos');const r=await fetch(`https://api.cloudinary.com/v1_1/${CLD_CLOUD}/image/upload`,{method:'POST',body:fd});const d=await r.json();return d.secure_url||null;}catch(e){return null}
+}
+
+async function qSub(){
+  const em=g('QE'),wh=g('QWH');if(!em)return;
+  const ev=em.value.trim(),wv=wh?wh.value.trim():'';
+  if(!ev){show('⚠️ Email requis');return}
+  QA.email=ev;QA.whats=wv;
+  const btn=g('QSND');btn.textContent='Envoi…';btn.disabled=true;
+  let vidUrl=null;
+  if(QV){btn.textContent='Upload vidéo…';vidUrl=await uploadVideo()}
+  let photoUrls=[];
+  if(QA.photos&&QA.photos.length){btn.textContent='Upload photos…';for(let pi=0;pi<QA.photos.length;pi++){if(QA.photos[pi]){const pu=await uploadPhoto(QA.photos[pi]);if(pu)photoUrls.push(pu)}}}
+  QA.vidUrl=vidUrl||'';QA.photoUrls=photoUrls;
+  btn.textContent='Enregistrement…';
+  const supaId=await saveToSupabase(QA);
+  if(supaId)QA.supa_id=supaId;
+  await saveToAirtable(QA);
+  const iF=QA.g==='f';
+  const msg=`NOUVELLE INSCRIPTION LOVESIAM\n\nProfil: ${iF?'Femme thaïlandaise':'Homme français'}\nPrénom: ${QA.name}\nÂge: ${QA.age} ans\nVille: ${QA.ville}\nTaille: ${QA.height} cm / Poids: ${QA.weight} kg\nLangues: ${iF?`FR:${QA.lfr} / EN:${QA.len}`:`TH:${QA.lth} / EN:${QA.len}`}\nDescription: ${QA.desc||''}\nRecherche: ${QA.looking}\nSituation: ${QA.fam||''} / ${QA.job||''}\n\nVIDÉO: ${vidUrl||'Non uploadée'}\nEmail: ${ev}\nWhatsApp: ${wv||'—'}`;
+  try{await emailjs.send(ES,ET,{to_email:PE,from_name:QA.name,from_email:ev,subject:`Nouvelle inscription LoveSiam — ${QA.name}`,message:msg})}catch(e2){}
+  U={name:QA.name,city:QA.ville||'France',bio:QA.desc||'',gender:QA.g,email:ev,status:'pending',supa_id:supaId};
+  updNav();QD=true;bQ();rFG();
+}
+
+function setupPhotoUploads(){
+  ['1','2','3'].forEach(n=>{
+    const inp=document.getElementById('PI'+n);if(!inp)return;
+    inp.onchange=function(){
+      const f=this.files[0];if(!f)return;
+      if(f.size>5*1024*1024){show('⚠️ Photo trop lourde — max 5MB');return}
+      const zone=document.getElementById('PH'+n);
+      const preview=document.getElementById('PP'+n);
+      const reader=new FileReader();
+      reader.onload=e=>{zone.style.backgroundImage=`url(${e.target.result})`;zone.style.backgroundSize='cover';zone.style.backgroundPosition='center';zone.innerHTML='<div style="background:rgba(0,0,0,.4);border-radius:inherit;position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-size:.7rem;font-weight:500">✓ Photo sélectionnée</span></div>';};
+      reader.readAsDataURL(f);
+      preview.style.display='block';preview.textContent=`✅ ${f.name}`;
+      if(!QA.photos)QA.photos=[];QA.photos[parseInt(n)-1]=f;
+    };
+  });
+}
+
+async function qCamOn(){
+  const er=g('QCE');er.style.display='none';
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    er.style.display='block';er.textContent='📱 Caméra non disponible. Utilisez l\'option Upload ci-dessous.';
+    g('QCP').style.display='none';
+    const uz=g('QUZ');if(uz){uz.style.border='2px solid var(--g)';uz.scrollIntoView({behavior:'smooth'})}
+    return;
+  }
+  try{
+    QST=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'user'},width:{ideal:720},height:{ideal:1280}},audio:true});
+    const v=g('QCV');v.srcObject=QST;v.setAttribute('playsinline','');v.setAttribute('autoplay','');v.setAttribute('muted','');v.style.display='block';
+    try{await v.play()}catch(pe){}
+    g('QCP').style.display='none';g('QBA').style.display='none';g('QBR2').style.display='block';
+  }catch(e){
+    er.style.display='block';
+    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+    if(isIOS)er.textContent='📱 Sur iPhone: Réglages → Safari → Caméra → Autoriser. Ou utilisez Upload.';
+    else if(e.name==='NotAllowedError')er.textContent='🔒 Accès caméra refusé. Autorisez dans les réglages.';
+    else er.textContent='❌ Caméra indisponible. Utilisez Upload ci-dessous.';
+    g('QCP').style.display='none';
+    const uz=g('QUZ');if(uz){uz.style.border='2px solid var(--g)';uz.scrollIntoView({behavior:'smooth'})}
+  }
+}
+function qCamRec(){
+  QCH=[];const mt=MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')?'video/webm;codecs=vp8,opus':'video/webm';
+  QMR=new MediaRecorder(QST,{mimeType:mt});
+  QMR.ondataavailable=e=>{if(e.data.size>0)QCH.push(e.data)};
+  QMR.onstop=()=>{const bl=new Blob(QCH,{type:'video/webm'});const rv=g('QCR');rv.src=URL.createObjectURL(bl);rv.style.display='block';g('QCV').style.display='none';g('QRB').style.display='none';g('QCP2').style.display='none';g('QBS').style.display='none';g('QBRT').style.display='block';QV=true;if(QST){QST.getTracks().forEach(t=>t.stop());QST=null}show('✅ Vidéo enregistrée !')};
+  QMR.start();QRS=0;g('QRB').style.display='flex';g('QCP2').style.display='block';g('QBR2').style.display='none';g('QBS').style.display='block';
+  QRT=setInterval(()=>{QRS++;g('QRL').textContent=`REC ${QRS}s / 60s`;g('QCPF').style.width=`${QRS/60*100}%`;if(QRS>=60)qCamStop()},1000);
+}
+function qCamStop(){clearInterval(QRT);if(QMR&&QMR.state!=='inactive')QMR.stop()}
+function qCamRetry(){QV=false;g('QCR').style.display='none';g('QBRT').style.display='none';g('QCPF').style.width='0%';qCamOn()}
+function qCC(){clearInterval(QRT);if(QST){QST.getTracks().forEach(t=>t.stop());QST=null}}
+
+// ============================================================
+// MODALES LÉGALES
+// ============================================================
+const ML_DATA={
+  ml:{title:'Mentions légales',content:'<h4 style="color:#1A2744;margin-bottom:10px">Éditeur du site</h4><p><strong>Patrick Hessel</strong><br>Consultant en relations franco-thaïlandaises<br>Email : contact@lovesiam.com</p><h4 style="color:#1A2744;margin:14px 0 10px">Hébergement</h4><p><strong>Netlify, Inc.</strong><br>512 2nd Street, San Francisco, CA 94107</p><h4 style="color:#1A2744;margin:14px 0 10px">Propriété intellectuelle</h4><p>Tout le contenu est protégé par le droit d\'auteur.</p>'},
+  cgu:{title:'Conditions Générales d\'Utilisation',content:'<p><strong>Dernière mise à jour : juin 2026</strong></p><h4 style="color:#1A2744;margin:12px 0 8px">1. Objet</h4><p>LoveSiam est un service de mise en relation entre hommes français et femmes thaïlandaises.</p><h4 style="color:#1A2744;margin:12px 0 8px">2. Conditions</h4><p>Utilisateur majeur (18 ans minimum). Tout faux profil entraîne la suppression du compte.</p><h4 style="color:#1A2744;margin:12px 0 8px">3. Fonctionnement</h4><p>Chaque inscription est validée avant publication. La mise en relation a lieu uniquement en cas de coup de coeur mutuel.</p>'},
+  rgpd:{title:'Confidentialité & RGPD',content:'<p><strong>Dernière mise à jour : juin 2026</strong></p><h4 style="color:#1A2744;margin:12px 0 8px">Responsable du traitement</h4><p>Patrick Hessel — contact@lovesiam.com</p><h4 style="color:#1A2744;margin:12px 0 8px">Données collectées</h4><p>Prénom, âge, ville, taille, poids, photo, vidéo, email, WhatsApp.</p><h4 style="color:#1A2744;margin:12px 0 8px">Sous-traitants</h4><p>Cloudinary · Airtable · EmailJS · Netlify · Supabase</p><h4 style="color:#1A2744;margin:12px 0 8px">Vos droits</h4><p>Accès, rectification, effacement : <strong>contact@lovesiam.com</strong><br>Réclamation : <strong>cnil.fr</strong></p>'},
+  cookies:{title:'Politique Cookies',content:'<p>LoveSiam utilise uniquement des cookies techniques nécessaires au fonctionnement du site. Aucun cookie publicitaire.</p><h4 style="color:#1A2744;margin:12px 0 8px">Cookies techniques</h4><p>Session utilisateur · Préférences de langue (FR/TH)</p>'}
+};
+function openMl(key){const d=ML_DATA[key];if(!d)return;document.getElementById('ML_TITLE').textContent=d.title;document.getElementById('ML_CONTENT').innerHTML=d.content;document.getElementById('ML_BG').style.display='flex';document.body.style.overflow='hidden'}
+function closeMl(){document.getElementById('ML_BG').style.display='none';document.body.style.overflow=''}
+</script>
+</body>
+</html>    var guideCards;
+    if(LANG==='th'){
+      guideCards=[
+        {ic:'👤',t:'แนะนำตัวเอง',d:'ชื่อ อายุ เมืองที่อยู่ และที่มาของคุณ'},
+        {ic:'💼',t:'อาชีพของคุณ',d:'คุณทำงานอะไร? ชีวิตประจำวันเป็นอย่างไร?'},
+        {ic:'❤️',t:'สิ่งที่คุณชอบ',d:'งานอดิเรก กีฬา ดนตรี การท่องเที่ยว'},
+        {ic:'👨‍👩‍👧',t:'ครอบครัวและค่านิยม',d:'ครอบครัวสำคัญแค่ไหน? มีลูกไหม?'},
+        {ic:'💑',t:'คู่ในอุดมคติ',d:'คุณมองหาผู้ชายแบบไหน? ความสัมพันธ์แบบไหน?'},
+        {ic:'🗣️',t:'พูดภาษาฝรั่งเศส',d:'พูดประโยคสั้นๆ เป็นภาษาฝรั่งเศส — มันน่ารักมาก!'}
+      ];
+    } else {
+      guideCards=[
+        {ic:'👤',t:'Présentez-vous',d:'Prénom, âge, ville et votre histoire'},
+        {ic:'💼',t:'Votre métier',d:'Que faites-vous dans la vie ? Votre quotidien ?'},
+        {ic:'❤️',t:'Vos passions',d:'Loisirs, sport, musique, voyages, ce que vous aimez'},
+        {ic:'👨‍👩‍👧',t:'Famille & valeurs',d:'Importance de la famille, enfants, ce qui vous guide'},
+        {ic:'💑',t:'Ce que vous cherchez',d:'Quel type de femme ? Quel type de relation ?'},
+        {ic:'🗣️',t:'Un mot en thaï',d:'Dites quelques mots en thaï — ça fait toujours sourire !'}
+      ];
+    }
+    var cardsHtml='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">';
+    for(var ci=0;ci<guideCards.length;ci++){
+      var card=guideCards[ci];
+      cardsHtml+='<div style="background:#fff;border:1px solid rgba(196,150,42,.18);border-radius:13px;padding:14px;text-align:left;box-shadow:0 2px 8px rgba(0,0,0,.05)">'
+        +'<div style="font-size:1.5rem;margin-bottom:7px">'+card.ic+'</div>'
+        +'<div style="font-size:.95rem;font-weight:600;color:var(--nv);margin-bottom:4px">'+card.t+'</div>'
+        +'<div style="font-size:.8rem;color:var(--td);line-height:1.55">'+card.d+'</div>'
+        +'</div>';
+    }
+    cardsHtml+='</div>';ang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>LoveSiam — Rencontres Franco-Thaïlandaises</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--g:#C4962A;--gl:#E8B84B;--gd:rgba(196,150,42,.1);--nv:#1A2744;--bg:#fff;--b2:#F8F6F2;--b3:#F0EDE6;--tm:#4A5568;--td:#8A95A8;--rd:#C0392B;--gn:#27AE60;--mw:480px}
+body{background:var(--bg);color:var(--nv);font-family:'DM Sans',sans-serif;overflow-x:hidden;font-size:16px;-webkit-font-smoothing:antialiased}
+
+/* GLOBAL TYPOGRAPHY SCALE - uniform across all pages */
+p, div, span, label, input, select, textarea, button{font-size:inherit}
+.small{font-size:.875rem}
+.tiny{font-size:.75rem}
+
+/* QUESTIONNAIRE - uniform */
+.qt{font-family:'Cormorant Garamond',serif;font-size:1.8rem !important;font-weight:300;line-height:1.15;margin-bottom:8px;color:var(--nv)}
+.qs{font-size:.95rem !important;color:var(--tm);line-height:1.7;margin-bottom:16px}
+.qe{font-size:.75rem !important;letter-spacing:.18em;text-transform:uppercase;color:var(--g);margin-bottom:6px;font-weight:600}
+.cl{font-size:.95rem !important;font-weight:500;margin-bottom:2px;color:var(--nv)}
+.cs3{font-size:.8rem !important;color:var(--td);line-height:1.5}
+.fl{font-size:.72rem !important;letter-spacing:.12em;text-transform:uppercase;color:var(--nv);display:block;margin-bottom:6px;font-weight:600}
+.fi,.fsl,.fa{font-size:.95rem !important}
+.lp2{font-size:.85rem !important}
+.pi2{font-size:.88rem !important}
+
+/* PROFILE CARDS - uniform */
+.pnm{font-family:'Cormorant Garamond',serif;font-size:1.2rem !important;font-weight:600;color:var(--nv);margin-bottom:3px}
+.plc{font-size:.82rem !important;color:var(--td);margin-bottom:5px}
+.plg{font-size:.75rem !important;padding:3px 9px;border-radius:6px;background:var(--b2);color:var(--nv);font-weight:500;display:inline-block;margin-bottom:7px}
+.pds{font-size:.85rem !important;color:var(--tm);line-height:1.55;margin-bottom:8px}
+.lb-like{font-size:.85rem !important;padding:9px !important}
+
+/* ADMIN */
+.admin-name{font-size:.95rem !important;font-weight:600;color:var(--nv)}
+.admin-sub{font-size:.78rem !important;color:var(--td)}
+.btn-validate{font-size:.82rem !important}
+.btn-reject{font-size:.82rem !important}
+.badge-pending,.badge-active,.badge-rejected{font-size:.72rem !important}
+
+/* MATCH PAGE */
+.match-name{font-size:1rem !important;font-weight:600;color:var(--nv);margin-bottom:3px}
+.match-sub{font-size:.82rem !important;color:var(--td)}
+.match-badge{font-size:.72rem !important}
+.match-empty{font-size:.9rem !important}
+
+/* PROFILE PAGE */
+.mnm{font-family:'Cormorant Garamond',serif;font-size:1.5rem !important}
+.mlc{font-size:.82rem !important}
+.msn{font-family:'Cormorant Garamond',serif;font-size:1.5rem !important;color:var(--g)}
+.msl{font-size:.68rem !important;color:var(--td);font-weight:500}
+.ms2{font-size:.68rem !important;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:5px;font-weight:500}
+.ms3{font-size:.9rem !important;color:var(--tm);line-height:1.6}
+
+/* CHAT */
+.cm{font-size:.9rem !important;line-height:1.58}
+.mn{font-size:.95rem !important;font-weight:600;margin-bottom:2px;color:var(--nv)}
+.mp{font-size:.8rem !important;color:var(--td)}
+
+/* LOGIN */
+.lc .fl{font-size:.78rem !important}
+
+/* BOTTOM NAV */
+.bi span{font-size:.68rem !important;letter-spacing:.04em;text-transform:uppercase;color:var(--td);font-weight:500}
+
+/* SECTION CARDS */
+.dc h4{font-size:1rem !important;font-weight:600;margin-bottom:5px;color:var(--nv)}
+.dc p{font-size:.88rem !important;color:var(--tm);line-height:1.65}
+.pt h4{font-size:1rem !important;font-weight:600;margin-bottom:5px;color:#fff}
+.pt p{font-size:.9rem !important;color:rgba(255,255,255,.65);line-height:1.68}
+
+/* POPUP PROFILE */
+.ph2{font-size:.95rem}
+.pb-back{font-size:1rem !important}
+
+/* VIDEO MODAL */
+.vf{font-size:.9rem !important;color:#fff;line-height:1.55}
+.vt{font-size:.85rem !important;color:var(--gl);line-height:1.55}
+.vn{font-family:'Cormorant Garamond',serif;font-size:1.5rem !important;margin-bottom:3px;color:#fff}
+.vlo{font-size:.82rem !important;color:rgba(255,255,255,.6)}
+
+/* FILTERS */
+.fc{font-size:.82rem !important;padding:7px 14px !important}
+.ft{font-family:'Cormorant Garamond',serif;font-size:1.7rem !important;font-weight:400;color:var(--nv)}
+.fb{font-size:.88rem !important}
+
+/* SUCCESS PAGE */
+.su h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem !important}
+.su p{font-size:.9rem !important;color:var(--tm);line-height:1.68}
+.ni h5{font-size:.9rem !important;font-weight:600;margin-bottom:2px;color:var(--nv)}
+.ni p{font-size:.8rem !important;color:var(--tm);line-height:1.5}
+
+/* LEGAL MODALS */
+#ML_CONTENT{font-size:.88rem !important;line-height:1.8}
+
+/* RESPONSIVE LAYOUT */
+@media(min-width:768px){
+  :root{--mw:100%}
+  body{background:#F5F2EE}
+  nav .nw{max-width:1100px}
+  .bn .bw{max-width:1100px}
+  .bn{height:64px}
+  .bi span{font-size:.65rem}
+  .pg{padding:72px 0 80px}
+  .hero-inner{max-width:700px;margin:0 auto;display:flex;flex-direction:column;align-items:center;padding:0 40px;text-align:center}
+  .hero-left{display:flex;flex-direction:column;align-items:center;width:100%}
+  .hero-right{display:flex;flex-direction:row;align-items:stretch;gap:16px;width:100%;max-width:600px;margin-top:8px}
+  .hero-preview{flex:1}
+  .ct{justify-content:center}
+  h1{font-size:3.4rem}
+  .sc-inner{max-width:1100px;margin:0 auto;padding:0 40px}
+  .dg{grid-template-columns:repeat(4,1fr);gap:16px}
+  .gr{grid-template-columns:repeat(4,1fr);max-width:1100px;margin:0 auto;padding:0 20px}
+  .fh{max-width:1100px;margin:0 auto;padding:16px 24px 10px}
+  .fb{max-width:1100px;margin:0 auto 11px;padding:10px 24px}
+  .fs{max-width:1100px;margin:0 auto;padding:0 20px 11px}
+  .adv-filters{max-width:1100px;margin:0 auto;padding:0 20px 12px}
+  .pp-overlay{max-width:600px;left:50%;transform:translateX(-50%);border-radius:18px;top:72px;height:calc(100vh - 72px)}
+  .qp{max-width:600px}
+  .footer-inner{max-width:1100px;margin:0 auto}
+  .mls{max-width:1100px;margin:0 auto}
+  #PM_MUTUAL,#PM_HEARTS{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 20px}
+  .match-card{margin:0}
+}
+@media(min-width:1100px){
+  h1{font-size:4rem}
+  .dg{grid-template-columns:repeat(4,1fr)}
+  .gr{grid-template-columns:repeat(5,1fr)}
+}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:99;height:56px;background:rgba(255,255,255,.97);border-bottom:1px solid rgba(196,150,42,.12)}
+nav .nw{max-width:var(--mw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 16px}
+@media(min-width:768px){nav{height:64px}nav .nw{height:64px;padding:0 32px}}
+.ltx{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--nv);font-weight:600;letter-spacing:.08em;cursor:pointer}
+.ltx em{color:var(--g);font-weight:300;font-style:italic}
+.lw{display:flex;border-radius:16px;overflow:hidden;border:1px solid rgba(26,39,68,.15)}
+.lb-lang{padding:4px 9px;font-size:.65rem;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.lb-lang.on{background:var(--nv);color:#fff}.lb-lang.off{background:transparent;color:var(--td)}
+.nb{padding:8px 16px;border-radius:20px;font-size:.82rem;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:500;border:none}
+.nb0{background:transparent;border:1.5px solid rgba(26,39,68,.2);color:var(--nv)}
+.nb1{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;font-weight:600}
+.bn{position:fixed;bottom:0;left:0;right:0;z-index:99;height:56px;background:rgba(255,255,255,.97);border-top:1px solid rgba(26,39,68,.08)}
+.bw{max-width:var(--mw);margin:0 auto;display:flex;align-items:center;justify-content:space-around;height:100%}
+.bi{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:5px 12px;opacity:.3}
+.bi.on{opacity:1}
+.bi i{font-size:1.1rem;position:relative}
+.bi span{font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;color:var(--td);font-weight:500}
+.bi.on span{color:var(--g)}
+.pg{display:none;padding:56px 0 64px;min-height:100vh}.pg.on{display:block}
+.tk{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-10px);background:var(--nv);border-radius:9px;padding:9px 16px;font-size:.77rem;z-index:999;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none;color:#fff}
+.tk.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* HERO */
+.hero{min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;text-align:center;background:linear-gradient(160deg,#FFFBF4,#fff 50%,#F8F6FF)}
+@media(min-width:768px){.hero{min-height:calc(100vh - 64px);padding:60px 0}}
+.hero-inner{width:100%}
+.hero-left{display:flex;flex-direction:column;align-items:center}
+.ey{font-size:.78rem;letter-spacing:.26em;text-transform:uppercase;color:var(--g);margin-bottom:14px;font-weight:500}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,8vw,4.8rem);font-weight:300;line-height:1.06;margin-bottom:12px;color:var(--nv)}
+h1 em{font-style:italic;color:var(--g)}
+.hs{font-size:1.05rem;color:var(--tm);line-height:1.8;max-width:380px;margin:0 auto 28px}
+@media(min-width:768px){.hs{margin:0 0 28px;max-width:440px}}
+.ct{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.bg-btn{padding:14px 28px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:30px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;box-shadow:0 5px 16px rgba(196,150,42,.28)}
+.bo-btn{padding:14px 28px;background:#fff;color:var(--nv);border:1.5px solid rgba(26,39,68,.15);border-radius:30px;font-family:'DM Sans',sans-serif;font-size:.95rem;cursor:pointer}
+.sw{display:flex;background:#fff;border-radius:16px;box-shadow:0 4px 18px rgba(0,0,0,.08);border:1px solid rgba(196,150,42,.1);width:100%;max-width:360px}
+.st{flex:1;padding:18px 8px;text-align:center;position:relative}
+.st:not(:last-child)::after{content:'';position:absolute;right:0;top:20%;height:60%;width:1px;background:rgba(196,150,42,.15)}
+.sn{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--g);font-weight:600;line-height:1}
+.sl-stat{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--nv);margin-top:6px;font-weight:600}
+.hero-right{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;margin-top:16px}
+@media(min-width:768px){
+  .hero-right{display:flex;flex-direction:column;gap:16px}
+  .hero-preview{background:#fff;border-radius:20px;padding:20px;border:1px solid rgba(196,150,42,.15);box-shadow:0 8px 32px rgba(0,0,0,.08);width:320px}
+  .hp-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--nv);margin-bottom:14px;font-weight:600}
+  .hp-profiles{display:flex;gap:10px}
+  .hp-card{flex:1;background:var(--b2);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(196,150,42,.1)}
+  .hp-av{font-size:2rem;margin-bottom:6px}
+  .hp-name{font-size:.9rem;font-weight:600;color:var(--nv);margin-bottom:3px}
+  .hp-loc{font-size:.72rem;color:var(--td)}
+  .hp-badge{font-size:.68rem;padding:3px 9px;background:var(--gd);color:var(--g);border-radius:8px;display:inline-block;margin-top:5px;border:1px solid rgba(196,150,42,.2);font-weight:500}
+}
+
+/* SECTIONS */
+.sc{padding:40px 18px;text-align:center}
+.sc.a{background:var(--b2)}
+.sc.n{background:var(--nv);color:#fff}
+@media(min-width:768px){.sc{padding:80px 40px}}
+.sc-inner{max-width:var(--mw)}
+.se{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--g);margin-bottom:8px;font-weight:600}
+h2{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;margin-bottom:10px;color:var(--nv)}
+@media(min-width:768px){h2{font-size:2.8rem}}
+h2 em{font-style:italic;color:var(--g)}
+.n h2{color:#fff}
+.ss{font-size:1rem;color:var(--tm);line-height:1.72;margin-bottom:22px}
+.n .ss{color:rgba(255,255,255,.6)}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;max-width:560px;margin-left:auto;margin-right:auto}
+.dc{background:#fff;border-radius:13px;padding:16px;border:1px solid rgba(26,39,68,.07);box-shadow:0 2px 7px rgba(0,0,0,.04);text-align:left}
+.dc i{font-size:1.8rem;margin-bottom:8px;display:block}
+.dc h4{font-size:.95rem;font-weight:600;margin-bottom:5px;color:var(--nv)}
+.dc p{font-size:.82rem;color:var(--tm);line-height:1.65}
+.pi-step{display:flex;gap:13px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left;max-width:560px;margin:0 auto;width:100%}
+.pi-step:last-child{border:none}
+.pn{font-family:'Cormorant Garamond',serif;font-size:2rem;color:rgba(196,150,42,.4);width:36px;flex-shrink:0;line-height:1}
+.pt h4{font-size:1rem;font-weight:600;margin-bottom:5px;color:#fff}
+.pt p{font-size:.86rem;color:rgba(255,255,255,.65);line-height:1.68}
+
+/* PROFILES */
+.fh{padding:13px 16px 7px;display:flex;align-items:center;justify-content:space-between}
+.ft{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:var(--nv)}
+.fb{margin:0 12px 11px;padding:12px 14px;background:var(--gd);border:1px solid rgba(196,150,42,.18);border-radius:10px;font-size:.85rem;color:var(--tm);line-height:1.58;text-align:center}
+.fs{display:flex;gap:5px;padding:0 12px 11px;overflow-x:auto;scrollbar-width:none;flex-wrap:wrap}
+.fs::-webkit-scrollbar{display:none}
+.fc{padding:7px 14px;border-radius:15px;font-size:.78rem;white-space:nowrap;cursor:pointer;border:1px solid rgba(26,39,68,.12);background:transparent;color:var(--td);font-family:'DM Sans',sans-serif}
+.fc.on{background:var(--nv);border-color:var(--nv);color:#fff}
+.adv-filters{padding:0 12px 8px}
+.gr{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding:0 11px}
+.pc-card{background:#fff;border-radius:15px;overflow:hidden;border:1px solid rgba(26,39,68,.07);cursor:pointer;box-shadow:0 2px 9px rgba(0,0,0,.06);transition:transform .2s,box-shadow .2s}
+.pc-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.ph-img{width:100%;aspect-ratio:4/5;position:relative;overflow:hidden;background:var(--b3)}
+.sw2{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;filter:blur(6px);opacity:.5;transform:scale(1.1)}
+.so{position:absolute;inset:0;background:linear-gradient(180deg,rgba(248,246,242,.05) 0%,rgba(248,246,242,.4) 70%,rgba(248,246,242,.8) 100%)}
+.sl2{background:rgba(26,39,68,.72);color:#fff;padding:3px 11px;border-radius:14px;font-size:.6rem;font-weight:500;white-space:nowrap}
+.sb-btn{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:13px;padding:4px 12px;font-size:.62rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.bd{position:absolute;font-size:.53rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 6px;border-radius:5px;font-weight:600;top:7px;left:7px}
+.bn2-badge{background:var(--rd);color:#fff}.bo2-badge{background:var(--gn);color:#fff}
+.vd-badge{position:absolute;bottom:7px;right:7px;background:rgba(196,150,42,.88);color:#fff;font-size:.53rem;padding:2px 6px;border-radius:4px;font-weight:600}
+.pif{padding:10px}
+.pnm{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--nv);margin-bottom:2px}
+.plc{font-size:.82rem;color:var(--td);margin-bottom:4px}
+.plg{font-size:.72rem;padding:2px 7px;border-radius:6px;background:var(--b2);color:var(--nv);font-weight:500;display:inline-block;margin-bottom:6px}
+.pds{font-size:.84rem;color:var(--tm);line-height:1.48;margin-bottom:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lb-like{width:100%;padding:9px;border-radius:8px;border:1px solid rgba(196,150,42,.22);background:rgba(196,150,42,.08);color:var(--g);font-size:.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600}
+.lb-like.liked{background:rgba(196,150,42,.2);border-color:var(--g)}
+
+/* PROFILE POPUP */
+.pp-overlay{position:fixed;inset:0;background:#fff;z-index:500;display:none;flex-direction:column;overflow-y:auto}
+.pp-overlay.on{display:flex}
+.ph2{padding:12px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(26,39,68,.07);flex-shrink:0;background:#fff;position:sticky;top:0;z-index:2}
+.pb-back{background:none;border:none;color:var(--g);font-size:1rem;cursor:pointer;font-weight:600}
+.pc2{width:100%;height:160px;display:flex;align-items:center;justify-content:center;background:var(--b3);position:relative;overflow:hidden}
+.pc2b{filter:blur(18px);opacity:.4;font-size:7rem;position:absolute}
+.pc2l{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}
+.av{width:70px;height:70px;border-radius:50%;background:var(--b2);display:flex;align-items:center;justify-content:center;font-size:2.2rem;border:3px solid #fff;margin-top:-35px;margin-left:16px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+
+/* VIDEO */
+.vm{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:600;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px}
+.vm.on{display:flex}
+.vc{position:absolute;top:16px;right:16px;width:34px;height:34px;background:rgba(255,255,255,.14);border:none;border-radius:50%;color:#fff;font-size:.9rem;cursor:pointer}
+.vs{width:100%;max-width:280px;aspect-ratio:9/16;border-radius:18px;overflow:hidden;position:relative;flex-shrink:0;background:var(--nv)}
+.vg{position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(0,0,0,.86) 100%)}
+.vb{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);width:88%;background:rgba(0,0,0,.8);border:1px solid rgba(196,150,42,.22);border-radius:10px;padding:10px 12px;z-index:3}
+.vl-badge{font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px;font-weight:500}
+.vf{font-size:.78rem;color:#fff;line-height:1.48}
+.vd2{height:1px;background:rgba(196,150,42,.18);margin:5px 0}
+.vt{font-size:.74rem;color:var(--gl);line-height:1.48}
+.vp-bar{position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,.1);z-index:4}
+.vpf{height:100%;background:var(--g)}
+.vi{position:absolute;bottom:0;left:0;right:0;padding:14px;z-index:3}
+.vn{font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:3px;color:#fff}
+.vlo{font-size:.7rem;color:rgba(255,255,255,.6)}
+.vct{display:flex;align-items:center;gap:7px;margin-top:11px;width:100%;max-width:280px}
+.vb2{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;font-size:.9rem;flex-shrink:0}
+.vb2.p{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff}
+.vb2.l{background:rgba(192,57,43,.1);color:var(--rd);border:1px solid rgba(192,57,43,.2)}
+.vln{display:flex;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.14)}
+.vl2{padding:4px 10px;font-size:.62rem;cursor:pointer;border:none;font-family:'DM Sans',sans-serif}
+.vl2.on{background:var(--nv);color:#fff}.vl2.off{background:transparent;color:rgba(255,255,255,.45)}
+
+/* MATCHS */
+.mls{padding:0 5px}
+.match-section-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--nv);padding:12px 16px 6px;font-weight:600}
+.match-card{display:flex;align-items:center;gap:11px;padding:12px 13px;background:#fff;border:1px solid rgba(26,39,68,.07);border-radius:13px;margin:0 11px 9px;box-shadow:0 2px 8px rgba(0,0,0,.05);cursor:pointer}
+.match-av{width:48px;height:48px;border-radius:50%;background:var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;border:2px solid rgba(196,150,42,.2)}
+.match-av.mutual{border-color:var(--g);box-shadow:0 0 0 3px rgba(196,150,42,.15)}
+.match-info{flex:1;min-width:0}
+.match-name{font-size:1rem;font-weight:600;color:var(--nv);margin-bottom:2px}
+.match-sub{font-size:.78rem;color:var(--td)}
+.match-badge{padding:3px 9px;border-radius:10px;font-size:.6rem;font-weight:600;white-space:nowrap}
+.match-badge.heart{background:rgba(196,150,42,.1);color:var(--g);border:1px solid rgba(196,150,42,.2)}
+.match-badge.mutual{background:rgba(39,174,96,.1);color:var(--gn);border:1px solid rgba(39,174,96,.2)}
+.match-empty{text-align:center;padding:32px 20px;color:var(--td);font-size:.82rem}
+.match-empty i{font-size:2.2rem;display:block;margin-bottom:9px}
+
+/* MON PROFIL */
+.mav{width:78px;height:78px;border-radius:50%;background:var(--b2);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:12px auto;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.mnm{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;text-align:center;margin-bottom:3px;color:var(--nv)}
+.mlc{font-size:.7rem;color:var(--td);text-align:center}
+.mst{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 16px}
+.mst div{background:#fff;border-radius:10px;padding:10px;text-align:center;border:1px solid rgba(26,39,68,.07)}
+.msn{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--g)}
+.msl{font-size:.56rem;color:var(--td);font-weight:500}
+.ms{background:#fff;border-radius:11px;padding:12px;margin:0 16px 9px;border:1px solid rgba(26,39,68,.07)}
+.ms2{font-size:.57rem;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:5px;font-weight:500}
+.ms3{font-size:.8rem;color:var(--tm);line-height:1.58}
+
+/* LOGIN */
+.lc{background:#fff;border:1px solid rgba(26,39,68,.08);border-radius:18px;padding:24px 20px;width:100%;max-width:340px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+
+/* QUESTIONNAIRE */
+.qp{padding:64px 14px 72px;max-width:440px;margin:0 auto}
+.qc{background:#fff;border:1px solid rgba(26,39,68,.07);border-radius:18px;padding:22px 18px;box-shadow:0 4px 18px rgba(0,0,0,.06)}
+.qpb{height:3px;background:var(--b2);border-radius:2px;margin-bottom:20px;overflow:hidden}
+.qpf{height:100%;background:linear-gradient(90deg,var(--g),var(--gl));transition:width .4s}
+.qe{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--g);margin-bottom:6px;font-weight:500}
+.qt{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,5vw,2rem);font-weight:300;line-height:1.12;margin-bottom:5px;color:var(--nv)}
+.qt em{font-style:italic;color:var(--g)}
+.qs{font-size:.76rem;color:var(--tm);line-height:1.65;margin-bottom:18px}
+.cs2{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.cd{display:flex;align-items:center;gap:11px;padding:12px 14px;background:var(--b2);border:1.5px solid rgba(26,39,68,.08);border-radius:11px;cursor:pointer;user-select:none}
+.cd.sl{border-color:var(--g);background:rgba(196,150,42,.06)}
+.ci2{font-size:1.3rem;flex-shrink:0}
+.cl{font-size:.85rem;font-weight:500;margin-bottom:2px;color:var(--nv)}
+.cs3{font-size:.68rem;color:var(--td);line-height:1.48}
+.ck{width:19px;height:19px;border-radius:50%;border:1.5px solid rgba(26,39,68,.17);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.62rem;margin-left:auto}
+.cd.sl .ck{background:var(--g);border-color:var(--g);color:#fff}
+.fg{margin-bottom:13px}
+.fl{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--nv);display:block;margin-bottom:6px;font-weight:600}
+.fi,.fsl,.fa{width:100%;background:var(--b2);border:1.5px solid rgba(26,39,68,.1);border-radius:9px;padding:10px 12px;color:var(--nv);font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;-webkit-appearance:none}
+.fi:focus,.fsl:focus,.fa:focus{border-color:var(--g)}
+.fi::placeholder,.fa::placeholder{color:var(--td)}
+.fa{resize:none;line-height:1.62}
+.fsl option{background:#fff;color:var(--nv)}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.pl{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.pi2{padding:6px 12px;border-radius:22px;border:1.5px solid rgba(26,39,68,.1);background:var(--b2);color:var(--tm);font-size:.77rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pi2.sl{border-color:var(--g);background:rgba(196,150,42,.08);color:var(--g)}
+.lr{margin-bottom:11px}
+.lh{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.lp{display:flex;gap:5px;flex-wrap:wrap}
+.lp2{padding:5px 10px;border-radius:14px;border:1.5px solid rgba(26,39,68,.09);background:var(--b2);color:var(--tm);font-size:.73rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+.lp2.sl{border-color:var(--g);background:rgba(196,150,42,.08);color:var(--g)}
+.ds{display:flex;align-items:center;gap:9px;margin:13px 0 11px}
+.dl{flex:1;height:1px;background:rgba(26,39,68,.08)}
+.dt{font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--td);font-weight:500;white-space:nowrap}
+.gt{display:flex;gap:9px;padding:10px;background:var(--b2);border-radius:9px;margin-bottom:6px}
+.gt strong{font-size:.78rem;font-weight:600;display:block;margin-bottom:2px;color:var(--nv)}
+.gt span{font-size:.68rem;color:var(--tm);line-height:1.52}
+.ca{width:100%;aspect-ratio:9/16;max-height:260px;background:var(--nv);border-radius:12px;overflow:hidden;position:relative;margin-bottom:10px;display:flex;align-items:center;justify-content:center}
+.cp{font-size:.78rem;color:rgba(255,255,255,.4);text-align:center;padding:13px;line-height:1.58}
+.rb{position:absolute;top:8px;left:8px;background:var(--rd);color:#fff;padding:3px 8px;border-radius:6px;font-size:.67rem;display:flex;align-items:center;gap:4px;font-weight:500}
+.rd2{width:5px;height:5px;border-radius:50%;background:#fff;animation:bk .8s infinite}
+@keyframes bk{0%,100%{opacity:1}50%{opacity:.2}}
+.cpb{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.1)}
+.cpf{height:100%;background:var(--rd);transition:width 1s linear}
+.uz{border:2px dashed rgba(196,150,42,.22);border-radius:11px;padding:18px;text-align:center;margin-bottom:10px;cursor:pointer;background:var(--b2)}
+.qn{display:flex;gap:8px;margin-top:10px}
+.qb{flex:1;padding:11px;background:var(--b2);border:1.5px solid rgba(26,39,68,.1);border-radius:11px;color:var(--td);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer}
+.qx{flex:2;padding:11px;background:linear-gradient(135deg,var(--g),var(--gl));border:none;border-radius:11px;color:#fff;font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:600;cursor:pointer}
+.qf{flex:1}
+.sr{background:var(--b2);border:1px solid rgba(196,150,42,.14);border-radius:12px;padding:14px;margin-bottom:12px}
+.sr .r{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(26,39,68,.07)}
+.sr .r:last-child{border:none}
+.sk{font-size:.68rem;color:var(--td)}
+.sv{font-size:.77rem;color:var(--tm);text-align:right}
+.su{text-align:center;padding:12px 0}
+.su i{font-size:2.8rem;margin-bottom:11px;display:block}
+.su h3{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:400;margin-bottom:6px;color:var(--nv)}
+.su p{font-size:.77rem;color:var(--tm);line-height:1.65;margin-bottom:16px}
+.ns{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;text-align:left}
+.ni{display:flex;gap:9px;padding:10px;background:var(--b2);border-radius:9px}
+.ni h5{font-size:.77rem;font-weight:600;margin-bottom:2px;color:var(--nv)}
+.ni p{font-size:.68rem;color:var(--tm);line-height:1.48}
+.ab{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;text-align:left}
+.af{display:flex;gap:10px;font-size:1rem;color:rgba(255,255,255,.9)}
+
+/* ADMIN */
+.admin-page{padding:72px 20px 80px;max-width:900px;margin:0 auto}
+.admin-card{background:#fff;border-radius:14px;border:1px solid rgba(26,39,68,.08);padding:18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.admin-profile-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--b2)}
+.admin-profile-row:last-child{border:none}
+.admin-av{width:44px;height:44px;border-radius:50%;background:var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.admin-info{flex:1}
+.admin-name{font-size:.85rem;font-weight:600;color:var(--nv)}
+.admin-sub{font-size:.68rem;color:var(--td)}
+.admin-actions{display:flex;gap:6px}
+.btn-validate{padding:5px 12px;background:var(--gn);color:#fff;border:none;border-radius:8px;font-size:.7rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600}
+.btn-reject{padding:5px 12px;background:transparent;color:var(--rd);border:1px solid rgba(192,57,43,.2);border-radius:8px;font-size:.7rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+.badge-pending{padding:2px 8px;background:rgba(243,156,18,.1);color:#F39C12;border-radius:8px;font-size:.6rem;font-weight:600}
+.badge-active{padding:2px 8px;background:rgba(39,174,96,.1);color:var(--gn);border-radius:8px;font-size:.6rem;font-weight:600}
+.badge-rejected{padding:2px 8px;background:rgba(192,57,43,.1);color:var(--rd);border-radius:8px;font-size:.6rem;font-weight:600}
+
+/* LEGAL */
+#ML_BG{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;align-items:center;justify-content:center;padding:20px}
+</style>
+<script>
+// City autocomplete using a simple approach with open data
+// No API key needed - uses nominatim (OpenStreetMap free API)
+function setupCityAutocomplete(inputId, country) {
+  var input = document.getElementById(inputId);
+  if (!input) return;
+  
+  // Create dropdown
+  var dropdown = document.createElement('div');
+  dropdown.style.cssText = 'position:absolute;background:#fff;border:1px solid rgba(196,150,42,.3);border-radius:9px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:999;width:100%;max-height:200px;overflow-y:auto;display:none;margin-top:2px';
+  dropdown.id = inputId + '_drop';
+  
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:relative';
+  input.parentNode.insertBefore(wrapper, input);
+  wrapper.appendChild(input);
+  wrapper.appendChild(dropdown);
+  
+  var timer = null;
+  input.addEventListener('input', function() {
+    clearTimeout(timer);
+    var val = input.value.trim();
+    if (val.length < 2) { dropdown.style.display='none'; return; }
+    timer = setTimeout(function() {
+      fetchCities(val, country, dropdown, input);
+    }, 300);
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!wrapper.contains(e.target)) dropdown.style.display = 'none';
+  });
+}
+
+function fetchCities(query, country, dropdown, input) {
+  var countryCode = country === 'th' ? 'th' : 'fr,be,ch,lu,mc';
+  var url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&countrycodes=' + countryCode + '&featuretype=city&format=json&limit=6&addressdetails=1';
+  
+  fetch(url, {headers: {'Accept-Language': 'fr'}})
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      dropdown.innerHTML = '';
+      if (!data || !data.length) { dropdown.style.display='none'; return; }
+      
+      var seen = new Set();
+      data.forEach(function(item) {
+        var city = item.address && (item.address.city || item.address.town || item.address.village || item.address.municipality);
+        var country_name = item.address && (item.address.country || '');
+        if (!city || seen.has(city)) return;
+        seen.add(city);
+        
+        var div = document.createElement('div');
+        div.style.cssText = 'padding:10px 14px;cursor:pointer;font-size:.9rem;color:#1A2744;border-bottom:1px solid rgba(26,39,68,.05);display:flex;align-items:center;justify-content:space-between';
+        div.innerHTML = '<span>' + city + '</span><span style="font-size:.75rem;color:#8A95A8">' + country_name + '</span>';
+        div.addEventListener('mouseenter', function() { div.style.background='rgba(196,150,42,.07)'; });
+        div.addEventListener('mouseleave', function() { div.style.background=''; });
+        div.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          input.value = city;
+          dropdown.style.display = 'none';
+          // Store in QA
+          if (typeof QA !== 'undefined') QA.ville = city;
+        });
+        dropdown.appendChild(div);
+      });
+      dropdown.style.display = data.length ? 'block' : 'none';
+    })
+    .catch(function() { dropdown.style.display='none'; });
+}
+</script>
+</head>
+<body>
+<div class="tk" id="T"></div>
+<nav>
+  <div class="nw">
+    <div class="ltx" id="LG">Love<em>Siam</em></div>
+    <div style="display:flex;gap:7px;align-items:center">
+      <div class="lw"><button class="lb-lang on" id="LF">🇫🇷</button><button class="lb-lang off" id="LT">🇹🇭</button></div>
+      <div id="NA"><button class="nb nb0" id="BL" style="margin-right:4px"><span data-t="nav_login">Connexion</span></button><button class="nb nb1" id="BI"><span data-t="nav_register">M'inscrire</span></button></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ACCUEIL -->
+<div class="pg on" id="ph">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div style="margin-bottom:22px;display:flex;flex-direction:column;align-items:center">
+          <img src="./logo.png" alt="LoveSiam" style="width:140px;height:auto;filter:drop-shadow(0 4px 12px rgba(196,150,42,.25))" onerror="this.style.display='none'">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:#1A2744;letter-spacing:.1em;font-weight:600;margin-top:10px">Love<em style="color:#C4962A;font-weight:300;font-style:italic">Siam</em></div>
+        </div>
+        <div class="ey"><span data-t="hero_tag">✦ Un accompagnement humain et personnalisé</span></div>
+        <h1><span data-t="hero_h1_1">La rencontre</span><br><em data-t="hero_h1_2">franco-thaïlandaise</em></h1>
+        <p class="hs"><span data-t="hero_sub">Un service sur-mesure, de l'inscription à la rencontre. Chaque profil est sélectionné avec soin.</span></p>
+        <div class="ct">
+          <button class="bg-btn" id="HC"><span data-t="btn_register">M'inscrire maintenant</span></button>
+          <button class="bo-btn" id="HF"><span data-t="btn_profiles">Voir les profils →</span></button>
+        </div>
+        <div class="sw">
+          <div class="st"><div class="sn" id="CM">0</div><div class="sl-stat" data-t="stat_members">Membres</div></div>
+          <div class="st"><div class="sn" id="CC">0</div><div class="sl-stat" data-t="stat_couples">Couples</div></div>
+          <div class="st"><div class="sn" id="CO">0</div><div class="sl-stat" data-t="stat_online">En ligne</div></div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div style="width:100%;max-width:480px">
+          <div style="font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g);font-weight:600;margin-bottom:14px;text-align:center" data-t="preview_title">✦ Profils récents</div>
+          <div style="display:flex;gap:12px;justify-content:center">
+            <div style="flex:1;max-width:148px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.1);border:1px solid rgba(196,150,42,.15)">
+              <div style="height:110px;background:linear-gradient(160deg,#E8D5C4 0%,#C4A080 100%);display:flex;align-items:center;justify-content:center;position:relative">
+                <div style="font-size:3.2rem;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))">👩</div>
+                <div style="position:absolute;top:8px;right:8px;background:var(--gn);width:9px;height:9px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 2px rgba(39,174,96,.3)"></div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,.15))"></div>
+              </div>
+              <div style="padding:11px">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--nv)">Ning, 26</div>
+                <div style="font-size:.75rem;color:var(--td);margin-bottom:7px">📍 Bangkok</div>
+                <div style="font-size:.68rem;padding:3px 9px;background:var(--gd);color:var(--g);border-radius:8px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">🇫🇷 Moyen</div>
+              </div>
+            </div>
+            <div style="flex:1;max-width:148px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,.14);border:2px solid rgba(196,150,42,.25);margin-top:-10px">
+              <div style="height:110px;background:linear-gradient(160deg,#D4C4E8 0%,#9080B8 100%);display:flex;align-items:center;justify-content:center;position:relative">
+                <div style="font-size:3.2rem;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))">👩</div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,.15))"></div>
+              </div>
+              <div style="padding:11px">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--nv)">Pim, 24</div>
+                <div style="font-size:.75rem;color:var(--td);margin-bottom:7px">📍 Phuket</div>
+                <div style="font-size:.68rem;padding:3px 9px;background:var(--gd);color:var(--g);border-radius:8px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">🇫🇷 Excellent</div>
+              </div>
+            </div>
+            <div style="flex:1;max-width:148px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.1);border:1px solid rgba(196,150,42,.15)">
+              <div style="height:110px;background:linear-gradient(160deg,#C4D8E8 0%,#7090A8 100%);display:flex;align-items:center;justify-content:center;position:relative">
+                <div style="font-size:3.2rem;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))">👩</div>
+                <div style="position:absolute;top:8px;left:8px;background:var(--rd);color:#fff;font-size:.55rem;padding:2px 7px;border-radius:6px;font-weight:600">Nouveau</div>
+                <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,.15))"></div>
+              </div>
+              <div style="padding:11px">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--nv)">Noi, 29</div>
+                <div style="font-size:.75rem;color:var(--td);margin-bottom:7px">📍 Chiang Mai</div>
+                <div style="font-size:.68rem;padding:3px 9px;background:var(--gd);color:var(--g);border-radius:8px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">🇫🇷 Un peu</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--nv),#243156);border-radius:18px;padding:22px;color:#fff;width:100%;max-width:480px;margin-top:4px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:14px;text-align:center">Pourquoi <em style="color:var(--gl)">LoveSiam</em> ?</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="display:flex;align-items:center;gap:9px;font-size:.88rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span>Profils vérifiés</div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:.88rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span>Vidéos FR↔TH</div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:.88rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span>Accompagnement</div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:.88rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span>Zéro faux profil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc a">
+    <div class="sc-inner">
+      <div class="se"><span data-t="why_tag">✦ Pourquoi LoveSiam</span></div>
+      <h2><span data-t="why_h2">Ce qui nous </span><em data-t="why_h2_em">distingue</em></h2>
+      <p class="ss"><span data-t="why_sub">Un service humain — pas un algorithme.</span></p>
+      <div class="dg">
+        <div class="dc"><i>🎯</i><h4 data-t="card1_title">Profils validés</h4><p data-t="card1_text">Chaque candidature est étudiée et validée avant publication.</p></div>
+        <div class="dc"><i>❤️</i><h4 data-t="card2_title">Profils authentiques</h4><p data-t="card2_text">Une vidéo réelle pour vous présenter tel que vous êtes.</p></div>
+        <div class="dc"><i>🎬</i><h4 data-t="card3_title">Vidéos FR↔TH</h4><p data-t="card3_text">Traduction simultanée sur chaque présentation vidéo.</p></div>
+        <div class="dc"><i>📋</i><h4 data-t="card4_title">Questionnaire</h4><p data-t="card4_text">Pour mieux vous accompagner vers la bonne rencontre.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc n">
+    <div class="sc-inner">
+      <div class="se"><span data-t="how_tag">✦ Le Processus</span></div>
+      <h2><span data-t="how_h2">Comment </span><em data-t="how_h2_em">ça marche</em></h2>
+      <p class="ss"><span data-t="how_sub">Simple, transparent et humain.</span></p>
+      <div class="pi-step"><div class="pn">01</div><div class="pt"><h4 data-t="step1_title">Inscription guidée</h4><p data-t="step1_text">Remplissez votre profil. Votre dossier est étudié.</p></div></div>
+      <div class="pi-step"><div class="pn">02</div><div class="pt"><h4 data-t="step2_title">Validation et publication</h4><p data-t="step2_text">Votre vidéo est publiée avec traduction FR↔TH.</p></div></div>
+      <div class="pi-step"><div class="pn">03</div><div class="pt"><h4 data-t="step3_title">Coup de cœur partagé</h4><p data-t="step3_text">Deux coups de cœur mutuels permettent une mise en relation directe.</p></div></div>
+      <div class="pi-step"><div class="pn">04</div><div class="pt"><h4 data-t="step4_title">Accompagnement premium</h4><p data-t="step4_text">Consulting, coaching et suivi personnalisé selon vos besoins.</p></div></div>
+    </div>
+  </div>
+
+  <div class="sc a">
+    <div class="sc-inner">
+      <div class="se" data-t="consult_tag">✦ Votre consultant</div>
+      <h2><span data-t="consult_h2">Un accompagnement </span><em data-t="consult_h2_em">sur-mesure</em></h2>
+      <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid rgba(26,39,68,.07);box-shadow:0 2px 9px rgba(0,0,0,.05);max-width:480px;margin:0 auto">
+        <div style="font-size:2.6rem;text-align:center;margin-bottom:6px">👨‍💼</div>
+        <p style="font-size:1.05rem;color:var(--g);font-weight:600;text-align:center;margin-bottom:11px"><span data-t="consult_sub">Vous souhaitez aller plus loin ?</span></p>
+        <p style="font-size:1rem;color:var(--tm);line-height:1.72;margin-bottom:14px;text-align:center"><span data-t="consult_text">Spécialiste des relations franco-thaïlandaises, votre consultant vous accompagne de l'inscription à la rencontre.</span></p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:14px">
+          <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.98rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500"><span data-t="badge_coach">💞 Love Coach</span></span>
+          <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.98rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500"><span data-t="badge_expert">🇹🇭 Expert Thaïlande</span></span>
+          <span style="padding:4px 11px;background:var(--gd);border-radius:14px;font-size:.98rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500"><span data-t="badge_consult">🤝 Consultant</span></span>
+        </div>
+        <button class="bg-btn" style="width:100%" id="PC"><span data-t="btn_contact">Prendre contact</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc n">
+    <div class="sc-inner">
+      <div class="se" data-t="premium_tag">✦ Accès Premium</div>
+      <h2><span data-t="premium_h2">Rejoignez </span><em data-t="premium_h2_em">LoveSiam</em></h2>
+      <p class="ss"><span data-t="premium_sub">L'inscription est <strong style="color:var(--gl)">gratuite pour les femmes thaïlandaises</strong>. Un accès premium est proposé aux hommes français.</span></p>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(196,150,42,.22);border-radius:16px;padding:24px;max-width:480px;margin:0 auto">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#fff;margin-bottom:6px;font-weight:300"><span data-t="premium_access">Accès </span><em style="color:var(--gl)" data-t="premium_access_em">Complet</em></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2.6rem;color:var(--gl);font-weight:600;margin-bottom:5px" data-t="premium_soon">À venir</div>
+        <div style="font-size:1rem;color:rgba(255,255,255,.55);margin-bottom:20px" data-t="premium_soon_sub">Tarifs en cours de finalisation</div>
+        <div class="ab" style="gap:12px;margin-bottom:20px">
+          <div class="af" style="font-size:1rem;color:rgba(255,255,255,.9);gap:10px"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span><span data-t="perk1">Accès aux vidéos complètes FR↔TH</span></div>
+          <div class="af" style="font-size:1rem;color:rgba(255,255,255,.9);gap:10px"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span><span data-t="perk2">Introduction par votre consultant</span></div>
+          <div class="af" style="font-size:1rem;color:rgba(255,255,255,.9);gap:10px"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span><span data-t="perk3">Messagerie avec traduction intégrée</span></div>
+          <div class="af" style="font-size:1rem;color:rgba(255,255,255,.9);gap:10px"><span style="color:var(--gl);font-size:1.1rem;font-weight:700">✓</span><span data-t="perk4">Coaching relationnel personnalisé</span></div>
+        </div>
+        <button class="bg-btn" style="width:100%;opacity:.55;cursor:not-allowed;font-size:1rem;padding:14px"><span data-t="btn_soon">Bientôt disponible</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILS -->
+<div class="pg" id="pf">
+  <div class="fh"><div class="ft">Profils ✦</div><div style="font-size:.68rem;color:var(--td)" id="ONLC"><span style="color:var(--gn)">●</span> 0 en ligne</div></div>
+  <div class="fb" id="FB_MSG">🔒 <strong style="color:var(--g)">Profils vérifiés.</strong> Inscrivez-vous pour accéder aux vidéos.</div>
+  <div class="fs" id="FF"></div>
+  <div class="adv-filters">
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <select id="F_AGE" class="fsl" style="flex:1;min-width:110px;font-size:.72rem;padding:6px 10px">
+        <option value="">Âge : tous</option>
+        <option value="18-25">18–25 ans</option>
+        <option value="25-30">25–30 ans</option>
+        <option value="30-35">30–35 ans</option>
+        <option value="35-40">35–40 ans</option>
+        <option value="40-50">40–50 ans</option>
+        <option value="50-99">50+ ans</option>
+      </select>
+      <input type="text" id="F_CITY" class="fi" placeholder="🏙 Ville…" style="flex:1;min-width:110px;font-size:.72rem;padding:6px 10px">
+    </div>
+    <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+      <button class="fc" id="F_ONLINE" data-active="0">● En ligne</button>
+      <button class="fc" id="F_RECENT" data-active="0">🆕 Récents</button>
+      <button class="fc" id="F_HEARTS" data-active="0">❤️ Mes coups de cœur</button>
+    </div>
+  </div>
+  <div class="gr" id="FG"></div>
+</div>
+
+<!-- POPUP PROFIL -->
+<div class="pp-overlay" id="PPG">
+  <div class="ph2"><button class="pb-back" id="PPB">← Retour</button><div id="PPT" style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--nv)"></div></div>
+  <div class="pc2" id="PPC"><div class="pc2b" id="PPCB"></div><div class="pc2l" id="PPCL"><div style="font-size:1.4rem">🔒</div><div style="font-size:.72rem;color:var(--nv);font-weight:500">Photo visible après inscription</div><button class="bg-btn" style="font-size:.72rem;padding:6px 14px" id="PPCAND">M'inscrire</button></div></div>
+  <div style="display:flex;align-items:flex-end;padding-right:14px"><div class="av" id="PPAV"></div><div style="padding-bottom:7px;flex:1;padding-left:9px"><div id="PPOL" style="font-size:.68rem;font-weight:500"></div></div></div>
+  <div style="padding:11px 16px 18px" id="PPINFO"></div>
+</div>
+
+<!-- MATCHS -->
+<div class="pg" id="pm">
+  <div class="fh"><div class="ft">Matchs ✦</div><div id="MATCH_COUNT" style="font-size:.68rem;color:var(--td)"></div></div>
+  <div id="PM_LOCKED" style="text-align:center;padding:48px 20px;display:none">
+    <div style="font-size:2.2rem;margin-bottom:10px">🔒</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:6px;color:var(--nv)">Espace membres</div>
+    <p style="font-size:.76rem;color:var(--tm);line-height:1.65;margin-bottom:16px">Vos coups de cœur et matchs mutuels apparaissent ici.</p>
+    <button class="bg-btn" id="PM_REG">M'inscrire</button>
+  </div>
+  <div id="PM_CONTENT" style="display:none">
+    <div class="match-section-title">💞 Matchs mutuels</div>
+    <div id="PM_MUTUAL"></div>
+    <div class="match-section-title">❤️ Mes coups de cœur</div>
+    <div id="PM_HEARTS"></div>
+  </div>
+</div>
+
+<!-- MON PROFIL -->
+<div class="pg" id="pp">
+  <div id="PO">
+    <div style="padding:56px 18px;text-align:center">
+      <div style="font-size:2.6rem;margin-bottom:11px">🔒</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:6px;color:var(--nv)">Espace membre</div>
+      <p style="font-size:.77rem;color:var(--tm);line-height:1.65;margin-bottom:20px">Accès activé après validation de votre inscription.</p>
+      <button class="bg-btn" style="width:100%;max-width:280px;display:block;margin:0 auto 9px" id="PCB">M'inscrire</button>
+      <button class="bo-btn" style="width:100%;max-width:280px;display:block;margin:7px auto 0" id="PLB">J'ai déjà un compte</button>
+    </div>
+  </div>
+  <div id="PI" style="display:none">
+    <div style="padding:13px 16px 18px;max-width:600px;margin:0 auto">
+      <div style="text-align:center;padding:13px 0 6px">
+        <div class="mav" id="PAV">👤</div>
+        <div class="mnm" id="PNM"></div>
+        <div class="mlc" id="PLC"></div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:5px;margin-top:5px"><div id="PDT" style="width:6px;height:6px;border-radius:50%"></div><span id="PSL" style="font-size:.68rem"></span></div>
+      </div>
+      <div class="mst">
+        <div><div class="msn" id="STAT_LIKES">0</div><div class="msl">Likes</div></div>
+        <div><div class="msn" id="STAT_VIEWS">0</div><div class="msl">Vues</div></div>
+        <div><div class="msn" id="STAT_MATCHES">0</div><div class="msl">Matchs</div></div>
+      </div>
+      <div class="ms" id="PSC"></div>
+      <div class="ms"><div class="ms2">Ma présentation</div><div class="ms3" id="PBIO"></div></div>
+      <button id="PLO" style="width:100%;padding:10px;background:transparent;border:1.5px solid rgba(192,57,43,.2);border-radius:10px;color:var(--rd);font-family:'DM Sans',sans-serif;font-size:.77rem;cursor:pointer;margin:6px 16px 0;width:calc(100% - 32px)">Se déconnecter</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONNEXION -->
+<div class="pg" id="plo">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 118px);padding:16px">
+    <div class="lc">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--nv);letter-spacing:.09em;margin-bottom:13px;font-weight:600">LoveSiam</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:300;margin-bottom:4px;color:var(--nv)">Connexion</div>
+      <div style="font-size:.76rem;color:var(--tm);margin-bottom:16px">Accédez à votre espace membre.</div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" id="LE" type="email" placeholder="votre@email.com"></div>
+      <button class="qx qf" id="LB" style="margin-top:3px">Se connecter</button>
+      <div style="margin-top:13px;font-size:.73rem;color:var(--td);text-align:center">Pas encore membre ? <span style="color:var(--g);cursor:pointer;font-weight:600" id="LC">M'inscrire</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUESTIONNAIRE -->
+<div class="pg" id="pq">
+  <div class="qp"><div class="qc">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--nv);letter-spacing:.09em;margin-bottom:13px;font-weight:600">LoveSiam</div>
+    <div class="qpb"><div class="qpf" id="QP" style="width:12%"></div></div>
+    <div id="QB"></div>
+  </div></div>
+</div>
+
+<!-- ADMIN PAGE (accessible via #admin) -->
+<div class="pg" id="padmin">
+  <div class="admin-page">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--nv)">Panel <em style="color:var(--g)">Admin</em></div>
+      <div style="font-size:.7rem;color:var(--td);background:var(--b2);padding:4px 10px;border-radius:8px">🔐 Accès restreint</div>
+    </div>
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+      <div class="admin-card" style="text-align:center;padding:14px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--g)" id="ADM_PENDING">0</div>
+        <div style="font-size:.62rem;color:var(--td);font-weight:500;text-transform:uppercase;letter-spacing:.1em">En attente</div>
+      </div>
+      <div class="admin-card" style="text-align:center;padding:14px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gn)" id="ADM_ACTIVE">0</div>
+        <div style="font-size:.62rem;color:var(--td);font-weight:500;text-transform:uppercase;letter-spacing:.1em">Actifs</div>
+      </div>
+      <div class="admin-card" style="text-align:center;padding:14px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--nv)" id="ADM_TOTAL">0</div>
+        <div style="font-size:.62rem;color:var(--td);font-weight:500;text-transform:uppercase;letter-spacing:.1em">Total</div>
+      </div>
+    </div>
+    <!-- Profils en attente -->
+    <div class="admin-card">
+      <div style="font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:12px;font-weight:600">📋 Inscriptions en attente</div>
+      <div id="ADM_LIST"><div style="text-align:center;padding:20px;color:var(--td);font-size:.8rem">Chargement…</div></div>
+    </div>
+    <!-- Profils actifs -->
+    <div class="admin-card">
+      <div style="font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gn);margin-bottom:12px;font-weight:600">✅ Profils actifs sur le site</div>
+      <div id="ADM_ACTIVE_LIST"><div style="text-align:center;padding:20px;color:var(--td);font-size:.8rem">Chargement…</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="vm" id="VM">
+  <button class="vc" id="VCL">✕</button>
+  <div class="vs" id="VS">
+    <div class="vg"></div>
+    <div style="position:absolute;top:9px;left:9px;z-index:3;background:rgba(0,0,0,.58);border:1px solid rgba(196,150,42,.28);border-radius:5px;padding:3px 8px;font-size:.56rem;color:var(--gl);font-weight:500">🌐 FR↔TH</div>
+    <div class="vp-bar"><div class="vpf" id="VPF" style="width:0%"></div></div>
+    <div class="vb"><div class="vl-badge">🇫🇷 Français</div><div class="vf" id="VFR"></div><div class="vd2"></div><div class="vl-badge">🇹🇭 ภาษาไทย</div><div class="vt" id="VTH"></div></div>
+    <div class="vi"><div class="vn" id="VNM"></div><div class="vlo" id="VLC2"></div></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:5rem;opacity:.07;pointer-events:none" id="VEM"></div>
+  </div>
+  <div class="vct">
+    <button class="vb2 p" id="VP">⏸</button>
+    <div style="flex:1"></div>
+    <div class="vln"><button class="vl2 on" id="VLF">🇫🇷 FR</button><button class="vl2 off" id="VLT">🇹🇭 TH</button></div>
+    <div style="flex:1"></div>
+    <button class="vb2 l" id="VLK">❤️</button>
+  </div>
+</div>
+
+<!-- MODALES LÉGALES -->
+<div id="ML_BG" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)closeMl()">
+  <div style="background:#fff;border-radius:16px;width:100%;max-width:500px;max-height:80vh;overflow-y:auto;position:relative">
+    <div style="padding:18px 18px 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-bottom:1px solid rgba(26,39,68,.08)">
+      <div id="ML_TITLE" style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:#1A2744"></div>
+      <button onclick="closeMl()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:#8A95A8;padding:4px">✕</button>
+    </div>
+    <div id="ML_CONTENT" style="padding:18px;font-size:.78rem;color:#4A5568;line-height:1.75"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="background:#1A2744;padding:24px 20px 74px">
+  <div class="footer-inner" style="max-width:var(--mw);margin:0 auto">
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#fff;font-weight:400">Love<em style="color:#E8B84B;font-style:italic">Siam</em></div>
+      <div style="font-size:.98rem;color:rgba(255,255,255,.35);letter-spacing:.15em;text-transform:uppercase;margin-top:3px"><span data-t="footer_tagline">Rencontres Franco-Thaïlandaises</span></div>
+    </div>
+    <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:16px">
+      <button onclick="openMl('ml')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer">Mentions légales</button>
+      <button onclick="openMl('cgu')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer">CGU</button>
+      <button onclick="openMl('rgpd')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer">Confidentialité & RGPD</button>
+      <button onclick="openMl('cookies')" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer">Cookies</button>
+    </div>
+    <div style="text-align:center;font-size:.98rem;color:rgba(255,255,255,.3)"><span data-t="footer_copy">© 2026 LoveSiam — Tous droits réservés</span></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bn">
+  <div class="bw">
+    <div class="bi on" id="BH"><i>🏠</i><span>Accueil</span></div>
+    <div class="bi" id="BF"><i>🎬</i><span>Profils</span></div>
+    <div class="bi" id="BM"><i id="BMI">💞</i><span>Matchs</span></div>
+    <div class="bi" id="BP"><i>👤</i><span>Mon profil</span></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const SUPA_URL = 'https://sbglyelgqceydofgllop.supabase.co';
+const SUPA_KEY = 'sb_publishable_h_VjLt_F7YkjNYdrTCXYNA_1vNzD3VG';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+emailjs.init('_62gqRQHF8yL_AVRb');
+const ES='service_9mpf0pc', ET='template_yvczjb6', PE='contact@lovesiam.com';
+const AT_TOKEN='patK9nEBAYdLHomzr.59d537e0b19dbf34e37ee350569ec48449a9d7bae27caa327c0f5b45fef3fa72';
+const AT_BASE='appFSujzn9mUGmv0Q', AT_TABLE='Table 1';
+const CLD_CLOUD='dfxxg3dk4', CLD_PRESET='lovesiam_videos';
+const ADMIN_PWD='lovesiam2026';
+
+// ============================================================
+// TRANSLATION SYSTEM
+// ============================================================
+let LANG = 'fr';
+
+const T = {
+  fr: {
+    nav_login: 'Connexion',
+    nav_register: "M'inscrire",
+    hero_tag: '✦ Un accompagnement humain et personnalisé',
+    hero_h1_1: 'La rencontre',
+    hero_h1_2: 'franco-thaïlandaise',
+    hero_sub: "Un service sur-mesure, de l'inscription à la rencontre. Chaque profil est sélectionné avec soin.",
+    btn_register: "M'inscrire maintenant",
+    btn_profiles: 'Voir les profils →',
+    stat_members: 'Membres',
+    stat_couples: 'Couples',
+    stat_online: 'En ligne',
+    why_tag: '✦ Pourquoi LoveSiam',
+    why_h2: 'Ce qui nous ',
+    why_h2_em: 'distingue',
+    why_sub: 'Un service humain — pas un algorithme.',
+    how_tag: '✦ Le Processus',
+    how_h2: 'Comment ',
+    how_h2_em: 'ça marche',
+    how_sub: 'Simple, transparent et humain.',
+    // Nav bottom
+    nav_home: 'Accueil',
+    nav_profiles: 'Profils',
+    nav_matches: 'Matchs',
+    nav_myprofile: 'Mon profil',
+    // Profile page
+    profiles_title: 'Profils ✦',
+    profiles_locked: '🔒 Profils vérifiés. Inscrivez-vous pour accéder aux vidéos.',
+    filter_all: 'Tous',
+    filter_f: 'Femmes thaï',
+    filter_h: 'Hommes français',
+    filter_online: '● En ligne',
+    filter_recent: '🆕 Récents',
+    filter_hearts: '❤️ Mes coups de cœur',
+    filter_age: 'Âge : tous',
+    filter_city: '🏙 Ville…',
+    // Matches page
+    matches_title: 'Matchs ✦',
+    matches_mutual: '💞 Matchs mutuels',
+    matches_hearts: '❤️ Mes coups de cœur',
+    matches_locked_title: 'Espace membres',
+    matches_locked_sub: 'Vos coups de cœur et matchs mutuels apparaissent ici.',
+    matches_register: "M'inscrire",
+    no_mutual: 'Pas encore de match mutuel.',
+    no_hearts: "Aucun coup de cœur pour l'instant.",
+    // Profile page
+    myprofile_title: 'Espace membre',
+    myprofile_sub: 'Accès activé après validation de votre inscription.',
+    btn_register2: "M'inscrire",
+    btn_login: "J'ai déjà un compte",
+    btn_logout: 'Se déconnecter',
+    status_pending: 'En attente',
+    status_active: 'Profil actif',
+    // Login
+    login_title: 'Connexion',
+    login_sub: 'Accédez à votre espace membre.',
+    login_email: 'Email',
+    login_btn: 'Se connecter',
+    login_no_account: "Pas encore membre ?",
+    login_register: "M'inscrire",
+    // Footer
+    footer_tagline: 'Rencontres Franco-Thaïlandaises',
+    footer_legal: 'Mentions légales',
+    footer_cgu: 'CGU',
+    footer_rgpd: 'Confidentialité & RGPD',
+    footer_cookies: 'Cookies',
+    footer_copy: '© 2026 LoveSiam — Tous droits réservés',
+    // Buttons
+    like_btn: '🤍 Coup de cœur',
+    liked_btn: '❤️ Aimé',
+    video_btn: '🎬 Voir la vidéo',
+    contact_btn: 'Prendre contact',
+    // Hero preview
+    preview_title: '✨ Profils récents',
+    why_box_title: 'Pourquoi ',
+    why_box: 'Pourquoi ',
+    why_box_em: 'LoveSiam',
+    premium_tag: '✦ Accès Premium',
+    premium_h2: 'Rejoignez ',
+    premium_h2_em: 'LoveSiam',
+    premium_sub: "L'inscription est gratuite pour les femmes thaïlandaises. Un accès premium est proposé aux hommes français.",
+    premium_access: 'Accès ',
+    premium_access_em: 'Complet',
+    premium_soon: 'À venir',
+    premium_soon_sub: 'Tarifs en cours de finalisation',
+    perk1: 'Accès aux vidéos complètes FR↔TH',
+    perk2: 'Introduction par votre consultant',
+    perk3: 'Messagerie avec traduction intégrée',
+    perk4: 'Coaching relationnel personnalisé',
+    btn_soon: 'Bientôt disponible',
+    consult_tag: '✦ Votre consultant',
+    consult_h2: 'Un accompagnement ',
+    consult_h2_em: 'sur-mesure',
+    consult_sub: 'Vous souhaitez aller plus loin ?',
+    consult_text: "Spécialiste des relations franco-thaïlandaises, votre consultant vous accompagne de l'inscription à la rencontre.",
+    badge_coach: '💞 Love Coach',
+    badge_expert: '🇹🇭 Expert Thaïlande',
+    badge_consult: '🤝 Consultant',
+    btn_contact: 'Prendre contact',
+    q_step: '✦ Étape',
+    q0_title: 'Je suis <em>un…</em>',
+    q0_sub: "Le formulaire s'adapte à votre profil.",
+    q0_man: 'Homme français',
+    q0_man_sub: 'Je recherche une femme thaïlandaise sincère',
+    q0_woman: 'Femme thaïlandaise',
+    q0_woman_sub: 'Je recherche un homme français sincère',
+    q_continue: 'Continuer →',
+    q_back: '← Retour',
+    q_send: 'Envoyer mon inscription ✦',
+    q2_title: 'Votre <em>identité</em>',
+    q2_name: 'Prénom',
+    q2_age: 'Âge',
+    q2_city_f: 'Ville (Thaïlande)',
+    q2_city_h: 'Ville (France)',
+    q2_height: 'Taille',
+    q2_weight: 'Poids',
+    q2_photos: 'Vos photos',
+    q2_photo1: 'Photo principale *',
+    q2_photo_add: 'Ajouter ma photo principale',
+    q2_photo_size: 'JPG, PNG — max 5MB',
+    q2_add: 'Ajouter',
+    q2_lang: 'Niveaux de langue',
+    q3_title: 'Votre <em>description</em>',
+    q3_sub: 'Présentez-vous sincèrement. Apparaîtra sur votre profil.',
+    q3_placeholder: 'Votre famille, vos loisirs, ce que vous cherchez…',
+    q4_title: 'Ce que vous <em>cherchez</em>',
+    q5_title: 'Votre lien avec la <em>France</em>',
+    q5_title_h: 'Votre lien avec la <em>Thaïlande</em>',
+    q6_title: 'Votre <em>situation</em>',
+    q7_title: 'Votre <em>vidéo</em>',
+    q7_sub: 'Publiée avec traduction FR↔TH après validation.',
+    q7_activate: '📷 Activer la caméra',
+    q7_start: '⏺ Démarrer',
+    q7_stop: '⏹ Arrêter',
+    q7_retry: '🔄 Recommencer',
+    q7_upload_title: 'Upload vidéo',
+    q7_upload_btn: 'Choisir une vidéo',
+    q7_upload_size: 'MP4, MOV — max 100MB',
+    q7_skip: 'Passer → vidéo plus tard',
+    q8_title: 'Votre <em>contact</em>',
+    q8_sub: 'Vous serez contacté à cette adresse pour valider votre inscription.',
+    q8_email: 'Email *',
+    q8_whatsapp: 'WhatsApp (optionnel)',
+    q8_recap: '📋 Récapitulatif',
+    q_success_title: 'Inscription envoyée !',
+    q_success_sub: 'Votre dossier a bien été reçu. Réponse sous 48h.',
+    q_back_home: "Retour à l'accueil",
+    card1_title: 'Profils validés',
+    card1_text: 'Chaque candidature est étudiée et validée avant publication.',
+    card2_title: 'Profils authentiques',
+    card2_text: 'Une vidéo réelle pour vous présenter tel que vous êtes.',
+    card3_title: 'Vidéos FR↔TH',
+    card3_text: 'Traduction simultanée sur chaque présentation vidéo.',
+    card4_title: 'Questionnaire',
+    card4_text: 'Pour mieux vous accompagner vers la bonne rencontre.',
+    step1_title: 'Inscription guidée',
+    step1_text: 'Remplissez votre profil. Votre dossier est étudié.',
+    step2_title: 'Validation et publication',
+    step2_text: 'Votre vidéo est publiée avec traduction FR↔TH.',
+    step3_title: 'Coup de cœur partagé',
+    step3_text: 'Deux coups de cœur mutuels permettent une mise en relation directe.',
+    step4_title: 'Accompagnement premium',
+    step4_text: 'Consulting, coaching et suivi personnalisé selon vos besoins.',
+  },
+  th: {
+    nav_login: 'เข้าสู่ระบบ',
+    nav_register: 'สมัครสมาชิก',
+    hero_tag: '✦ การดูแลที่เป็นส่วนตัวและใส่ใจ',
+    hero_h1_1: 'การพบรัก',
+    hero_h1_2: 'ฝรั่งเศส-ไทย',
+    hero_sub: 'บริการที่ปรับแต่งเฉพาะคุณ ตั้งแต่การสมัครจนถึงการพบกัน ทุกโปรไฟล์ผ่านการคัดเลือกอย่างพิถีพิถัน',
+    btn_register: 'สมัครสมาชิกตอนนี้',
+    btn_profiles: 'ดูโปรไฟล์ →',
+    stat_members: 'สมาชิก',
+    stat_couples: 'คู่รัก',
+    stat_online: 'ออนไลน์',
+    why_tag: '✦ ทำไมต้อง LoveSiam',
+    why_h2: 'สิ่งที่ทำให้เรา',
+    why_h2_em: 'แตกต่าง',
+    why_sub: 'บริการที่มีตัวตน ไม่ใช่แค่อัลกอริทึม',
+    how_tag: '✦ กระบวนการ',
+    how_h2: 'วิธี',
+    how_h2_em: 'การทำงาน',
+    how_sub: 'เรียบง่าย โปร่งใส และมีมนุษยธรรม',
+    nav_home: 'หน้าแรก',
+    nav_profiles: 'โปรไฟล์',
+    nav_matches: 'แมทช์',
+    nav_myprofile: 'โปรไฟล์ฉัน',
+    profiles_title: 'โปรไฟล์ ✦',
+    profiles_locked: '🔒 โปรไฟล์ที่ผ่านการยืนยัน สมัครสมาชิกเพื่อดูวิดีโอ',
+    filter_all: 'ทั้งหมด',
+    filter_f: 'หญิงไทย',
+    filter_h: 'ชายฝรั่งเศส',
+    filter_online: '● ออนไลน์',
+    filter_recent: '🆕 ใหม่',
+    filter_hearts: '❤️ ที่ฉันถูกใจ',
+    filter_age: 'อายุ : ทั้งหมด',
+    filter_city: '🏙 เมือง…',
+    matches_title: 'แมทช์ ✦',
+    matches_mutual: '💞 แมทช์ร่วมกัน',
+    matches_hearts: '❤️ ที่ฉันถูกใจ',
+    matches_locked_title: 'พื้นที่สมาชิก',
+    matches_locked_sub: 'ความชอบและแมทช์ร่วมกันของคุณจะปรากฏที่นี่',
+    matches_register: 'สมัครสมาชิก',
+    no_mutual: 'ยังไม่มีแมทช์ร่วมกัน',
+    no_hearts: 'ยังไม่มีรายการที่ถูกใจ',
+    myprofile_title: 'พื้นที่สมาชิก',
+    myprofile_sub: 'เปิดใช้งานหลังจากยืนยันการสมัคร',
+    btn_register2: 'สมัครสมาชิก',
+    btn_login: 'ฉันมีบัญชีอยู่แล้ว',
+    btn_logout: 'ออกจากระบบ',
+    status_pending: 'รอการอนุมัติ',
+    status_active: 'โปรไฟล์ใช้งานได้',
+    login_title: 'เข้าสู่ระบบ',
+    login_sub: 'เข้าถึงพื้นที่สมาชิกของคุณ',
+    login_email: 'อีเมล',
+    login_btn: 'เข้าสู่ระบบ',
+    login_no_account: 'ยังไม่ได้เป็นสมาชิก?',
+    // Questionnaire
+    q_step: '✦ ขั้นตอน',
+    q0_title: 'ฉันเป็น…',
+    q0_sub: 'แบบฟอร์มจะปรับตามโปรไฟล์ของคุณ',
+    q0_man: 'ผู้ชายฝรั่งเศส',
+    q0_man_sub: 'ฉันกำลังมองหาผู้หญิงไทยที่จริงใจ',
+    q0_woman: 'ผู้หญิงไทย',
+    q0_woman_sub: 'ฉันกำลังมองหาผู้ชายฝรั่งเศสที่จริงใจ',
+    q_continue: 'ถัดไป →',
+    q_back: '← กลับ',
+    q_send: 'ส่งใบสมัครของฉัน ✦',
+    q2_title: 'ตัวตนของ<em>คุณ</em>',
+    q2_name: 'ชื่อ',
+    q2_age: 'อายุ',
+    q2_city_f: 'เมือง (ไทย)',
+    q2_city_h: 'เมือง (ฝรั่งเศส)',
+    q2_height: 'ส่วนสูง',
+    q2_weight: 'น้ำหนัก',
+    q2_photos: 'รูปภาพของคุณ',
+    q2_photo1: 'รูปภาพหลัก *',
+    q2_photo_add: 'เพิ่มรูปภาพหลัก',
+    q2_photo_size: 'JPG, PNG — สูงสุด 5MB',
+    q2_add: 'เพิ่ม',
+    q2_lang: 'ระดับภาษา',
+    q3_title: '<em>คำอธิบาย</em>ของคุณ',
+    q3_sub: 'แนะนำตัวอย่างจริงใจ จะปรากฏในโปรไฟล์ของคุณ',
+    q3_placeholder: 'ครอบครัว งานอดิเรก สิ่งที่คุณกำลังมองหา…',
+    q4_title: 'คุณ<em>กำลังมองหา</em>อะไร',
+    q5_title: 'ความสัมพันธ์กับ<em>ฝรั่งเศส</em>',
+    q5_title_h: 'ความสัมพันธ์กับ<em>ไทย</em>',
+    q6_title: '<em>สถานการณ์</em>ของคุณ',
+    q7_title: '<em>วิดีโอ</em>ของคุณ',
+    q7_sub: 'เผยแพร่พร้อมคำแปล FR↔TH หลังการยืนยัน',
+    q7_activate: '📷 เปิดกล้อง',
+    q7_start: '⏺ เริ่มบันทึก',
+    q7_stop: '⏹ หยุด',
+    q7_retry: '🔄 บันทึกใหม่',
+    q7_upload_title: 'อัปโหลดวิดีโอ',
+    q7_upload_btn: 'เลือกวิดีโอ',
+    q7_upload_size: 'MP4, MOV — สูงสุด 100MB',
+    q7_skip: 'ข้าม → บันทึกวิดีโอภายหลัง',
+    q8_title: '<em>ข้อมูลติดต่อ</em>ของคุณ',
+    q8_sub: 'เราจะติดต่อคุณที่อีเมลนี้เพื่อยืนยันการสมัคร',
+    q8_email: 'อีเมล *',
+    q8_whatsapp: 'WhatsApp (ไม่บังคับ)',
+    q8_recap: '📋 สรุป',
+    q_success_title: 'ส่งใบสมัครแล้ว!',
+    q_success_sub: 'เราได้รับข้อมูลของคุณแล้ว คำตอบภายใน 48 ชั่วโมง',
+    q_back_home: 'กลับหน้าแรก',
+    // Filters
+    filter_all: 'ทั้งหมด',
+    filter_f: 'หญิงไทย',
+    filter_h: 'ชายฝรั่งเศส',
+    filter_online: '● ออนไลน์',
+    filter_recent: '🆕 ใหม่',
+    filter_hearts: '❤️ ที่ฉันถูกใจ',
+    filter_age: 'อายุ : ทั้งหมด',
+    filter_city: '🏙 เมือง…',
+    login_register: 'สมัครสมาชิก',
+    footer_tagline: 'พบรักฝรั่งเศส-ไทย',
+    footer_legal: 'ข้อความทางกฎหมาย',
+    footer_cgu: 'เงื่อนไขการใช้งาน',
+    footer_rgpd: 'ความเป็นส่วนตัว & RGPD',
+    footer_cookies: 'คุกกี้',
+    footer_copy: '© 2026 LoveSiam — สงวนลิขสิทธิ์',
+    like_btn: '🤍 ถูกใจ',
+    liked_btn: '❤️ ถูกใจแล้ว',
+    video_btn: '🎬 ดูวิดีโอ',
+    contact_btn: 'ติดต่อที่ปรึกษา',
+    preview_title: '✨ โปรไฟล์ล่าสุด',
+    why_box_title: 'ทำไมต้อง ',
+    why_box: 'ทำไมต้อง ',
+    why_box_em: 'LoveSiam',
+    premium_tag: '✦ การเข้าถึงพรีเมียม',
+    premium_h2: 'เข้าร่วม ',
+    premium_h2_em: 'LoveSiam',
+    premium_sub: 'การสมัครสมาชิกฟรีสำหรับผู้หญิงไทย มีการเข้าถึงพรีเมียมสำหรับผู้ชายชาวฝรั่งเศส',
+    premium_access: 'การเข้าถึง ',
+    premium_access_em: 'สมบูรณ์',
+    premium_soon: 'เร็วๆ นี้',
+    premium_soon_sub: 'กำลังดำเนินการด้านราคา',
+    perk1: 'เข้าถึงวิดีโอครบถ้วน FR↔TH',
+    perk2: 'แนะนำโดยที่ปรึกษาของคุณ',
+    perk3: 'การส่งข้อความพร้อมการแปลในตัว',
+    perk4: 'การโค้ชความสัมพันธ์ส่วนตัว',
+    btn_soon: 'เร็วๆ นี้',
+    consult_tag: '✦ ที่ปรึกษาของคุณ',
+    consult_h2: 'การดูแล',
+    consult_h2_em: 'เฉพาะบุคคล',
+    consult_sub: 'ต้องการไปต่อไหม?',
+    consult_text: 'ผู้เชี่ยวชาญด้านความสัมพันธ์ฝรั่งเศส-ไทย ที่ปรึกษาของคุณดูแลคุณตั้งแต่การสมัครจนถึงการพบกัน',
+    badge_coach: '💞 โค้ชความรัก',
+    badge_expert: '🇹🇭 ผู้เชี่ยวชาญไทย',
+    badge_consult: '🤝 ที่ปรึกษา',
+    btn_contact: 'ติดต่อที่ปรึกษา',
+    card1_title: 'โปรไฟล์ที่ผ่านการยืนยัน',
+    card1_text: 'ทุกใบสมัครได้รับการศึกษาและยืนยันก่อนเผยแพร่',
+    card2_title: 'โปรไฟล์จริง',
+    card2_text: 'วิดีโอจริงเพื่อแนะนำตัวคุณตามที่คุณเป็น',
+    card3_title: 'วิดีโอ FR↔TH',
+    card3_text: 'การแปลพร้อมกันในทุกการนำเสนอวิดีโอ',
+    card4_title: 'แบบสอบถาม',
+    card4_text: 'เพื่อนำทางคุณไปสู่การพบที่ใช่ได้ดียิ่งขึ้น',
+    step1_title: 'การสมัครที่แนะนำ',
+    step1_text: 'กรอกโปรไฟล์ของคุณ เอกสารของคุณจะได้รับการพิจารณา',
+    step2_title: 'การยืนยันและเผยแพร่',
+    step2_text: 'วิดีโอของคุณเผยแพร่พร้อมการแปล FR↔TH',
+    step3_title: 'แมทช์ร่วมกัน',
+    step3_text: 'ความชอบร่วมกันสองฝ่ายช่วยให้เชื่อมต่อโดยตรง',
+    step4_title: 'การดูแลพรีเมียม',
+    step4_text: 'การให้คำปรึกษา การโค้ช และการติดตามผลส่วนตัว',
+    // Profiles page
+    profiles_locked: '🔒 โปรไฟล์ที่ผ่านการยืนยัน สมัครสมาชิกเพื่อดูวิดีโอ',
+    // Matches page
+    matches_locked_title: 'พื้นที่สมาชิก',
+    matches_locked_sub: 'ความชอบและแมทช์ของคุณจะปรากฏที่นี่',
+    matches_register: 'สมัครสมาชิก',
+    matches_mutual: '💞 แมทช์ร่วมกัน',
+    matches_hearts: '❤️ ที่ฉันถูกใจ',
+    no_mutual: 'ยังไม่มีแมทช์ร่วมกัน',
+    no_hearts: 'ยังไม่มีรายการที่ถูกใจ',
+    // My profile
+    myprofile_title: 'พื้นที่สมาชิก',
+    myprofile_sub: 'เปิดใช้งานหลังจากยืนยันการสมัคร',
+    btn_register2: 'สมัครสมาชิก',
+    btn_login: 'ฉันมีบัญชีอยู่แล้ว',
+    btn_logout: 'ออกจากระบบ',
+    // Login
+    login_title: 'เข้าสู่ระบบ',
+    login_sub: 'เข้าถึงพื้นที่สมาชิกของคุณ',
+    login_email: 'อีเมล',
+    login_btn: 'เข้าสู่ระบบ',
+    login_register: 'สมัครสมาชิก',
+    login_no_account: 'ยังไม่ได้เป็นสมาชิก?',
+    // Questionnaire
+    q_step: '✦ ขั้นตอน',
+    q0_title: 'ฉันเป็น…',
+    q0_sub: 'แบบฟอร์มจะปรับตามโปรไฟล์ของคุณ',
+    q0_man: 'ผู้ชายฝรั่งเศส',
+    q0_man_sub: 'ฉันกำลังมองหาผู้หญิงไทยที่จริงใจ',
+    q0_woman: 'ผู้หญิงไทย',
+    q0_woman_sub: 'ฉันกำลังมองหาผู้ชายฝรั่งเศสที่จริงใจ',
+    q_continue: 'ถัดไป →',
+    q_back: '← กลับ',
+    q_send: 'ส่งใบสมัครของฉัน ✦',
+    q2_title: 'ตัวตนของ<em>คุณ</em>',
+    q2_name: 'ชื่อ',
+    q2_age: 'อายุ',
+    q2_city_f: 'เมือง (ไทย)',
+    q2_city_h: 'เมือง (ฝรั่งเศส)',
+    q2_height: 'ส่วนสูง',
+    q2_weight: 'น้ำหนัก',
+    q2_photos: 'รูปภาพของคุณ',
+    q2_photo1: 'รูปภาพหลัก *',
+    q2_photo_add: 'เพิ่มรูปภาพหลัก',
+    q2_photo_size: 'JPG, PNG — สูงสุด 5MB',
+    q2_add: 'เพิ่ม',
+    q2_lang: 'ระดับภาษา',
+    q3_title: '<em>คำอธิบาย</em>ของคุณ',
+    q3_sub: 'แนะนำตัวอย่างจริงใจ จะปรากฏในโปรไฟล์ของคุณ',
+    q3_placeholder: 'ครอบครัว งานอดิเรก สิ่งที่คุณกำลังมองหา…',
+    q4_title: 'คุณ<em>กำลังมองหา</em>อะไร',
+    q5_title: 'ความสัมพันธ์กับ<em>ฝรั่งเศส</em>',
+    q5_title_h: 'ความสัมพันธ์กับ<em>ไทย</em>',
+    q6_title: '<em>สถานการณ์</em>ของคุณ',
+    q7_title: '<em>วิดีโอ</em>ของคุณ',
+    q7_sub: 'เผยแพร่พร้อมคำแปล FR↔TH หลังการยืนยัน',
+    q7_activate: '📷 เปิดกล้อง',
+    q7_start: '⏺ เริ่มบันทึก',
+    q7_stop: '⏹ หยุด',
+    q7_retry: '🔄 บันทึกใหม่',
+    q7_upload_title: 'อัปโหลดวิดีโอ',
+    q7_upload_btn: 'เลือกวิดีโอ',
+    q7_upload_size: 'MP4, MOV — สูงสุด 100MB',
+    q7_skip: 'ข้าม → บันทึกวิดีโอภายหลัง',
+    q8_title: '<em>ข้อมูลติดต่อ</em>ของคุณ',
+    q8_sub: 'เราจะติดต่อคุณที่อีเมลนี้เพื่อยืนยันการสมัคร',
+    q8_email: 'อีเมล *',
+    q8_whatsapp: 'WhatsApp (ไม่บังคับ)',
+    q8_recap: '📋 สรุป',
+    q_success_title: 'ส่งใบสมัครแล้ว!',
+    q_success_sub: 'เราได้รับข้อมูลของคุณแล้ว คำตอบภายใน 48 ชั่วโมง',
+    q_back_home: 'กลับหน้าแรก',
+    // Filters
+    filter_all: 'ทั้งหมด',
+    filter_f: 'หญิงไทย',
+    filter_h: 'ชายฝรั่งเศส',
+    filter_online: '● ออนไลน์',
+    filter_recent: '🆕 ใหม่',
+    filter_hearts: '❤️ ที่ฉันถูกใจ',
+    filter_age: 'อายุ : ทั้งหมด',
+    filter_city: '🏙 เมือง…',
+  }
+};
+
+function applyTranslations(lang){
+  LANG = lang;
+  const t = T[lang];
+  if(!t) return;
+
+  // 1. Apply all data-t elements
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const key = el.getAttribute('data-t');
+    if(t[key] !== undefined) el.innerHTML = t[key];
+  });
+
+  // 2. Bottom nav
+  const navLabels = document.querySelectorAll('.bi span');
+  const navKeys = ['nav_home','nav_profiles','nav_matches','nav_myprofile'];
+  navLabels.forEach((el,i)=>{ if(t[navKeys[i]]) el.textContent = t[navKeys[i]] });
+
+  // 3. Footer buttons
+  const footerBtns = document.querySelectorAll('[onclick*="openMl"]');
+  const footerKeys = ['footer_legal','footer_cgu','footer_rgpd','footer_cookies'];
+  footerBtns.forEach((btn,i)=>{ if(t[footerKeys[i]]) btn.textContent = t[footerKeys[i]] });
+
+  // 4. Nav buttons (when logged out)
+  const bl2=g('BL2');if(bl2)bl2.textContent=t.nav_login;
+  const bi2=g('BI2');if(bi2)bi2.textContent=t.nav_register;
+  const blNav=g('BL');if(blNav)blNav.textContent=t.nav_login;
+  const biNav=g('BI');if(biNav)biNav.textContent=t.nav_register;
+
+  // 5. Profiles page
+  const fbMsg=g('FB_MSG');
+  if(fbMsg)fbMsg.innerHTML=t.profiles_locked;
+
+  // 6. Profile page (logged out)
+  const po=g('PO');
+  if(po){
+    const title=po.querySelector('[style*="1.35rem"]');
+    if(title)title.textContent=t.myprofile_title;
+    const sub=po.querySelector('[style*="0.77rem"]');
+    if(sub)sub.textContent=t.myprofile_sub;
+    const pcb=g('PCB');if(pcb)pcb.textContent=t.btn_register2;
+    const plb=g('PLB');if(plb)plb.textContent=t.btn_login;
+  }
+
+  // 7. Logout button
+  const plo=g('PLO');if(plo)plo.textContent=t.btn_logout;
+
+  // 8. Matches page locked
+  const pmLocked=g('PM_LOCKED');
+  if(pmLocked){
+    const title=pmLocked.querySelector('[style*="1.3rem"]');
+    if(title)title.textContent=t.matches_locked_title;
+    const sub=pmLocked.querySelector('[style*="0.76rem"]');
+    if(sub)sub.textContent=t.matches_locked_sub;
+    const pmReg=g('PM_REG');if(pmReg)pmReg.textContent=t.matches_register;
+  }
+
+  // 9. Match section titles
+  const matchTitles=document.querySelectorAll('.match-section-title');
+  if(matchTitles[0])matchTitles[0].textContent=t.matches_mutual;
+  if(matchTitles[1])matchTitles[1].textContent=t.matches_hearts;
+
+  // 10. Login page
+  const loginTitle=document.querySelector('#plo [style*="1.65rem"]');
+  if(loginTitle)loginTitle.textContent=t.login_title;
+  const loginSub=document.querySelector('#plo [style*="0.76rem"]');
+  if(loginSub)loginSub.textContent=t.login_sub;
+  const loginEmailLabel=document.querySelector('#plo .fl');
+  if(loginEmailLabel)loginEmailLabel.textContent=t.login_email;
+  const lb=g('LB');if(lb)lb.textContent=t.login_btn;
+  const lc=g('LC');if(lc)lc.textContent=t.login_register;
+
+  // 11. Re-render profiles and filters
+  rFF();
+  rFG();
+
+  // 12. Re-render questionnaire if on that page
+  if(document.getElementById('pq').classList.contains('on')) bQ();
+
+  // 13. Font size for Thai
+  document.body.style.fontSize = lang === 'th' ? '94%' : '';
+}
+
+
+
+// ============================================================
+// SILHOUETTES SVG
+// ============================================================
+const SF='<svg width="90" height="130" viewBox="0 0 90 130"><ellipse cx="45" cy="23" rx="16" ry="18" fill="#C4A090"/><path d="M18 130 Q23 68 45 63 Q67 68 72 130Z" fill="#B89080"/><ellipse cx="26" cy="88" rx="9" ry="24" fill="#B89080" transform="rotate(-7,26,88)"/><ellipse cx="64" cy="88" rx="9" ry="24" fill="#B89080" transform="rotate(7,64,88)"/></svg>';
+const SH='<svg width="90" height="130" viewBox="0 0 90 130"><ellipse cx="45" cy="22" rx="15" ry="17" fill="#8090A0"/><path d="M16 130 Q21 65 45 60 Q69 65 74 130Z" fill="#708090"/><ellipse cx="23" cy="85" rx="10" ry="26" fill="#708090" transform="rotate(-5,23,85)"/><ellipse cx="67" cy="85" rx="10" ry="26" fill="#708090" transform="rotate(5,67,85)"/></svg>';
+const BG=['#F8E8D8','#E8D8F8','#D8F8E8','#F8F0D8','#D8E8F8','#F8D8E8','#E8F8D8'];
+
+// ============================================================
+// PROFILS DEMO
+// ============================================================
+const PR=[
+  {id:1,n:"Ning",a:26,h:162,w:52,l:"Bangkok",g:"f",on:true,nw:true,lfr:"Moyen",len:"Un peu",lth:"",b:"Enseignante de yoga à Bangkok. Je vis avec ma famille. Je cherche un homme sincère.",s:[{f:"Bonjour, je m'appelle Ning, j'ai 26 ans.",t:"สวัสดีค่ะ ฉันชื่อนิ่ง อายุ 26 ปีค่ะ"},{f:"Je vis à Bangkok et j'enseigne le yoga.",t:"ฉันอยู่กรุงเทพฯ สอนโยคะค่ะ"},{f:"Je cherche un homme sincère.",t:"ฉันมองหาผู้ชายที่จริงใจค่ะ"}]},
+  {id:2,n:"Pierre",a:38,h:180,w:80,l:"Lyon",g:"h",on:false,nw:true,lfr:"",len:"Excellent",lth:"Un peu",b:"Ingénieur à Lyon. J'ai découvert la Thaïlande il y a 3 ans. Je cherche une relation authentique.",s:[{f:"Bonjour, je suis Pierre, ingénieur à Lyon.",t:"สวัสดีครับ ผมชื่อปิแอร์ วิศวกรครับ"},{f:"J'ai découvert la Thaïlande il y a 3 ans.",t:"ผมรู้จักไทยเมื่อ 3 ปีก่อนครับ"},{f:"Je cherche une relation sincère.",t:"ผมมองหาความสัมพันธ์ที่จริงใจครับ"}]},
+  {id:3,n:"Noi",a:29,h:158,w:48,l:"Chiang Mai",g:"f",on:true,nw:false,lfr:"Un peu",len:"Moyen",lth:"",b:"Artiste bijoutière à Chiang Mai. La famille est ma valeur essentielle.",s:[{f:"Je suis Noi, artiste bijoutière.",t:"ฉันชื่อน้อย ช่างทำเครื่องประดับค่ะ"},{f:"La famille est ma valeur principale.",t:"ครอบครัวคือสิ่งที่สำคัญที่สุดค่ะ"},{f:"Je cherche un homme sincère.",t:"ฉันมองหาผู้ชายที่จริงใจค่ะ"}]},
+  {id:4,n:"Marc",a:45,h:178,w:85,l:"Bordeaux",g:"h",on:true,nw:false,lfr:"",len:"Bon",lth:"Non",b:"Chef cuisinier à Bordeaux. Amoureux de la Thaïlande depuis 5 ans.",s:[{f:"Je suis Marc, chef cuisinier à Bordeaux.",t:"สวัสดีครับ ผมชื่อมาร์ก เชฟครับ"},{f:"J'aime la Thaïlande depuis 5 ans.",t:"ผมรักไทยมาก 5 ปีแล้วครับ"},{f:"Je cherche une femme sincère.",t:"ผมมองหาผู้หญิงที่จริงใจครับ"}]},
+  {id:5,n:"Pim",a:24,h:155,w:45,l:"Phuket",g:"f",on:false,nw:true,lfr:"Excellent",len:"Excellent",lth:"",b:"Guide touristique trilingue à Phuket. Je parle français, anglais et thaï.",s:[{f:"Je suis Pim, guide touristique à Phuket.",t:"ฉันชื่อพิม ไกด์ที่ภูเก็ตค่ะ"},{f:"Je parle trois langues couramment.",t:"ฉันพูดได้สามภาษาค่ะ"},{f:"Je cherche quelqu'un de sincère.",t:"ฉันมองหาคนที่จริงใจค่ะ"}]},
+  {id:6,n:"Aom",a:31,h:160,w:52,l:"Pattaya",g:"f",on:true,nw:false,lfr:"Un peu",len:"Moyen",lth:"",b:"Comptable à Pattaya. J'ai une fille de 6 ans. Je cherche une relation sincère.",s:[{f:"Je suis Aom, comptable à Pattaya.",t:"ฉันชื่ออ้อม นักบัญชีที่พัทยาค่ะ"},{f:"J'ai une fille de 6 ans.",t:"ฉันมีลูกสาว 6 ขวบค่ะ"},{f:"Je cherche une relation sincère.",t:"ฉันมองหาความสัมพันธ์ที่จริงใจค่ะ"}]},
+  {id:7,n:"Julien",a:29,h:183,w:78,l:"Marseille",g:"h",on:false,nw:true,lfr:"",len:"Excellent",lth:"Non",b:"Kiné à Marseille. 6 mois en Thaïlande. Je cherche une rencontre authentique.",s:[{f:"Je suis Julien, kiné à Marseille.",t:"สวัสดีครับ ผมชื่อจูลียงครับ"},{f:"J'ai passé 6 mois en Thaïlande.",t:"ผมอยู่ไทย 6 เดือนครับ"},{f:"Je cherche une rencontre authentique.",t:"ผมมองหาความรักที่แท้จริงครับ"}]}
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let U=null, FL='all', VI=0, VP2=true, VL='fr', VTM=null;
+let QS=0, QA={}, QV=false, QD=false, QST=null, QMR=null, QCH=[], QRT=null, QRS=0;
+const QT_STEPS=8;
+let MY_LIKES=new Set();
+let MY_MUTUAL=[];
+
+function g(id){return document.getElementById(id)}
+function show(m){let t=g('T');t.textContent=m;t.classList.add('on');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('on'),3000)}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goP(p){
+  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
+  g('p'+p).classList.add('on');
+  ['H','F','M','P'].forEach(x=>{let b=g('B'+x);if(b)b.classList.remove('on')});
+  const mp={h:'H',f:'F',m:'M',p:'P'};
+  if(mp[p])g('B'+mp[p]).classList.add('on');
+  window.scrollTo(0,0);
+  if(p==='p')updP();
+  if(p==='m')renderMatchsPage();
+  if(p==='q'){QS=0;QA={};QV=false;QD=false;bQ()}
+  if(p==='admin')loadAdmin();
+}
+
+// Check URL hash for admin
+window.addEventListener('hashchange',()=>{
+  if(location.hash==='#admin'){
+    const pwd=prompt('Mot de passe admin :');
+    if(pwd===ADMIN_PWD)goP('admin');
+    else{location.hash='';show('Accès refusé');}
+  }
+});
+// Admin accessible via #admin hash
+
+// ============================================================
+// ADMIN
+// ============================================================
+// ============================================================
+// ADMIN — TRANSCRIPTION AUTOMATIQUE
+// ============================================================
+async function transcribeVideo(videoUrl, sourceLang, profileId){
+  var btn=document.getElementById('TRANS_BTN_'+profileId);
+  var status=document.getElementById('TRANS_STATUS_'+profileId);
+  if(btn)btn.disabled=true;
+  if(status)status.textContent='⏳ Transcription en cours…';
+  try{
+    var resp=await fetch('/.netlify/functions/transcribe',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({videoUrl:videoUrl,sourceLang:sourceLang})
+    });
+    var data=await resp.json();
+    if(data.success){
+      if(status){
+        status.innerHTML='<div style="margin-top:8px">'
+          +'<div style="font-size:.65rem;color:var(--g);font-weight:600;margin-bottom:4px">'+(sourceLang==='th'?'🇹🇭 Thaï transcrit:':'🇫🇷 Français transcrit:')+'</div>'
+          +'<div style="font-size:.72rem;color:var(--tm);background:var(--b2);padding:8px;border-radius:8px;margin-bottom:6px">'+data.transcription+'</div>'
+          +'<div style="font-size:.65rem;color:var(--g);font-weight:600;margin-bottom:4px">'+(sourceLang==='th'?'🇫🇷 Traduction française:':'🇹🇭 Traduction thaïe:')+'</div>'
+          +'<div style="font-size:.72rem;color:var(--tm);background:var(--b2);padding:8px;border-radius:8px">'+data.translation+'</div>'
+          +'</div>';
+      }
+      // Store segments for validation
+      window['SEGMENTS_'+profileId]=data.segments;
+      // Show validate button
+      var valBtn=document.getElementById('VAL_BTN_'+profileId);
+      if(valBtn)valBtn.style.display='block';
+      show('✅ Traduction terminée !');
+    } else {
+      if(status)status.textContent='❌ Erreur: '+(data.error||'Echec');
+      if(btn)btn.disabled=false;
+    }
+  }catch(e){
+    if(status)status.textContent='❌ Erreur réseau';
+    if(btn)btn.disabled=false;
+  }
+}
+
+function onCountryChange(sel){
+  var val = sel.value;
+  var iF = typeof QA !== 'undefined' && QA.g === 'f';
+  var inp = document.getElementById('QV2');
+  var wrap = document.getElementById('QV2_WRAP');
+  if(!inp) return;
+  
+  // Update placeholder
+  var placeholders = {
+    'TH': 'Bangkok, Chiang Mai, Phuket…',
+    'FR': 'Paris, Lyon, Marseille…',
+    'BE': 'Bruxelles, Liège, Gand…',
+    'CH': 'Genève, Zurich, Lausanne…',
+    'LU': 'Luxembourg, Esch-sur-Alzette…',
+    'OTHER': typeof LANG !== 'undefined' && LANG === 'th' ? 'ระบุเมือง…' : 'Votre ville…'
+  };
+  inp.placeholder = placeholders[val] || 'Votre ville…';
+  inp.value = '';
+  if(typeof QA !== 'undefined') { QA.country = val; QA.ville = ''; }
+  
+  // Update autocomplete country
+  var countryMap = {'TH':'th','FR':'fr','BE':'be','CH':'ch','LU':'lu','OTHER':''};
+  var drop = document.getElementById('QV2_drop');
+  if(drop) drop.style.display = 'none';
+  if(val !== 'OTHER') {
+    setupCityAutocomplete('QV2', countryMap[val]||'fr');
+  }
+}
+
+function adminTranscribe(btn){
+  var vid=btn.getAttribute('data-vid');
+  var lang=btn.getAttribute('data-lang');
+  var uid=btn.getAttribute('data-uid');
+  transcribeVideo(vid,lang,uid);
+}
+function adminValidate(btn){
+  var uid=btn.getAttribute('data-uid');
+  var email=btn.getAttribute('data-email');
+  var name=btn.getAttribute('data-name');
+  validateProfile(uid,email,name);
+}
+function adminReject(btn){
+  var uid=btn.getAttribute('data-uid');
+  var email=btn.getAttribute('data-email');
+  rejectProfile(uid,email);
+}
+function adminDeactivate(btn){
+  var uid=btn.getAttribute('data-uid');
+  deactivateProfile(uid);
+}
+
+async function loadAdmin(){
+  try{
+    const{data:pending}=await supa.from('users').select('*').eq('en_ligne',false).order('created_at',{ascending:false});
+    const{data:active}=await supa.from('users').select('*').eq('en_ligne',true).order('created_at',{ascending:false});
+    const all=(pending||[]).concat(active||[]);
+
+    g('ADM_PENDING').textContent=(pending||[]).length;
+    g('ADM_ACTIVE').textContent=(active||[]).length;
+    g('ADM_TOTAL').textContent=all.length;
+
+    // Pending list
+    const pendingList=g('ADM_LIST');
+    if(!pending||pending.length===0){
+      pendingList.innerHTML='<div style="text-align:center;padding:20px;color:var(--td);font-size:.8rem">Aucune inscription en attente</div>';
+    } else {
+      pendingList.innerHTML=pending.map(u=>{
+        var srcLang=u.genre==='femme'?'th':'fr';
+        var hasVideo=!!u.video_url;
+        return '<div class="admin-profile-row" style="flex-direction:column;align-items:stretch">'
+          +'<div style="display:flex;align-items:center;gap:12px">'
+          +'<div class="admin-av">'+(u.genre==='femme'?'👤':'👨')+'</div>'
+          +'<div class="admin-info">'
+          +'<div class="admin-name">'+(u.prenom||u.nom||'—')+', '+(u.age||'?')+' ans</div>'
+          +'<div class="admin-sub">📍 '+(u.ville||'—')+' · '+u.email+'</div>'
+          +(hasVideo?'<div style="margin-top:4px"><a href="'+u.video_url+'" target="_blank" style="font-size:.65rem;color:var(--g);text-decoration:none">🎬 Voir la vidéo</a></div>':'<div style="font-size:.65rem;color:var(--td);margin-top:3px">Pas de vidéo</div>')
+          +'</div>'
+          +'<span class="badge-pending">En attente</span>'
+          +'</div>'
+          +(hasVideo?'<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--b2)">'
+          +'<button id="TRANS_BTN_'+u.id+'" class="btn-validate" style="background:var(--nv);margin-bottom:6px;width:100%" data-vid="'+u.video_url+'" data-lang="'+srcLang+'" data-uid="'+u.id+'" onclick="adminTranscribe(this)">'
+          +'🤖 Transcrire + Traduire automatiquement</button>'
+          +'<div id="TRANS_STATUS_'+u.id+'"></div>'
+          +'<button id="VAL_BTN_'+u.id+'" class="btn-validate" style="display:none;margin-top:8px;width:100%" data-uid="'+u.id+'" data-email="'+u.email+'" data-name="'+(u.prenom||u.nom||'')+'" onclick="adminValidate(this)">✓ Valider et publier</button>'
+          +'</div>':'')
+          +'<div style="display:flex;gap:6px;margin-top:8px">'
+          +'<button id="VAL_BTN_'+u.id+'" class="btn-validate" style="display:none;margin-top:8px;width:100%" data-uid="'+u.id+'" data-email="'+u.email+'" data-name="'+(u.prenom||u.nom||'')+'" onclick="adminValidate(this)">✓ Valider et publier</button>'
+          +'<button class="btn-reject" style="flex:1" data-uid="'+u.id+'" data-email="'+u.email+'" onclick="adminReject(this)">✗ Refuser</button>'
+          +'</div>'
+          +'</div>';
+      }).join('');
+    }
+
+    // Active list
+    const activeList=g('ADM_ACTIVE_LIST');
+    if(!active||active.length===0){
+      activeList.innerHTML='<div style="text-align:center;padding:20px;color:var(--td);font-size:.8rem">Aucun profil actif</div>';
+    } else {
+      activeList.innerHTML=active.map(u=>`
+        <div class="admin-profile-row">
+          <div class="admin-av">${u.genre==='femme'?'👤':'👨'}</div>
+          <div class="admin-info">
+            <div class="admin-name">${u.prenom||u.nom||'—'}, ${u.age||'?'} ans</div>
+            <div class="admin-sub">📍 ${u.ville||'—'} · ${u.email}</div>
+          </div>
+          <span class="badge-active">Actif</span>
+          <div class="admin-actions">
+            <button class="btn-reject" onclick="deactivateProfile('${u.id}')">Désactiver</button>
+          </div>
+        </div>
+      `).join('');
+    }
+  }catch(e){
+    g('ADM_LIST').innerHTML='<div style="color:var(--rd);font-size:.8rem;padding:10px">Erreur de connexion Supabase</div>';
+  }
+}
+
+async function validateProfile(id,email,name){
+  try{
+    // Get segments if transcription was done
+    var segments=window['SEGMENTS_'+id]||null;
+    var updateData={en_ligne:true};
+    if(segments)updateData.subtitles=JSON.stringify(segments);
+    
+    await supa.from('users').update(updateData).eq('id',id);
+    
+    // Email de confirmation
+    try{
+      await emailjs.send(ES,ET,{
+        to_email:email,
+        from_name:'LoveSiam',
+        from_email:PE,
+        subject:'Votre profil LoveSiam est validé !',
+        message:'Bonjour '+name+',\n\nVotre profil LoveSiam a été validé et est maintenant visible sur le site.\n\nBienvenue dans la communauté LoveSiam !\n\nL\'équipe LoveSiam'
+      });
+    }catch(e){}
+    show('✅ Profil de '+name+' validé !');
+    loadAdmin();
+  }catch(e){show('Erreur lors de la validation');}
+}
+
+async function rejectProfile(id,email){
+  if(!confirm('Refuser ce profil ?'))return;
+  try{
+    await supa.from('users').delete().eq('id',id);
+    show('Profil supprimé');
+    loadAdmin();
+  }catch(e){show('Erreur')}
+}
+
+async function deactivateProfile(id){
+  try{
+    await supa.from('users').update({en_ligne:false}).eq('id',id);
+    show('Profil désactivé');
+    loadAdmin();
+  }catch(e){show('Erreur')}
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load',()=>{
+  g('LG').onclick=()=>goP('h');
+  g('LF').onclick=()=>{
+    g('LF').className='lb-lang on';
+    g('LT').className='lb-lang off';
+    applyTranslations('fr');
+    show('🇫🇷 Français');
+  };
+  g('LT').onclick=()=>{
+    g('LT').className='lb-lang on';
+    g('LF').className='lb-lang off';
+    applyTranslations('th');
+    show('🇹🇭 ภาษาไทย');
+  };
+  g('BL').onclick=()=>goP('lo');
+  g('BI').onclick=()=>goP('q');
+  g('BH').onclick=()=>goP('h');
+  g('BF').onclick=()=>goP('f');
+  g('BM').onclick=()=>goP('m');
+  g('BP').onclick=()=>goP('p');
+  g('HC').onclick=()=>goP('q');
+  g('HF').onclick=()=>goP('f');
+  g('PC').onclick=()=>goP('q');
+  g('PCB').onclick=()=>goP('q');
+  g('PLB').onclick=()=>goP('lo');
+  g('PLO').onclick=logout;
+  g('LB').onclick=doLogin;
+  g('LC').onclick=()=>goP('q');
+  g('PM_REG').onclick=()=>goP('q');
+  g('PPB').onclick=()=>g('PPG').classList.remove('on');
+  g('PPCAND').onclick=()=>{g('PPG').classList.remove('on');goP('q')};
+  g('VCL').onclick=closeV;
+  g('VP').onclick=()=>{VP2=!VP2;g('VP').textContent=VP2?'⏸':'▶'};
+  g('VLF').onclick=()=>sVL('fr');
+  g('VLT').onclick=()=>sVL('th');
+  g('VLK').onclick=()=>{if(window._vidProfile)sLike(window._vidProfile.id)};
+  g('F_AGE').onchange=rFG;
+  g('F_CITY').oninput=rFG;
+  g('F_ONLINE').onclick=()=>toggleFilter('F_ONLINE');
+  g('F_RECENT').onclick=()=>toggleFilter('F_RECENT');
+  g('F_HEARTS').onclick=()=>toggleFilter('F_HEARTS');
+
+  let m=0,c=0,o=0;
+  const ti=setInterval(()=>{
+    m=Math.min(m+7,247);c=Math.min(c+1,31);o=Math.min(o+1,7);
+    g('CM').textContent=m;g('CC').textContent=c;g('CO').textContent=o;
+    if(m>=247)clearInterval(ti);
+  },40);
+  rFF();bQ();
+});
+
+function toggleFilter(id){
+  const btn=g(id);
+  const active=btn.getAttribute('data-active')==='1';
+  btn.setAttribute('data-active',active?'0':'1');
+  btn.classList.toggle('on',!active);
+  rFG();
+}
+
+// ============================================================
+// PROFILS
+// ============================================================
+function rFF(){
+  const lb=['Tous','Femmes thaï','Hommes français'],vl=['all','f','h'];
+  g('FF').innerHTML=vl.map((v,i)=>`<button class="fc ${FL===v?'on':''}" data-fv="${v}">${lb[i]}</button>`).join('');
+  g('FF').querySelectorAll('[data-fv]').forEach(b=>b.onclick=()=>{FL=b.getAttribute('data-fv');rFF();rFG()});
+  rFG();
+}
+
+function getVisibleProfiles(){
+  let pr=[...PR];
+  if(U){
+    if(U.gender==='h')pr=pr.filter(p=>p.g==='f');
+    else if(U.gender==='f')pr=pr.filter(p=>p.g==='h');
+  }
+  if(FL==='f')pr=pr.filter(p=>p.g==='f');
+  else if(FL==='h')pr=pr.filter(p=>p.g==='h');
+  const ageVal=g('F_AGE')?g('F_AGE').value:'';
+  if(ageVal){
+    const parts=ageVal.split('-');
+    const min=parseInt(parts[0]),max=parseInt(parts[1])||999;
+    pr=pr.filter(p=>p.a>=min&&p.a<=max);
+  }
+  const cityVal=g('F_CITY')?g('F_CITY').value.trim().toLowerCase():'';
+  if(cityVal)pr=pr.filter(p=>p.l.toLowerCase().includes(cityVal));
+  if(g('F_ONLINE')&&g('F_ONLINE').getAttribute('data-active')==='1')pr=pr.filter(p=>p.on);
+  if(g('F_RECENT')&&g('F_RECENT').getAttribute('data-active')==='1')pr=pr.filter(p=>p.nw);
+  if(g('F_HEARTS')&&g('F_HEARTS').getAttribute('data-active')==='1')pr=pr.filter(p=>MY_LIKES.has(p.id));
+  return pr;
+}
+
+function rFG(){
+  const pr=getVisibleProfiles();
+  const onlineCount=PR.filter(p=>p.on).length;
+  g('ONLC').innerHTML=`<span style="color:var(--gn)">●</span> ${onlineCount} en ligne`;
+  g('FB_MSG').style.display=U?'none':'block';
+  g('FG').innerHTML=pr.map((p,i)=>{
+    const bl=!U;
+    const ls=p.g==='f'
+      ?`🇫🇷 FR: ${p.lfr||'—'} · 🇬🇧 EN: ${p.len||'—'}`
+      :`🇹🇭 TH: ${p.lth||'—'} · 🇬🇧 EN: ${p.len||'—'}`;
+    const liked=MY_LIKES.has(p.id);
+    return `<div class="pc-card" data-pid="${p.id}">
+      <div class="ph-img" style="background:${BG[i%7]}">
+        <div class="sw2">${p.g==='f'?SF:SH}</div>
+        <div class="so"></div>
+        ${p.nw&&!p.on?'<div class="bd bn2-badge">Nouveau</div>':''}
+        ${p.on?'<div class="bd bo2-badge">● Live</div>':''}
+        ${bl?`<div style="position:absolute;bottom:9px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px"><div class="sl2">🔒 Inscription requise</div><button class="sb-btn" data-bc="1">M'inscrire</button></div>`:'<div class="vd-badge">▶ Vidéo</div>'}
+      </div>
+      <div class="pif">
+        <div class="pnm">${p.n}, ${p.a} ans</div>
+        <div class="plc">📍 ${p.l} · ${p.h} cm · ${p.w} kg</div>
+        <div class="plg">${ls}</div>
+        <div class="pds">${p.b}</div>
+        <button class="lb-like ${liked?'liked':''}" data-lid="${p.id}">${liked?'❤️ Aimé':'🤍 Coup de cœur'}</button>
+      </div>
+    </div>`;
+  }).join('');
+  g('FG').querySelectorAll('[data-pid]').forEach(el=>el.onclick=()=>oPP(parseInt(el.getAttribute('data-pid'))));
+  g('FG').querySelectorAll('[data-bc]').forEach(el=>el.onclick=e=>{e.stopPropagation();goP('q')});
+  g('FG').querySelectorAll('[data-lid]').forEach(el=>el.onclick=e=>{e.stopPropagation();sLike(parseInt(el.getAttribute('data-lid')))});
+}
+
+function oPP(id){
+  const p=PR.find(x=>x.id===id);if(!p)return;
+  g('PPT').textContent=`${p.n}, ${p.a} ans`;
+  g('PPCB').innerHTML=p.g==='f'?SF:SH;
+  g('PPCL').style.display=U?'none':'flex';
+  g('PPAV').innerHTML=p.g==='f'?'👤':'👨';
+  const ol=g('PPOL');
+  ol.textContent=p.on?'● En ligne':'● Hors ligne';
+  ol.style.color=p.on?'var(--gn)':'var(--td)';
+  const ls=p.g==='f'
+    ?`<span style="padding:3px 9px;border-radius:13px;font-size:.68rem;background:var(--gd);color:var(--g);font-weight:500">🇫🇷 FR: ${p.lfr||'—'}</span><span style="padding:3px 9px;border-radius:13px;font-size:.68rem;background:var(--gd);color:var(--g);font-weight:500;margin-left:5px">🇬🇧 EN: ${p.len||'—'}</span>`
+    :`<span style="padding:3px 9px;border-radius:13px;font-size:.68rem;background:var(--gd);color:var(--g);font-weight:500">🇹🇭 TH: ${p.lth||'—'}</span><span style="padding:3px 9px;border-radius:13px;font-size:.68rem;background:var(--gd);color:var(--g);font-weight:500;margin-left:5px">🇬🇧 EN: ${p.len||'—'}</span>`;
+  const liked=MY_LIKES.has(p.id);
+  g('PPINFO').innerHTML=`
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;color:var(--nv);margin-bottom:2px">${p.n}</div>
+    <div style="font-size:.73rem;color:var(--td);margin-bottom:9px">📍 ${p.l} · ${p.a} ans · ${p.h} cm · ${p.w} kg</div>
+    <div style="margin-bottom:11px">${ls}</div>
+    ${U?`<div style="font-size:.8rem;color:var(--tm);line-height:1.7;margin-bottom:13px;padding:12px;background:var(--b2);border-radius:10px">${p.b}</div>`:`<div style="font-size:.8rem;color:var(--tm);line-height:1.7;margin-bottom:13px;padding:12px;background:var(--b2);border-radius:10px;filter:blur(4px);user-select:none">${p.b}</div>`}
+    <div style="display:flex;gap:8px;margin-bottom:13px">
+      ${U?`<button style="flex:1;padding:10px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer" id="PPVID_BTN">🎬 Voir la vidéo</button>`:''}
+      <button style="flex:1;padding:10px;background:#fff;color:var(--rd);border:1.5px solid rgba(192,57,43,.2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer" id="PPLK">${liked?'❤️ Aimé':'🤍 Coup de cœur'}</button>
+    </div>
+    ${!U?'<div style="padding:12px;background:var(--b2);border-radius:11px;font-size:.76rem;color:var(--tm);text-align:center">🔒 Vidéo accessible après inscription</div>':''}
+  `;
+  setTimeout(()=>{
+    if(g('PPVID_BTN'))g('PPVID_BTN').onclick=()=>oV(p.id);
+    if(g('PPLK'))g('PPLK').onclick=()=>sLike(p.id);
+  },50);
+  g('PPG').classList.add('on');
+}
+
+// ============================================================
+// LIKES & MATCHS
+// ============================================================
+async function sLike(id){
+  const p=PR.find(x=>x.id===id);if(!p)return;
+  if(!U){goP('q');return;}
+  if(MY_LIKES.has(id)){show('❤️ Déjà dans vos coups de cœur');return;}
+  MY_LIKES.add(id);
+  rFG();
+  show(`❤️ Coup de cœur pour ${p.n} !`);
+  try{await emailjs.send(ES,ET,{to_email:PE,from_name:U.name,from_email:U.email,subject:`❤️ Coup de cœur → ${p.n}`,message:`De: ${U.name} (${U.email})\nPour: ${p.n}, ${p.a} ans — ${p.l}`})}catch(e){}
+  const isMutual=Math.random()>0.75;
+  if(isMutual)await handleMutualMatch(p);
+  updateMatchBadge();
+}
+
+async function handleMutualMatch(p){
+  if(MY_MUTUAL.find(m=>m.id===p.id))return;
+  MY_MUTUAL.push(p);
+  show(`🎉 Match mutuel avec ${p.n} !`);
+  try{await emailjs.send(ES,ET,{to_email:PE,from_name:'LoveSiam — Match',from_email:'noreply@lovesiam.com',subject:`💞 Match mutuel — ${U.name} & ${p.n}`,message:`Match mutuel !\n\n${U.name} (${U.email})\n${p.n}, ${p.a} ans — ${p.l}`})}catch(e){}
+  updateMatchBadge();
+}
+
+function updateMatchBadge(){
+  const count=MY_LIKES.size+MY_MUTUAL.length;
+  g('BMI').innerHTML='💞'+(count>0?'<div style="position:absolute;top:-2px;right:-4px;width:7px;height:7px;background:var(--g);border-radius:50%"></div>':'');
+  if(MY_MUTUAL.length>0){g('MATCH_COUNT').textContent=`${MY_MUTUAL.length} match${MY_MUTUAL.length>1?'s':''}`;g('MATCH_COUNT').style.color='var(--gn)'}
+}
+
+function renderMatchsPage(){
+  if(!U){g('PM_LOCKED').style.display='block';g('PM_CONTENT').style.display='none';return;}
+  g('PM_LOCKED').style.display='none';g('PM_CONTENT').style.display='block';
+  const mutualEl=g('PM_MUTUAL');
+  if(MY_MUTUAL.length===0){
+    mutualEl.innerHTML='<div class="match-empty"><i>💞</i>Pas encore de match mutuel.</div>';
+  }else{
+    mutualEl.innerHTML=MY_MUTUAL.map(p=>`<div class="match-card" onclick="oPP(${p.id})"><div class="match-av mutual">${p.g==='f'?'👤':'👨'}</div><div class="match-info"><div class="match-name">${p.n}, ${p.a} ans</div><div class="match-sub">📍 ${p.l}</div></div><span class="match-badge mutual">✓ Match</span></div>`).join('');
+  }
+  const heartsEl=g('PM_HEARTS');
+  const liked=[...MY_LIKES].map(id=>PR.find(x=>x.id===id)).filter(Boolean);
+  if(liked.length===0){
+    heartsEl.innerHTML='<div class="match-empty"><i>❤️</i>Aucun coup de cœur pour l\'instant.</div>';
+  }else{
+    heartsEl.innerHTML=liked.map(p=>`<div class="match-card" onclick="oPP(${p.id})"><div class="match-av">${p.g==='f'?'👤':'👨'}</div><div class="match-info"><div class="match-name">${p.n}, ${p.a} ans</div><div class="match-sub">📍 ${p.l}</div></div><span class="match-badge heart">❤️ Liké</span></div>`).join('');
+  }
+}
+
+// ============================================================
+// VIDEO
+// ============================================================
+function oV(id){
+  const p=PR.find(x=>x.id===id);if(!p)return;
+  if(!U){goP('q');return}
+  window._vidProfile=p;VI=0;VP2=true;VL='fr';
+  g('VEM').textContent=p.g==='f'?'👤':'👨';
+  g('VNM').textContent=`${p.n}, ${p.a} ans`;
+  g('VLC2').innerHTML=`📍 ${p.l}${p.on?' · <span style="color:var(--gn)">● En ligne</span>':''}`;
+  g('VLF').className='vl2 on';g('VLT').className='vl2 off';g('VP').textContent='⏸';
+  clearInterval(VTM);shS(p,0);
+  VTM=setInterval(()=>{VI=(VI+1)%p.s.length;shS(p,VI);g('VPF').style.width=(((VI+1)/p.s.length)*100)+'%'},3200);
+  g('VM').classList.add('on');document.body.style.overflow='hidden';
+}
+function shS(p,i){const s=p.s[i];g('VFR').style.opacity='0';g('VTH').style.opacity='0';setTimeout(()=>{g('VFR').textContent=VL==='fr'?s.f:s.t;g('VTH').textContent=VL==='fr'?s.t:s.f;g('VFR').style.opacity='1';g('VTH').style.opacity='.88'},160)}
+function sVL(l){VL=l;g('VLF').className='vl2 '+(l==='fr'?'on':'off');g('VLT').className='vl2 '+(l==='th'?'on':'off');if(window._vidProfile)shS(window._vidProfile,VI)}
+function closeV(){g('VM').classList.remove('on');document.body.style.overflow='';clearInterval(VTM)}
+
+// ============================================================
+// AUTH
+// ============================================================
+function doLogin(){
+  const e=g('LE').value.trim();
+  if(!e){show('⚠️ Email requis');return}
+  U={name:e.split('@')[0],city:'France',bio:'',gender:'h',email:e,status:'active'};
+  updNav();updP();goP('h');rFG();show('✅ Connexion réussie !');
+}
+function logout(){U=null;MY_LIKES=new Set();MY_MUTUAL=[];updNav();updP();rFG();show('👋 À bientôt !')}
+function updNav(){
+  const na=g('NA');
+  if(U){
+    na.innerHTML=`<span style="font-size:.7rem;color:var(--tm);margin-right:4px">${U.name}</span><button class="nb nb0" id="NPB">👤</button>`;
+    g('NPB').onclick=()=>goP('p');
+  }else{
+    na.innerHTML='<button class="nb nb0" id="BL2" style="margin-right:4px">Connexion</button><button class="nb nb1" id="BI2">M\'inscrire</button>';
+    g('BL2').onclick=()=>goP('lo');g('BI2').onclick=()=>goP('q');
+  }
+}
+function updP(){
+  if(U){
+    g('PO').style.display='none';g('PI').style.display='block';
+    g('PAV').textContent='👤';g('PNM').textContent=U.name;g('PLC').textContent=`📍 ${U.city||'France'}`;g('PBIO').textContent=U.bio||'—';
+    const ip=U.status==='pending';
+    g('PDT').style.background=ip?'#F39C12':'var(--gn)';g('PSL').textContent=ip?'En attente':'Profil actif';g('PSL').style.color=ip?'#F39C12':'var(--gn)';
+    g('PSC').innerHTML=`<div class="ms2">Statut</div><div class="ms3">${ip?'⏳ Dossier en cours. Réponse sous 48h.':'✅ Profil actif et visible.'}</div>`;
+    g('STAT_LIKES').textContent=MY_LIKES.size;g('STAT_MATCHES').textContent=MY_MUTUAL.length;
+  }else{g('PO').style.display='block';g('PI').style.display='none'}
+}
+
+// ============================================================
+// QUESTIONNAIRE
+// ============================================================
+function bQ(){
+  var pb=g('QP');if(pb)pb.style.width=((QS+1)/QT_STEPS*100)+'%';
+  var tq=T[LANG]||T.fr;
+  var stepLabel=tq.q_step||'Etape';
+  var contBtn=tq.q_continue||'Continuer';
+  var backBtn=tq.q_back||'Retour';
+  var iF=QA.g==='f';
+  var h='';
+
+  if(QD){
+    g('QB').innerHTML='<div class="su"><i>🎉</i><h3>'+tq.q_success_title+'</h3><p>'+tq.q_success_sub+' <strong style="color:var(--g)">'+PE+'</strong></p><div class="ns"><div class="ni"><h5>📋</h5><p>'+tq.step1_text+'</p></div><div class="ni"><h5>✅</h5><p>'+tq.step2_text+'</p></div><div class="ni"><h5>💞</h5><p>'+tq.step3_text+'</p></div></div><button class="qx qf" id="SHB">'+tq.q_back_home+'</button></div>';
+    if(pb)pb.style.width='100%';
+    g('SHB').onclick=function(){goP('h')};
+    return;
+  }
+
+  if(QS===0){
+    h='<div class="qe">'+stepLabel+' 1/'+QT_STEPS+'</div>'
+     +'<div class="qt">'+tq.q0_title+'</div>'
+     +'<p class="qs">'+tq.q0_sub+'</p>'
+     +'<div class="cs2">'
+     +'<div class="cd '+(QA.g==='h'?'sl':'')+'" data-cd="g:h"><div class="ci2">👨</div><div><div class="cl">'+tq.q0_man+'</div><div class="cs3">'+tq.q0_man_sub+'</div></div><div class="ck">'+(QA.g==='h'?'✓':'')+'</div></div>'
+     +'<div class="cd '+(QA.g==='f'?'sl':'')+'" data-cd="g:f"><div class="ci2">👩</div><div><div class="cl">'+tq.q0_woman+'</div><div class="cs3">'+tq.q0_woman_sub+'</div></div><div class="ck">'+(QA.g==='f'?'✓':'')+'</div></div>'
+     +'</div>'
+     +'<div class="qn"><button class="qx qf" id="QNX">'+contBtn+'</button></div>';
+  }
+  else if(QS===1){
+    var hO='',wO='';
+    for(var hi=140;hi<=200;hi++)hO+='<option value="'+hi+'"'+(QA.height==hi?' selected':'')+'>'+hi+' cm</option>';
+    for(var wi=35;wi<=120;wi++)wO+='<option value="'+wi+'"'+(QA.weight==wi?' selected':'')+'>'+wi+' kg</option>';
+    var langLevels=LANG==='th'?['ไม่มี','นิดหน่อย','ปานกลาง','ดีมาก']:['Non','Un peu','Moyen','Excellent'];
+    var langVals=['Non','Un peu','Moyen','Excellent'];
+    var langFR='',langEN='',langTH='';
+    for(var li=0;li<4;li++){
+      var lv=langVals[li];
+      var ll=langLevels[li];
+      langFR+='<button class="lp2 '+(QA.lfr===lv?'sl':'')+'" data-lp="lfr:'+lv+'">'+ll+'</button>';
+      langEN+='<button class="lp2 '+(QA.len===lv?'sl':'')+'" data-lp="len:'+lv+'">'+ll+'</button>';
+      langTH+='<button class="lp2 '+(QA.lth===lv?'sl':'')+'" data-lp="lth:'+lv+'">'+ll+'</button>';
+    }
+    var cityLabel=iF?(tq.q2_city_f||'Ville (Thaïlande)'):(tq.q2_city_h||'Ville (France)');
+    var cityPh=iF?'Bangkok…':'Paris, Lyon…';
+    // Language names always in display language
+    var lbl_th = LANG==='th' ? 'ภาษาไทย' : 'Thaïlandais';
+    var lbl_fr_lang = LANG==='th' ? 'ภาษาฝรั่งเศส' : 'Français';
+    var lbl_en = LANG==='th' ? 'ภาษาอังกฤษ' : 'Anglais';
+    var langBlock=iF
+      ?'<div class="lr"><div class="lh"><span>🇫🇷</span><span style="font-size:.9rem;font-weight:500">'+lbl_fr_lang+'</span></div><div class="lp">'+langFR+'</div></div>'
+       +'<div class="lr"><div class="lh"><span>🇬🇧</span><span style="font-size:.9rem;font-weight:500">'+lbl_en+'</span></div><div class="lp">'+langEN+'</div></div>'
+      :'<div class="lr"><div class="lh"><span>🇹🇭</span><span style="font-size:.9rem;font-weight:500">'+lbl_th+'</span></div><div class="lp">'+langTH+'</div></div>'
+       +'<div class="lr"><div class="lh"><span>🇬🇧</span><span style="font-size:.9rem;font-weight:500">'+lbl_en+'</span></div><div class="lp">'+langEN+'</div></div>';
+    h='<div class="qe">'+stepLabel+' 2/'+QT_STEPS+'</div>'
+     +'<div class="qt">'+tq.q2_title+'</div>'
+     +'<div class="fg"><label class="fl">'+tq.q2_name+'</label><input class="fi" id="QN" type="text" placeholder="'+tq.q2_name+'" value="'+(QA.name||'')+'"></div>'
+     +'<div class="fg"><label class="fl">'+tq.q2_age+'</label><select class="fsl" id="QAG"><option value="">—</option></select></div>'
+     +'<div class="fg"><label class="fl">'+(LANG==="th"?"ประเทศ":"Pays")+'</label>'
+    +'<select class="fsl" id="QCOUNTRY" onchange="onCountryChange(this)">'
+    +(iF
+      ?'<option value="TH" '+((!QA.country||QA.country==="TH")?"selected":"")+'>🇹🇭 Thaïlande</option>'
+       +'<option value="FR" '+(QA.country==="FR"?"selected":"")+'>🇫🇷 France</option>'
+       +'<option value="OTHER" '+(QA.country==="OTHER"?"selected":"")+'>🌍 '+(LANG==="th"?"อื่นๆ":"Autre pays")+'</option>'
+      :'<option value="FR" '+((!QA.country||QA.country==="FR")?"selected":"")+'>🇫🇷 France</option>'
+       +'<option value="BE" '+(QA.country==="BE"?"selected":"")+'>🇧🇪 Belgique</option>'
+       +'<option value="CH" '+(QA.country==="CH"?"selected":"")+'>🇨🇭 Suisse</option>'
+       +'<option value="LU" '+(QA.country==="LU"?"selected":"")+'>🇱🇺 Luxembourg</option>'
+       +'<option value="TH" '+(QA.country==="TH"?"selected":"")+'>🇹🇭 Thaïlande</option>'
+       +'<option value="OTHER" '+(QA.country==="OTHER"?"selected":"")+'>🌍 '+(LANG==="th"?"อื่นๆ":"Autre pays")+'</option>'
+    )
+    +'</select></div>'
+    +'<div class="fg" id="QV2_WRAP"><label class="fl">'+cityLabel+'</label><input class="fi" id="QV2" type="text" placeholder="'+cityPh+'" value="'+(QA.ville||'')+'"></div>'
      +'<div class="r2"><div class="fg"><label class="fl">'+tq.q2_height+'</label><select class="fsl" id="QH"><option value="">cm</option>'+hO+'</select></div>'
      +'<div class="fg"><label class="fl">'+tq.q2_weight+'</label><select class="fsl" id="QW"><option value="">kg</option>'+wO+'</select></div></div>'
      +'<div class="ds"><div class="dl"></div><div class="dt">'+tq.q2_photos+'</div><div class="dl"></div></div>'
