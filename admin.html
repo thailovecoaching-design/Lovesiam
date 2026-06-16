@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LoveSiam — Administration</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--nv:#1A2744;--g:#C4962A;--gl:#E8B84B;--rd:#C0392B;--gn:#27AE60;--b2:#F5F2EE;--td:#8A8070;--sans:'DM Sans',sans-serif;--serif:'Cormorant Garamond',serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:#F0EDE8;color:var(--nv);min-height:100vh}
+
+/* NAV */
+.nav{background:var(--nv);color:#fff;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:var(--serif);font-size:1.4rem}
+.nav-logo em{color:var(--gl);font-style:italic}
+.nav-info{font-size:.78rem;color:rgba(255,255,255,.5)}
+.nav-btns{display:flex;gap:10px}
+.nav-btn{padding:6px 14px;border:none;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--sans)}
+.nav-btn.primary{background:var(--g);color:#fff}
+.nav-btn.ghost{background:rgba(255,255,255,.1);color:#fff}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 60px)}
+.sidebar{width:220px;background:#fff;border-right:1px solid rgba(26,39,68,.08);padding:16px 0;flex-shrink:0}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:.84rem;font-weight:500;cursor:pointer;color:var(--td);transition:all .15s;border-left:3px solid transparent}
+.sb-item:hover{background:var(--b2);color:var(--nv)}
+.sb-item.on{background:#FDF8F0;color:var(--g);border-left-color:var(--g);font-weight:600}
+.sb-item .cnt{margin-left:auto;background:var(--g);color:#fff;border-radius:8px;padding:1px 7px;font-size:.7rem}
+.sb-item .cnt.rd{background:var(--rd)}
+.sb-sep{height:1px;background:rgba(26,39,68,.06);margin:10px 16px}
+.main{flex:1;padding:24px;overflow-y:auto}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:#fff;border-radius:14px;padding:20px;border:1px solid rgba(26,39,68,.06)}
+.stat-num{font-size:2rem;font-weight:700;color:var(--nv);margin-bottom:4px}
+.stat-lbl{font-size:.76rem;color:var(--td);text-transform:uppercase;letter-spacing:.06em}
+.stat-sub{font-size:.74rem;color:var(--gn);margin-top:4px;font-weight:500}
+
+/* TABLE */
+.card{background:#fff;border-radius:14px;border:1px solid rgba(26,39,68,.06);overflow:hidden;margin-bottom:20px}
+.card-hdr{padding:16px 20px;border-bottom:1px solid rgba(26,39,68,.06);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:.96rem;font-weight:700;color:var(--nv)}
+.card-actions{display:flex;gap:8px;align-items:center}
+
+/* FILTRES */
+.filter-bar{display:flex;gap:10px;align-items:center;padding:12px 20px;background:var(--b2);border-bottom:1px solid rgba(26,39,68,.06);flex-wrap:wrap}
+.filter-chip{padding:5px 12px;border-radius:20px;border:1.5px solid rgba(26,39,68,.12);background:#fff;font-size:.76rem;cursor:pointer;font-family:var(--sans);font-weight:500;color:var(--td)}
+.filter-chip.on{background:var(--nv);color:#fff;border-color:var(--nv)}
+.search-input{flex:1;min-width:200px;padding:7px 12px;border:1.5px solid rgba(26,39,68,.12);border-radius:20px;font-size:.82rem;font-family:var(--sans);outline:none;background:#fff}
+.search-input:focus{border-color:var(--g)}
+
+/* LISTE INSCRIPTIONS */
+.ins-row{display:grid;grid-template-columns:44px 1fr 120px 100px 100px 130px 90px;align-items:center;padding:12px 20px;border-bottom:1px solid rgba(26,39,68,.05);gap:12px;cursor:pointer;transition:background .1s}
+.ins-row:hover{background:var(--b2)}
+.ins-row:last-child{border-bottom:none}
+.ins-hdr{display:grid;grid-template-columns:44px 1fr 120px 100px 100px 130px 90px;padding:8px 20px;background:#F8F6F2;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--td);gap:12px;border-bottom:1px solid rgba(26,39,68,.06)}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.ins-name{font-weight:600;font-size:.88rem}
+.ins-meta{font-size:.74rem;color:var(--td);margin-top:2px}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:10px;font-size:.7rem;font-weight:600;white-space:nowrap}
+.badge.pending{background:#FFF3CD;color:#856404}
+.badge.approved{background:#D4EDDA;color:#155724}
+.badge.rejected{background:#F8D7DA;color:#721C24}
+.badge.review{background:#D1ECF1;color:#0C5460}
+.badge.m{background:#EDE0FF;color:#5A2D8B}
+.badge.f{background:#FFE4F0;color:#8B2D5A}
+
+/* DÉTAIL */
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-start;justify-content:flex-end}
+.detail-overlay.on{display:flex}
+.detail-panel{width:480px;background:#fff;height:100vh;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
+.dp-hdr{padding:20px;border-bottom:1px solid rgba(26,39,68,.06);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:5}
+.dp-title{font-size:1rem;font-weight:700}
+.dp-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--td);padding:4px}
+.dp-body{padding:20px}
+.dp-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.dp-photo{aspect-ratio:1;border-radius:10px;background:var(--b2);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.8rem}
+.dp-photo img{width:100%;height:100%;object-fit:cover}
+.dp-video-wrap{margin-bottom:16px;border-radius:12px;overflow:hidden;background:#111;position:relative}
+.dp-video-wrap video{width:100%;display:block;max-height:260px}
+.dp-video-wrap .no-video{padding:24px;text-align:center;color:var(--td);font-size:.84rem}
+.dp-section{margin-bottom:14px}
+.dp-sec-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--td);margin-bottom:8px}
+.dp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dp-field{background:var(--b2);border-radius:8px;padding:10px 12px}
+.dp-field-lbl{font-size:.66rem;color:var(--td);margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
+.dp-field-val{font-size:.88rem;font-weight:500;color:var(--nv)}
+.dp-bio{background:var(--b2);border-radius:10px;padding:14px;font-size:.86rem;color:var(--nv);line-height:1.6;margin-bottom:14px}
+.dp-actions{display:flex;gap:10px;padding:16px 20px;border-top:1px solid rgba(26,39,68,.06);position:sticky;bottom:0;background:#fff}
+.dp-btn{flex:1;padding:12px;border:none;border-radius:10px;font-size:.86rem;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all .2s}
+.dp-btn.approve{background:var(--gn);color:#fff}
+.dp-btn.reject{background:var(--rd);color:#fff}
+.dp-btn.review{background:var(--nv);color:#fff}
+.dp-btn.msg{background:var(--g);color:#fff}
+
+/* NOTE */
+.dp-note-area{width:100%;padding:10px;border:1.5px solid rgba(26,39,68,.1);border-radius:8px;font-family:var(--sans);font-size:.84rem;resize:vertical;min-height:80px;outline:none;margin-bottom:10px}
+.dp-note-area:focus{border-color:var(--g)}
+
+/* VIDE */
+.empty{text-align:center;padding:60px 20px;color:var(--td)}
+.empty-icon{font-size:3rem;margin-bottom:12px}
+.empty-text{font-size:.9rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A2744;color:#fff;padding:10px 20px;border-radius:20px;font-size:.84rem;z-index:999;display:none}
+.toast.on{display:block}
+
+/* PAGE TEST */
+.test-section{background:#fff;border-radius:14px;padding:24px;margin-bottom:20px;border:1px solid rgba(26,39,68,.06)}
+.test-title{font-size:1rem;font-weight:700;margin-bottom:16px;color:var(--nv)}
+.test-btn{padding:10px 20px;border:none;border-radius:10px;background:var(--nv);color:#fff;font-size:.84rem;font-weight:600;cursor:pointer;font-family:var(--sans);margin-right:8px;margin-bottom:8px}
+.test-btn.g{background:var(--g)}
+.test-btn.rd{background:var(--rd)}
+.test-btn.gn{background:var(--gn)}
+.test-log{background:#1A2744;color:#E8B84B;border-radius:10px;padding:14px;font-size:.78rem;font-family:monospace;min-height:80px;max-height:200px;overflow-y:auto;margin-top:12px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-logo">Love<em>Siam</em> <span style="font-size:.7rem;opacity:.5;font-family:var(--sans)">Admin</span></div>
+  <div class="nav-info">Page d'administration privée</div>
+  <div class="nav-btns">
+    <button class="nav-btn ghost" onclick="exportCSV()">📥 Export CSV</button>
+    <button class="nav-btn primary" onclick="clearAll()">🗑 Tout effacer</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-item on" onclick="showPage('inscriptions',this)" id="sb-inscriptions">
+      👤 Inscriptions <span class="cnt" id="cnt-total">0</span>
+    </div>
+    <div class="sb-item" onclick="showPage('pending',this)" id="sb-pending">
+      ⏳ En attente <span class="cnt rd" id="cnt-pending">0</span>
+    </div>
+    <div class="sb-item" onclick="showPage('approved',this)" id="sb-approved">
+      ✅ Validés <span class="cnt" id="cnt-approved">0</span>
+    </div>
+    <div class="sb-item" onclick="showPage('rejected',this)" id="sb-rejected">
+      ❌ Refusés
+    </div>
+    <div class="sb-sep"></div>
+    <div class="sb-item" onclick="showPage('hommes',this)">🇫🇷 Hommes français</div>
+    <div class="sb-item" onclick="showPage('femmes',this)">🇹🇭 Femmes thaïes</div>
+    <div class="sb-sep"></div>
+    <div class="sb-item" onclick="showPage('tests',this)">🧪 Tests</div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="MAIN">
+    <!-- contenu dynamique -->
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="detail-overlay" id="DETAIL" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-panel" id="DP"></div>
+</div>
+
+<div class="toast" id="TOAST"></div>
+
+<script>
+var CURRENT_PAGE='inscriptions';
+var CURRENT_FILTER='all';
+var SEARCH='';
+
+// ═══════════════════════════════
+// DONNÉES
+// ═══════════════════════════════
+function getInscriptions(){
+  try{return JSON.parse(localStorage.getItem('ls_inscriptions')||'[]');}
+  catch(e){return [];}
+}
+
+function saveInscriptions(data){
+  localStorage.setItem('ls_inscriptions',JSON.stringify(data));
+}
+
+function updateStatus(id,status,note){
+  var data=getInscriptions();
+  data=data.map(function(d){
+    if(d.id===id){d.status=status;if(note)d.note=note;}
+    return d;
+  });
+  saveInscriptions(data);
+}
+
+// ═══════════════════════════════
+// STATS
+// ═══════════════════════════════
+function updateCounts(){
+  var data=getInscriptions();
+  var pending=data.filter(function(d){return d.status==='pending';});
+  var approved=data.filter(function(d){return d.status==='approved';});
+  document.getElementById('cnt-total').textContent=data.length;
+  document.getElementById('cnt-pending').textContent=pending.length;
+  document.getElementById('cnt-approved').textContent=approved.length;
+}
+
+// ═══════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════
+function showPage(page,el){
+  CURRENT_PAGE=page;
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('on');});
+  if(el)el.classList.add('on');
+  render();
+}
+
+// ═══════════════════════════════
+// RENDER PRINCIPAL
+// ═══════════════════════════════
+function render(){
+  updateCounts();
+  var main=document.getElementById('MAIN');
+
+  if(CURRENT_PAGE==='tests'){
+    renderTests(main);
+    return;
+  }
+
+  var data=getInscriptions();
+
+  // Filtrer selon la page
+  if(CURRENT_PAGE==='pending') data=data.filter(function(d){return d.status==='pending';});
+  else if(CURRENT_PAGE==='approved') data=data.filter(function(d){return d.status==='approved';});
+  else if(CURRENT_PAGE==='rejected') data=data.filter(function(d){return d.status==='rejected';});
+  else if(CURRENT_PAGE==='hommes') data=data.filter(function(d){return d.gender==='m';});
+  else if(CURRENT_PAGE==='femmes') data=data.filter(function(d){return d.gender==='f';});
+
+  // Recherche
+  if(SEARCH){
+    var s=SEARCH.toLowerCase();
+    data=data.filter(function(d){
+      return (d.name&&d.name.toLowerCase().includes(s))||
+             (d.email&&d.email.toLowerCase().includes(s))||
+             (d.city&&d.city.toLowerCase().includes(s));
+    });
+  }
+
+  var all=getInscriptions();
+  var pending=all.filter(function(d){return d.status==='pending';}).length;
+  var approved=all.filter(function(d){return d.status==='approved';}).length;
+  var hommes=all.filter(function(d){return d.gender==='m';}).length;
+  var femmes=all.filter(function(d){return d.gender==='f';}).length;
+
+  var html='<div class="stats">';
+  html+='<div class="stat-card"><div class="stat-num">'+all.length+'</div><div class="stat-lbl">Total inscrits</div><div class="stat-sub">'+hommes+'H · '+femmes+'F</div></div>';
+  html+='<div class="stat-card"><div class="stat-num" style="color:var(--rd)">'+pending+'</div><div class="stat-lbl">En attente</div><div class="stat-sub">À valider</div></div>';
+  html+='<div class="stat-card"><div class="stat-num" style="color:var(--gn)">'+approved+'</div><div class="stat-lbl">Validés</div><div class="stat-sub">Profils actifs</div></div>';
+  html+='<div class="stat-card"><div class="stat-num" style="color:var(--g)">'+Math.round(approved/Math.max(all.length,1)*100)+'%</div><div class="stat-lbl">Taux validation</div><div class="stat-sub">Qualité dossiers</div></div>';
+  html+='</div>';
+
+  html+='<div class="card">';
+  html+='<div class="card-hdr"><div class="card-title">'+data.length+' inscription'+(data.length>1?'s':'')+' · '+pageTitle()+'</div>';
+  html+='<div class="card-actions"><input class="search-input" placeholder="Rechercher nom, email, ville…" value="'+SEARCH+'" oninput="SEARCH=this.value;render()" style="width:220px"></div></div>';
+  html+='<div class="filter-bar">';
+  ['all','pending','approved','rejected'].forEach(function(f){
+    var labels={all:'Tous',pending:'En attente',approved:'Validés',rejected:'Refusés'};
+    html+='<button class="filter-chip'+(CURRENT_FILTER===f?' on':'')+'" onclick="CURRENT_FILTER=\''+f+'\';render()">'+labels[f]+'</button>';
+  });
+  html+='</div>';
+
+  if(data.length===0){
+    html+='<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Aucune inscription</div></div>';
+  } else {
+    html+='<div class="ins-hdr"><div></div><div>Profil</div><div>Statut</div><div>Âge · Taille</div><div>Anglais</div><div>Recherche</div><div>Date</div></div>';
+    data.forEach(function(d){
+      var dateStr=d.date?new Date(d.date).toLocaleDateString('fr-FR'):'—';
+      var statusBadge='<span class="badge '+d.status+'">'+(
+        d.status==='pending'?'⏳ En attente':
+        d.status==='approved'?'✅ Validé':
+        d.status==='rejected'?'❌ Refusé':'👁 Révision')+'</span>';
+      var genderBadge='<span class="badge '+(d.gender==='f'?'f':'m')+'">'+(d.gender==='f'?'🇹🇭 Femme':'🇫🇷 Homme')+'</span>';
+      var avBg=d.gender==='f'?'linear-gradient(135deg,#3D1A78,#7B2FBE)':'linear-gradient(135deg,#1A3D78,#2F7BBE)';
+      var avEmoji=d.gender==='f'?'👩':'👨';
+      html+='<div class="ins-row" onclick="openDetail(\''+d.id+'\')">';
+      html+='<div class="av" style="background:'+avBg+'">'+avEmoji+'</div>';
+      html+='<div><div class="ins-name">'+(d.name||'Anonyme')+'</div><div class="ins-meta">'+(d.email||'—')+' · '+(d.city||'')+'</div></div>';
+      html+=statusBadge;
+      html+='<div style="font-size:.82rem">'+(d.age||'—')+' ans · '+(d.height||'—')+'</div>';
+      html+='<div style="font-size:.78rem;color:var(--td)">'+(d.englishLevel||'—')+'</div>';
+      html+='<div style="font-size:.78rem;color:var(--td)">'+(d.looking||'—')+'</div>';
+      html+='<div style="font-size:.74rem;color:var(--td)">'+dateStr+'</div>';
+      html+='</div>';
+    });
+  }
+  html+='</div>';
+  main.innerHTML=html;
+}
+
+function pageTitle(){
+  var titles={inscriptions:'Toutes',pending:'En attente',approved:'Validées',rejected:'Refusées',hommes:'Hommes français',femmes:'Femmes thaïes'};
+  return titles[CURRENT_PAGE]||CURRENT_PAGE;
+}
+
+// ═══════════════════════════════
+// DÉTAIL D'UNE INSCRIPTION
+// ═══════════════════════════════
+function openDetail(id){
+  var data=getInscriptions();
+  var d=data.find(function(x){return x.id===id;});
+  if(!d)return;
+
+  var dp=document.getElementById('DP');
+  var statusColors={pending:'#856404',approved:'#155724',rejected:'#721C24'};
+  var statusLabels={pending:'⏳ En attente',approved:'✅ Validé',rejected:'❌ Refusé'};
+
+  var photosHtml='<div class="dp-photo-grid">';
+  if(d.photos&&d.photos.length){
+    d.photos.forEach(function(url,i){
+      photosHtml+='<div class="dp-photo"><img src="'+url+'" onerror="this.parentElement.textContent=\'📷\'"></div>';
+    });
+  } else {
+    photosHtml+='<div class="dp-photo">📷</div><div class="dp-photo" style="opacity:.3">📷</div><div class="dp-photo" style="opacity:.3">📷</div>';
+  }
+  photosHtml+='</div>';
+
+  var videoHtml='<div class="dp-video-wrap">';
+  if(d.video){
+    videoHtml+='<video controls playsinline src="'+d.video+'"></video>';
+  } else {
+    videoHtml+='<div class="no-video">🎥 Aucune vidéo soumise</div>';
+  }
+  videoHtml+='</div>';
+
+  dp.innerHTML=
+    '<div class="dp-hdr">'+
+    '<div class="dp-title">'+(d.name||'Anonyme')+', '+(d.age||'—')+'</div>'+
+    '<button class="dp-close" onclick="closeDetail()">✕</button>'+
+    '</div>'+
+    '<div class="dp-body">'+
+    photosHtml+
+    videoHtml+
+    '<div class="dp-section">'+
+    '<div class="dp-sec-title">Informations personnelles</div>'+
+    '<div class="dp-grid">'+
+    '<div class="dp-field"><div class="dp-field-lbl">Prénom</div><div class="dp-field-val">'+(d.name||'—')+'</div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">Âge</div><div class="dp-field-val">'+(d.age||'—')+' ans</div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">Genre</div><div class="dp-field-val">'+(d.gender==='f'?'🇹🇭 Femme thaïlandaise':'🇫🇷 Homme français')+'</div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">Ville</div><div class="dp-field-val">'+(d.city||'—')+'</div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">Taille</div><div class="dp-field-val">'+(d.height||'—')+'</div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">Poids</div><div class="dp-field-val">'+(d.weight||'—')+'</div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">Anglais</div><div class="dp-field-val">🇬🇧 '+(d.englishLevel||'—')+'</div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">Recherche</div><div class="dp-field-val">'+(d.looking||'—')+'</div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">Famille</div><div class="dp-field-val">'+(d.family||'—')+'</div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">Statut</div><div class="dp-field-val"><span style="color:'+statusColors[d.status]+'">'+statusLabels[d.status]+'</span></div></div>'+
+    '</div></div>'+
+    '<div class="dp-section">'+
+    '<div class="dp-sec-title">Présentation</div>'+
+    '<div class="dp-bio">'+(d.bio||'<em style="color:var(--td)">Pas de présentation</em>')+'</div>'+
+    '</div>'+
+    '<div class="dp-section">'+
+    '<div class="dp-sec-title">Contact</div>'+
+    '<div class="dp-grid">'+
+    '<div class="dp-field"><div class="dp-field-lbl">Email</div><div class="dp-field-val"><a href="mailto:'+(d.email||'')+'">'+( d.email||'—')+'</a></div></div>'+
+    '<div class="dp-field"><div class="dp-field-lbl">WhatsApp</div><div class="dp-field-val">'+(d.whatsapp?'<a href="https://wa.me/'+d.whatsapp.replace(/\D/g,'')+'">'+d.whatsapp+'</a>':'—')+'</div></div>'+
+    '</div></div>'+
+    '<div class="dp-section">'+
+    '<div class="dp-sec-title">Note admin</div>'+
+    '<textarea class="dp-note-area" id="DP_NOTE" placeholder="Ajouter une note…">'+(d.note||'')+'</textarea>'+
+    '</div>'+
+    '</div>'+
+    '<div class="dp-actions">'+
+    '<button class="dp-btn approve" onclick="validate(\''+d.id+'\',\'approved\')">✅ Valider</button>'+
+    '<button class="dp-btn review" onclick="validate(\''+d.id+'\',\'review\')">👁 Révision</button>'+
+    '<button class="dp-btn reject" onclick="validate(\''+d.id+'\',\'rejected\')">❌ Refuser</button>'+
+    '</div>';
+
+  document.getElementById('DETAIL').classList.add('on');
+}
+
+function closeDetail(){
+  document.getElementById('DETAIL').classList.remove('on');
+}
+
+function validate(id,status){
+  var note=document.getElementById('DP_NOTE')?document.getElementById('DP_NOTE').value:'';
+  updateStatus(id,status,note);
+  closeDetail();
+  render();
+  var labels={approved:'✅ Profil validé',rejected:'❌ Profil refusé',review:'👁 Mis en révision'};
+  showToast(labels[status]||'Statut mis à jour');
+}
+
+// ═══════════════════════════════
+// PAGE TESTS
+// ═══════════════════════════════
+function renderTests(main){
+  main.innerHTML=
+    '<div class="test-section">'+
+    '<div class="test-title">🧪 Générer des inscriptions de test</div>'+
+    '<button class="test-btn g" onclick="genTest(1)">+ 1 inscription test</button>'+
+    '<button class="test-btn g" onclick="genTest(5)">+ 5 inscriptions</button>'+
+    '<button class="test-btn g" onclick="genTest(10)">+ 10 inscriptions</button>'+
+    '<button class="test-btn rd" onclick="clearAll()">🗑 Tout effacer</button>'+
+    '<div class="test-log" id="TEST_LOG">En attente…</div>'+
+    '</div>'+
+    '<div class="test-section">'+
+    '<div class="test-title">🔗 Liens utiles</div>'+
+    '<p style="font-size:.84rem;color:var(--td);margin-bottom:12px">Ouvrir l\'application principale dans un autre onglet pour tester l\'inscription :</p>'+
+    '<button class="test-btn" onclick="window.open(\'lovesiam_v2.html\',\'_blank\')">🔗 Ouvrir LoveSiam</button>'+
+    '</div>'+
+    '<div class="test-section">'+
+    '<div class="test-title">📊 État localStorage</div>'+
+    '<button class="test-btn" onclick="showStorage()">Voir les données</button>'+
+    '<div class="test-log" id="STORAGE_LOG"></div>'+
+    '</div>';
+}
+
+var testNames=['Ning','Pim','Noi','Fah','Wan','Sophie','Marie','Julie','Ana','Léa'];
+var testCities=['Bangkok','Chiang Mai','Phuket','Pattaya','Paris','Lyon','Marseille'];
+var testLooking=['Mariage','Relation serieuse','Se faire des amis'];
+var testEnglish=['Un peu','Moyen','Excellent'];
+var testFamily=['Celibataire sans enfant','Celibataire avec enfant'];
+
+function genTest(n){
+  var log=document.getElementById('TEST_LOG');
+  var data=getInscriptions();
+  var added=[];
+  for(var i=0;i<n;i++){
+    var isFemme=Math.random()>0.4;
+    var entry={
+      id:'ins_'+Date.now()+'_'+i,
+      date:new Date(Date.now()-Math.random()*7*24*3600*1000).toISOString(),
+      status:'pending',
+      name:testNames[Math.floor(Math.random()*testNames.length)],
+      age:18+Math.floor(Math.random()*30),
+      gender:isFemme?'f':'m',
+      email:'test'+Math.floor(Math.random()*9999)+'@lovesiam.com',
+      whatsapp:'+66'+Math.floor(Math.random()*999999999),
+      city:testCities[Math.floor(Math.random()*testCities.length)],
+      country:isFemme?'Thaïlande':'France',
+      height:(isFemme?(155+Math.floor(Math.random()*20)):(170+Math.floor(Math.random()*20)))+'cm',
+      weight:(isFemme?(45+Math.floor(Math.random()*20)):(65+Math.floor(Math.random()*25)))+'kg',
+      bio:'Bonjour ! Je cherche une relation sincère et durable. J\'aime voyager, la cuisine et découvrir de nouvelles cultures.',
+      englishLevel:testEnglish[Math.floor(Math.random()*testEnglish.length)],
+      looking:testLooking[Math.floor(Math.random()*testLooking.length)],
+      family:testFamily[Math.floor(Math.random()*testFamily.length)],
+      photos:[],
+      video:'',
+      note:''
+    };
+    data.unshift(entry);
+    added.push(entry.name+' ('+entry.gender+', '+entry.age+'ans)');
+  }
+  saveInscriptions(data);
+  if(log)log.textContent='✅ '+n+' inscription(s) ajoutée(s) :\n'+added.join('\n');
+  render();
+  showToast('✅ '+n+' inscription(s) de test générée(s)');
+}
+
+function showStorage(){
+  var log=document.getElementById('STORAGE_LOG');
+  var data=getInscriptions();
+  if(log)log.textContent=JSON.stringify(data.slice(0,2),null,2)+(data.length>2?'\n\n… ('+data.length+' entrées total)':'');
+}
+
+// ═══════════════════════════════
+// EXPORT CSV
+// ═══════════════════════════════
+function exportCSV(){
+  var data=getInscriptions();
+  if(!data.length){showToast('Aucune donnée à exporter');return;}
+  var cols=['id','date','status','name','age','gender','email','whatsapp','city','country','height','weight','englishLevel','looking','family','bio'];
+  var rows=[cols.join(',')];
+  data.forEach(function(d){
+    rows.push(cols.map(function(c){
+      var v=(d[c]||'').toString().replace(/"/g,'""');
+      return '"'+v+'"';
+    }).join(','));
+  });
+  var blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='lovesiam_inscriptions_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  showToast('📥 Export CSV téléchargé');
+}
+
+function clearAll(){
+  if(!confirm('Effacer TOUTES les inscriptions de test ?'))return;
+  localStorage.removeItem('ls_inscriptions');
+  render();
+  showToast('🗑 Données effacées');
+}
+
+// ═══════════════════════════════
+// TOAST
+// ═══════════════════════════════
+function showToast(msg){
+  var t=document.getElementById('TOAST');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(function(){t.classList.remove('on');},2500);
+}
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+render();
+</script>
+</body>
+</html>
