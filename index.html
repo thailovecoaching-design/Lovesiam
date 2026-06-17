@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -2138,7 +2139,7 @@ function applyFilters(){
 function toast(msg){var old=document.querySelector(".toast");if(old)old.remove();var el=document.createElement("div");el.className="toast";el.innerHTML=msg;document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.remove();},2500);}
 
 // Questionnaire
-const T = {
+var T = {
   fr: {
     nav_login: 'Connexion',
     nav_register: "M'inscrire",
@@ -2306,372 +2307,142 @@ const T = {
     step3_text: 'Deux coups de cœur mutuels permettent une mise en relation directe.',
     step4_title: 'Accompagnement premium',
     step4_text: 'Consulting, coaching et suivi personnalisé selon vos besoins.',
-  },
-  th: {
-    nav_login: 'เข้าสู่ระบบ',
-    nav_register: 'สมัครสมาชิก',
-    hero_tag: '✦ การดูแลที่เป็นส่วนตัวและใส่ใจ',
-    hero_h1_1: 'การพบรัก',
-    hero_h1_2: 'ฝรั่งเศส-ไทย',
-    hero_sub: 'บริการที่ปรับแต่งเฉพาะคุณ ตั้งแต่การสมัครจนถึงการพบกัน ทุกโปรไฟล์ผ่านการคัดเลือกอย่างพิถีพิถัน',
-    btn_register: 'สมัครสมาชิกตอนนี้',
-    btn_profiles: 'ดูโปรไฟล์ →',
-    stat_members: 'สมาชิก',
-    stat_couples: 'คู่รัก',
-    stat_online: 'ออนไลน์',
-    why_tag: '✦ ทำไมต้อง LoveSiam',
-    why_h2: 'สิ่งที่ทำให้เรา',
-    why_h2_em: 'แตกต่าง',
-    why_sub: 'บริการที่มีตัวตน ไม่ใช่แค่อัลกอริทึม',
-    how_tag: '✦ กระบวนการ',
-    how_h2: 'วิธี',
-    how_h2_em: 'การทำงาน',
-    how_sub: 'เรียบง่าย โปร่งใส และมีมนุษยธรรม',
-    nav_home: 'หน้าแรก',
-    nav_profiles: 'โปรไฟล์',
-    nav_matches: 'แมทช์',
-    nav_myprofile: 'โปรไฟล์ฉัน',
-    nav_loved: 'ที่ชอบ',
-    profiles_title: 'โปรไฟล์ ✦',
-    profiles_locked: '🔒 โปรไฟล์ที่ผ่านการยืนยัน สมัครสมาชิกเพื่อดูวิดีโอ',
-    filter_all: 'ทั้งหมด',
-    filter_f: 'หญิงไทย',
-    filter_h: 'ชายฝรั่งเศส',
-    filter_online: '● ออนไลน์',
-    filter_recent: '🆕 ใหม่',
-    filter_hearts: '❤️ ที่ฉันถูกใจ',
-    filter_age: 'อายุ : ทั้งหมด',
-    filter_city: '🏙 เมือง…',
-    matches_title: 'แมทช์ ✦',
-    matches_mutual: '💞 แมทช์ร่วมกัน',
-    matches_hearts: '❤️ ที่ฉันถูกใจ',
-    matches_locked_title: 'พื้นที่สมาชิก',
-    matches_locked_sub: 'ความชอบและแมทช์ร่วมกันของคุณจะปรากฏที่นี่',
-    matches_register: 'สมัครสมาชิก',
-    no_mutual: 'ยังไม่มีแมทช์ร่วมกัน',
-    no_hearts: 'ยังไม่มีรายการที่ถูกใจ',
-    myprofile_title: 'พื้นที่สมาชิก',
-    myprofile_sub: 'เปิดใช้งานหลังจากยืนยันการสมัคร',
-    btn_register2: 'สมัครสมาชิก',
-    btn_login: 'ฉันมีบัญชีอยู่แล้ว',
-    btn_logout: 'ออกจากระบบ',
-    status_pending: 'รอการอนุมัติ',
-    status_active: 'โปรไฟล์ใช้งานได้',
-    login_title: 'เข้าสู่ระบบ',
-    login_sub: 'เข้าถึงพื้นที่สมาชิกของคุณ',
-    login_email: 'อีเมล',
-    login_btn: 'เข้าสู่ระบบ',
-    login_no_account: 'ยังไม่ได้เป็นสมาชิก?',
-    // Questionnaire
-    q_step: '✦ ขั้นตอน',
-    q0_title: 'ฉันเป็น…',
-    q0_sub: 'แบบฟอร์มจะปรับตามโปรไฟล์ของคุณ',
-    q0_man: 'ผู้ชายฝรั่งเศส',
-    q0_man_sub: 'ฉันกำลังมองหาผู้หญิงไทยที่จริงใจ',
-    q0_woman: 'ผู้หญิงไทย',
-    q0_woman_sub: 'ฉันกำลังมองหาผู้ชายฝรั่งเศสที่จริงใจ',
-    q_continue: 'ถัดไป →',
-    q_back: '← กลับ',
-    q_send: 'ส่งใบสมัครของฉัน ✦',
-    q2_title: 'ตัวตนของ<em>คุณ</em>',
-    q2_name: 'ชื่อ',
-    q2_age: 'อายุ',
-    q2_city_f: 'เมือง (ไทย)',
-    q2_city_h: 'เมือง (ฝรั่งเศส)',
-    q2_height: 'ส่วนสูง',
-    q2_weight: 'น้ำหนัก',
-    q2_photos: 'รูปภาพของคุณ',
-    q2_photo1: 'รูปภาพหลัก *',
-    q2_photo_add: 'เพิ่มรูปภาพหลัก',
-    q2_photo_size: 'JPG, PNG — สูงสุด 5MB',
-    q2_add: 'เพิ่ม',
-    q2_lang: 'ระดับภาษา',
-    q3_title: '<em>คำอธิบาย</em>ของคุณ',
-    q3_sub: 'แนะนำตัวอย่างจริงใจ จะปรากฏในโปรไฟล์ของคุณ',
-    q3_placeholder: 'ครอบครัว งานอดิเรก สิ่งที่คุณกำลังมองหา…',
-    q4_title: 'คุณ<em>กำลังมองหา</em>อะไร',
-    q5_title: 'ความสัมพันธ์กับ<em>ฝรั่งเศส</em>',
-    q5_title_h: 'ความสัมพันธ์กับ<em>ไทย</em>',
-    q6_title: '<em>สถานการณ์</em>ของคุณ',
-    q7_title: '<em>วิดีโอ</em>ของคุณ',
-    q7_sub: 'เผยแพร่พร้อมคำแปล FR↔TH หลังการยืนยัน',
-    q7_activate: '📷 เปิดกล้อง',
-    q7_start: '⏺ เริ่มบันทึก',
-    q7_stop: '⏹ หยุด',
-    q7_retry: 'บันทึกใหม่',
-    q7_upload_title: 'อัปโหลดวิดีโอ',
-    q7_upload_btn: 'เลือกวิดีโอ',
-    q7_upload_size: 'MP4, MOV — สูงสุด 100MB',
-    q7_skip: 'ข้าม → บันทึกวิดีโอภายหลัง',
-    q8_title: '<em>ข้อมูลติดต่อ</em>ของคุณ',
-    q8_sub: 'เราจะติดต่อคุณที่อีเมลนี้เพื่อยืนยันการสมัคร',
-    q8_email: 'อีเมล *',
-    q8_whatsapp: 'WhatsApp (ไม่บังคับ)',
-    q8_recap: '📋 สรุป',
-    q_success_title: 'ส่งใบสมัครแล้ว!',
-    q_success_sub: 'เราได้รับข้อมูลของคุณแล้ว คำตอบภายใน 48 ชั่วโมง',
-    q_back_home: 'กลับหน้าแรก',
-    // Filters
-    filter_all: 'ทั้งหมด',
-    filter_f: 'หญิงไทย',
-    filter_h: 'ชายฝรั่งเศส',
-    filter_online: '● ออนไลน์',
-    filter_recent: '🆕 ใหม่',
-    filter_hearts: '❤️ ที่ฉันถูกใจ',
-    filter_age: 'อายุ : ทั้งหมด',
-    filter_city: '🏙 เมือง…',
-    login_register: 'สมัครสมาชิก',
-    footer_tagline: 'พบรักฝรั่งเศส-ไทย',
-    footer_legal: 'ข้อความทางกฎหมาย',
-    footer_cgu: 'เงื่อนไขการใช้งาน',
-    footer_rgpd: 'ความเป็นส่วนตัว & RGPD',
-    footer_cookies: 'คุกกี้',
-    footer_copy: '© 2026 LoveSiam — สงวนลิขสิทธิ์',
-    like_btn: '🤍 ถูกใจ',
-    liked_btn: '❤️ ถูกใจแล้ว',
-    video_btn: '🎬 ดูวิดีโอ',
-    contact_btn: 'ติดต่อที่ปรึกษา',
-    preview_title: '✨ โปรไฟล์ล่าสุด',
-    why_box_title: 'ทำไมต้อง ',
-    why_box: 'ทำไมต้อง ',
-    why_box_em: 'LoveSiam',
-    premium_tag: '✦ การเข้าถึงพรีเมียม',
-    premium_h2: 'เข้าร่วม ',
-    premium_h2_em: 'LoveSiam',
-    premium_sub: 'การสมัครสมาชิกฟรีสำหรับผู้หญิงไทย มีการเข้าถึงพรีเมียมสำหรับผู้ชายชาวฝรั่งเศส',
-    premium_access: 'การเข้าถึง ',
-    premium_access_em: 'สมบูรณ์',
-    premium_soon: 'เร็วๆ นี้',
-    premium_soon_sub: 'กำลังดำเนินการด้านราคา',
-    perk1: 'เข้าถึงวิดีโอครบถ้วน FR↔TH',
-    perk2: 'แนะนำโดยที่ปรึกษาของคุณ',
-    perk3: 'การส่งข้อความพร้อมการแปลในตัว',
-    perk4: 'การโค้ชความสัมพันธ์ส่วนตัว',
-    btn_soon: 'เร็วๆ นี้',
-    consult_tag: '✦ ที่ปรึกษาของคุณ',
-    consult_h2: 'การดูแล',
-    consult_h2_em: 'เฉพาะบุคคล',
-    consult_sub: 'ต้องการไปต่อไหม?',
-    consult_text: 'ผู้เชี่ยวชาญด้านความสัมพันธ์ฝรั่งเศส-ไทย ที่ปรึกษาของคุณดูแลคุณตั้งแต่การสมัครจนถึงการพบกัน',
-    badge_coach: '💞 โค้ชความรัก',
-    badge_expert: '🇹🇭 ผู้เชี่ยวชาญไทย',
-    badge_consult: '🤝 ที่ปรึกษา',
-    btn_contact: 'ติดต่อที่ปรึกษา',
-    accomp_short: 'การดูแลส่วนตัว',
-    zero_fake: 'ไม่มีโปรไฟล์ปลอม',
-    why_box: 'ทำไมต้อง ',
-    card1_title: 'โปรไฟล์ที่ผ่านการยืนยัน',
-    card1_text: 'ทุกใบสมัครได้รับการศึกษาและยืนยันก่อนเผยแพร่',
-    card2_title: 'โปรไฟล์จริง',
-    card2_text: 'วิดีโอจริงเพื่อแนะนำตัวคุณตามที่คุณเป็น',
-    card3_title: 'วิดีโอ FR↔TH',
-    card3_text: 'การแปลพร้อมกันในทุกการนำเสนอวิดีโอ',
-    card4_title: 'แบบสอบถาม',
-    card4_text: 'เพื่อนำทางคุณไปสู่การพบที่ใช่ได้ดียิ่งขึ้น',
-    step1_title: 'การสมัครที่แนะนำ',
-    step1_text: 'กรอกโปรไฟล์ของคุณ เอกสารของคุณจะได้รับการพิจารณา',
-    step2_title: 'การยืนยันและเผยแพร่',
-    step2_text: 'วิดีโอของคุณเผยแพร่พร้อมการแปล FR↔TH',
-    step3_title: 'แมทช์ร่วมกัน',
-    step3_text: 'ความชอบร่วมกันสองฝ่ายช่วยให้เชื่อมต่อโดยตรง',
-    step4_title: 'การดูแลพรีเมียม',
-    step4_text: 'การให้คำปรึกษา การโค้ช และการติดตามผลส่วนตัว',
-    // Profiles page
-    profiles_locked: '🔒 โปรไฟล์ที่ผ่านการยืนยัน สมัครสมาชิกเพื่อดูวิดีโอ',
-    // Matches page
-    matches_locked_title: 'พื้นที่สมาชิก',
-    matches_locked_sub: 'ความชอบและแมทช์ของคุณจะปรากฏที่นี่',
-    matches_register: 'สมัครสมาชิก',
-    matches_mutual: '💞 แมทช์ร่วมกัน',
-    matches_hearts: '❤️ ที่ฉันถูกใจ',
-    no_mutual: 'ยังไม่มีแมทช์ร่วมกัน',
-    no_hearts: 'ยังไม่มีรายการที่ถูกใจ',
-    // My profile
-    myprofile_title: 'พื้นที่สมาชิก',
-    myprofile_sub: 'เปิดใช้งานหลังจากยืนยันการสมัคร',
-    btn_register2: 'สมัครสมาชิก',
-    btn_login: 'ฉันมีบัญชีอยู่แล้ว',
-    btn_logout: 'ออกจากระบบ',
-    // Login
-    login_title: 'เข้าสู่ระบบ',
-    login_sub: 'เข้าถึงพื้นที่สมาชิกของคุณ',
-    login_email: 'อีเมล',
-    login_btn: 'เข้าสู่ระบบ',
-    login_register: 'สมัครสมาชิก',
-    login_no_account: 'ยังไม่ได้เป็นสมาชิก?',
-    // Questionnaire
-    q_step: '✦ ขั้นตอน',
-    q0_title: 'ฉันเป็น…',
-    q0_sub: 'แบบฟอร์มจะปรับตามโปรไฟล์ของคุณ',
-    q0_man: 'ผู้ชายฝรั่งเศส',
-    q0_man_sub: 'ฉันกำลังมองหาผู้หญิงไทยที่จริงใจ',
-    q0_woman: 'ผู้หญิงไทย',
-    q0_woman_sub: 'ฉันกำลังมองหาผู้ชายฝรั่งเศสที่จริงใจ',
-    q_continue: 'ถัดไป →',
-    q_back: '← กลับ',
-    q_send: 'ส่งใบสมัครของฉัน ✦',
-    q2_title: 'ตัวตนของ<em>คุณ</em>',
-    q2_name: 'ชื่อ',
-    q2_age: 'อายุ',
-    q2_city_f: 'เมือง (ไทย)',
-    q2_city_h: 'เมือง (ฝรั่งเศส)',
-    q2_height: 'ส่วนสูง',
-    q2_weight: 'น้ำหนัก',
-    q2_photos: 'รูปภาพของคุณ',
-    q2_photo1: 'รูปภาพหลัก *',
-    q2_photo_add: 'เพิ่มรูปภาพหลัก',
-    q2_photo_size: 'JPG, PNG — สูงสุด 5MB',
-    q2_add: 'เพิ่ม',
-    q2_lang: 'ระดับภาษา',
-    q3_title: '<em>คำอธิบาย</em>ของคุณ',
-    q3_sub: 'แนะนำตัวอย่างจริงใจ จะปรากฏในโปรไฟล์ของคุณ',
-    q3_placeholder: 'ครอบครัว งานอดิเรก สิ่งที่คุณกำลังมองหา…',
-    q4_title: 'คุณ<em>กำลังมองหา</em>อะไร',
-    q5_title: 'ความสัมพันธ์กับ<em>ฝรั่งเศส</em>',
-    q5_title_h: 'ความสัมพันธ์กับ<em>ไทย</em>',
-    q6_title: '<em>สถานการณ์</em>ของคุณ',
-    q7_title: '<em>วิดีโอ</em>ของคุณ',
-    q7_sub: 'เผยแพร่พร้อมคำแปล FR↔TH หลังการยืนยัน',
-    q7_activate: '📷 เปิดกล้อง',
-    q7_start: '⏺ เริ่มบันทึก',
-    q7_stop: '⏹ หยุด',
-    q7_retry: 'บันทึกใหม่',
-    q7_upload_title: 'อัปโหลดวิดีโอ',
-    q7_upload_btn: 'เลือกวิดีโอ',
-    q7_upload_size: 'MP4, MOV — สูงสุด 100MB',
-    q7_skip: 'ข้าม → บันทึกวิดีโอภายหลัง',
-    q8_title: '<em>ข้อมูลติดต่อ</em>ของคุณ',
-    q8_sub: 'เราจะติดต่อคุณที่อีเมลนี้เพื่อยืนยันการสมัคร',
-    q8_email: 'อีเมล *',
-    q8_whatsapp: 'WhatsApp (ไม่บังคับ)',
-    q8_recap: '📋 สรุป',
-    q_success_title: 'ส่งใบสมัครแล้ว!',
-    q_success_sub: 'เราได้รับข้อมูลของคุณแล้ว คำตอบภายใน 48 ชั่วโมง',
-    q_back_home: 'กลับหน้าแรก',
-    // Filters
-    filter_all: 'ทั้งหมด',
-    filter_f: 'หญิงไทย',
-    filter_h: 'ชายฝรั่งเศส',
-    filter_online: '● ออนไลน์',
-    filter_recent: '🆕 ใหม่',
-    filter_hearts: '❤️ ที่ฉันถูกใจ',
-    filter_age: 'อายุ : ทั้งหมด',
-    filter_city: '🏙 เมือง…',
   }
 }
 
 function setupCityAutocomplete(id,lang){/* stub */}
 
-async function qSub(){
-  const em=g('QE'),wh=g('QWH');if(!em)return;
-  const ev=em.value.trim(),wv=wh?wh.value.trim():'';
-  if(!ev){show('⚠️ Email requis');return}
-  QA.email=ev;QA.whats=wv;
-  const btn=g('QSND');btn.textContent='Envoi…';btn.disabled=true;
-  let vidUrl=null;
-  if(QV){btn.textContent='Upload vidéo…';vidUrl=await uploadVideo()}
-  let photoUrls=[];
-  if(QA.photos&&QA.photos.length){btn.textContent='Upload photos…';for(let pi=0;pi<QA.photos.length;pi++){if(QA.photos[pi]){const pu=await uploadPhoto(QA.photos[pi]);if(pu)photoUrls.push(pu)}}}
-  QA.vidUrl=vidUrl||'';QA.photoUrls=photoUrls;
-  btn.textContent='Enregistrement…';
-  const supaId=await saveToSupabase(QA);
-  if(supaId)QA.supa_id=supaId;
-  await saveToAirtable(QA);
-  const iF=QA.g==='f';
-  const msg=`NOUVELLE INSCRIPTION LOVESIAM\n\nProfil: ${iF?'Femme thaïlandaise':'Homme français'}\nPrénom: ${QA.name}\nÂge: ${QA.age} ans\nVille: ${QA.ville}\nTaille: ${QA.height} cm / Poids: ${QA.weight} kg\nLangues: ${iF?`FR:${QA.lfr} / EN:${QA.len}`:`TH:${QA.lth} / EN:${QA.len}`}\nDescription: ${QA.desc||''}\nRecherche: ${QA.looking}\nSituation: ${QA.fam||''} / ${QA.job||''}\n\nVIDÉO: ${vidUrl||'Non uploadée'}\nEmail: ${ev}\nWhatsApp: ${wv||'—'}`;
-  try{await emailjs.send(ES,ET,{to_email:PE,from_name:QA.name,from_email:ev,subject:`Nouvelle inscription LoveSiam — ${QA.name}`,message:msg})}catch(e2){}
-  U={name:QA.name,city:QA.ville||'France',bio:QA.desc||'',gender:QA.g,email:ev,status:'pending',supa_id:supaId};
-  updNav();QD=true;bQ();rFG();
+// Config EmailJS (à remplir quand connecté)
+var ES='',ET='',PE='contact@lovesiam.com';
+
+function qSub(){
+  var em=g('QE'), wh=g('QWH');
+  if(!em)return;
+  var ev=(em.value||'').trim();
+  var wv=wh?(wh.value||'').trim():'';
+  if(!ev){show('⚠️ Email requis');return;}
+
+  QA.email=ev; QA.whats=wv;
+  var btn=g('QSND');
+  if(btn){btn.textContent='Envoi…';btn.disabled=true;}
+
+  // Sauvegarder directement en localStorage (sans async)
+  try{
+    var entry={
+      id:'ins_'+Date.now(),
+      date:new Date().toISOString(),
+      status:'pending',
+      name:QA.name||'',
+      age:QA.age||'',
+      gender:QA.g||'',
+      email:ev,
+      whatsapp:wv||'',
+      city:QA.ville||QA.city||'',
+      country:QA.country||'',
+      height:QA.height||'',
+      weight:QA.weight||'',
+      bio:QA.desc||'',
+      englishLevel:QA.len||'',
+      looking:QA.looking||'',
+      family:QA.fam||'',
+      ageRange:QA.ageRange||'',
+      photos:[],
+      video:'',
+      note:''
+    };
+    var existing=[];
+    try{existing=JSON.parse(localStorage.getItem('ls_inscriptions')||'[]');}catch(e){}
+    existing.unshift(entry);
+    localStorage.setItem('ls_inscriptions',JSON.stringify(existing));
+    console.log('Inscription sauvegardée:', entry.id);
+  }catch(saveErr){
+    console.log('save error:', saveErr);
+  }
+
+  // Mettre à jour l'utilisateur connecté
+  U={
+    name:QA.name||'',
+    city:QA.ville||QA.city||'',
+    bio:QA.desc||'',
+    gender:QA.g||'',
+    email:ev,
+    status:'pending'
+  };
+
+  // Passer à l'écran de confirmation
+  try{updNav();}catch(e){}
+  QD=true;
+  try{bQ();}catch(e){}
+  try{rFG();}catch(e){}
 }
 
 
-function qCamRetry(){
-  var cv=g('QCV'),cr=g('QCR'),rb=g('QRB'),cp2=g('QCP2'),ba=g('QBA'),br=g('QBR2'),bs=g('QBS'),brt=g('QBRT');
-  QV=false;QMR=null;
-  if(cr){cr.style.display='none';cr.src='';}
-  if(cv){cv.style.display='none';}
-  if(rb)rb.style.display='none';
-  if(cp2)cp2.style.display='none';
-  if(brt)brt.style.display='none';
-  if(ba)ba.style.display='';
-  if(br)br.style.display='none';
-  if(bs)bs.style.display='none';
-  qCC();
-}
-async function qCamOn(){
+function qCamOn(){
   var er=g('QCE');
   if(er)er.style.display='none';
-  
-  // Vérifier HTTPS (requis pour caméra)
+
+  // Détecter iOS Safari
+  var ua=navigator.userAgent||'';
+  var isIOS=/iPad|iPhone|iPod/.test(ua);
+  var isSafari=isIOS||(/Safari/.test(ua)&&!/Chrome/.test(ua));
   var isFile=location.protocol==='file:';
-  var isHTTP=location.protocol==='http:';
-  var isLocal=location.hostname==='localhost'||location.hostname==='127.0.0.1';
-  
-  if(isFile||(isHTTP&&!isLocal)){
+
+  // Sur iOS Safari ou fichier local : aller directement à l'upload
+  if(isFile||isIOS){
     if(er){
       er.style.display='block';
-      er.innerHTML='⚠️ La caméra nécessite une connexion sécurisée (HTTPS).<br>'+
-        'Cette fonctionnalité sera disponible une fois le site en ligne.<br><br>'+
-        'En attendant, utilisez <strong>Upload vidéo</strong> ci-dessous.';
+      if(isIOS){
+        er.innerHTML='📱 <strong>Sur iPhone</strong> : utilisez <strong>Upload vidéo</strong> ci-dessous pour ajouter votre vidéo depuis la galerie ou en filmer une nouvelle.';
+      } else {
+        er.innerHTML='💻 Caméra disponible sur le site en ligne (HTTPS). Utilisez <strong>Upload vidéo</strong> ci-dessous.';
+      }
     }
+    if(g('QCP'))g('QCP').style.display='none';
     var uz=g('QUZ');
-    if(uz){uz.style.border='2px solid var(--g)';uz.style.background='rgba(196,150,42,.06)';}
-    return;
-  }
-
-  // Vérifier support API
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    if(er){
-      er.style.display='block';
-      er.innerHTML='📱 Caméra non disponible sur ce navigateur.<br>Utilisez <strong>Upload vidéo</strong> ci-dessous.';
+    if(uz){
+      uz.style.border='2px solid var(--g)';
+      uz.style.background='rgba(196,150,42,.08)';
+      uz.scrollIntoView({behavior:'smooth',block:'center'});
     }
     return;
   }
 
-  try{
-    // Contraintes adaptées Safari iOS
-    var constraints={audio:true,video:{facingMode:'user'}};
-    QST=await navigator.mediaDevices.getUserMedia(constraints);
+  // Sur desktop HTTPS : activer la caméra normalement
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    if(er){er.style.display='block';er.innerHTML='Caméra non disponible. Utilisez Upload ci-dessous.';}
+    return;
+  }
+
+  navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:'user'}})
+  .then(function(stream){
+    QST=stream;
     var v=g('QCV');
     if(v){
-      v.srcObject=QST;
+      v.srcObject=stream;
       v.setAttribute('playsinline','');
       v.setAttribute('webkit-playsinline','');
-      v.setAttribute('muted','');
       v.muted=true;
       v.style.display='block';
-      try{await v.play();}catch(pe){}
+      v.play().catch(function(){});
     }
     if(g('QCP'))g('QCP').style.display='none';
     if(g('QBA'))g('QBA').style.display='none';
     if(g('QBR2'))g('QBR2').style.display='block';
-  }catch(e){
+  })
+  .catch(function(e){
     if(er){
       er.style.display='block';
-      var ua=navigator.userAgent||'';
-      var isIOS=/iPad|iPhone|iPod/.test(ua);
-      var isSafari=isIOS||(/Safari/.test(ua)&&!/Chrome/.test(ua));
-      if(e.name==='NotAllowedError'||e.name==='PermissionDeniedError'){
-        if(isIOS){
-          er.innerHTML='📱 <strong>iPhone/Safari :</strong><br>'+
-            'Allez dans <strong>Réglages → Safari → Caméra → Autoriser</strong><br>'+
-            'Puis revenez ici.<br><br>'+
-            'Ou utilisez <strong>Upload vidéo</strong> ci-dessous.';
-        } else {
-          er.innerHTML='🔒 Accès caméra refusé.<br>'+
-            'Cliquez sur l\'icône caméra dans la barre d\'adresse pour autoriser.<br><br>'+
-            'Ou utilisez <strong>Upload vidéo</strong> ci-dessous.';
-        }
-      } else if(e.name==='NotFoundError'){
-        er.innerHTML='📷 Aucune caméra détectée.<br>Utilisez <strong>Upload vidéo</strong> ci-dessous.';
+      if(e.name==='NotAllowedError'){
+        er.innerHTML='🔒 Accès caméra refusé. Autorisez dans les réglages ou utilisez <strong>Upload vidéo</strong>.';
       } else {
-        er.innerHTML='❌ Caméra indisponible ('+e.name+').<br>Utilisez <strong>Upload vidéo</strong> ci-dessous.';
+        er.innerHTML='❌ Caméra indisponible. Utilisez <strong>Upload vidéo</strong> ci-dessous.';
       }
     }
     var uz=g('QUZ');
-    if(uz){uz.style.border='2px solid var(--g)';uz.style.background='rgba(196,150,42,.06)';}
-  }
+    if(uz){uz.style.border='2px solid var(--g)';}
+  });
 }
+
 
 
 function qCamRec(){
@@ -2720,7 +2491,7 @@ function qCamRec(){
 
 function qCamStop(){clearInterval(QRT);if(QMR&&QMR.state!=='inactive')QMR.stop()}
 
-function qCC(){clearInterval(QRT);if(QST){QST.getTracks().forEach(t=>t.stop());QST=null}}
+function qCC(){clearInterval(QRT);if(QST){QST.getTracks().forEach(function(t){t.stop();});QST=null;}}
 
 function updateBioCount(ta){
   var cnt=document.getElementById('BIO_COUNT');
@@ -2730,7 +2501,7 @@ function updateBioCount(ta){
 
 let QS=0, QA={}, QV=false, QD=false, QST=null, QMR=null, QCH=[], QRT=null, QRS=0;
 
-const QT_STEPS=8;
+var QT_STEPS=8;
 
 
 function buildCountrySelect(iF, selectedCountry, lang) {
@@ -2778,20 +2549,20 @@ function ft(val){
   return map[val]||val;
 }
 
-function shS(p,i){const s=p.s[i];g('VFR').style.opacity='0';g('VTH').style.opacity='0';setTimeout(()=>{g('VFR').textContent=VL==='fr'?s.f:s.t;g('VTH').textContent=VL==='fr'?s.t:s.f;g('VFR').style.opacity='1';g('VTH').style.opacity='.88'},160)}
+function shS(p,i){const s=p.s[i];g('VFR').style.opacity='0';g('VTH').style.opacity='0';setTimeout(function(){g('VFR').textContent=VL==='fr'?s.f:s.t;g('VTH').textContent=VL==='fr'?s.t:s.f;g('VFR').style.opacity='1';g('VTH').style.opacity='.88'},160)}
 
 function sVL(l){VL=l;g('VLF').className='vl2 '+(l==='fr'?'on':'off');g('VLT').className='vl2 '+(l==='th'?'on':'off');if(window._vidProfile)shS(window._vidProfile,VI)}
 
 function oV(id){
-  const p=PR.find(x=>x.id===id);if(!p)return;
+  var p=PR.find(function(x){return x.id===id;});if(!p)return;
   if(!U){goPage('pg-inscription');return}
   window._vidProfile=p;VI=0;VP2=true;VL='fr';
   g('VEM').textContent=p.g==='f'?'👤':'👨';
-  g('VNM').textContent=`${p.n}, ${p.a} ans`;
-  g('VLC2').innerHTML=`📍 ${p.l}${p.on?' · <span style="color:var(--gn)">● En ligne</span>':''}`;
+  g('VNM').textContent=p.n+', '+p.a+' ans';
+  g('VLC2').innerHTML='📍 '+p.l+(p.on?' · <span style="color:var(--gn)">● En ligne</span>':'');
   g('VLF').className='vl2 on';g('VLT').className='vl2 off';g('VP').textContent='⏸';
   clearInterval(VTM);shS(p,0);
-  VTM=setInterval(()=>{VI=(VI+1)%p.s.length;shS(p,VI);g('VPF').style.width=(((VI+1)/p.s.length)*100)+'%'},3200);
+  VTM=setInterval(function(){VI=(VI+1)%p.s.length;shS(p,VI);g('VPF').style.width=(((VI+1)/p.s.length)*100)+'%'},3200);
   g('VM').classList.add('on');document.body.style.overflow='hidden';
 }
 
@@ -2800,10 +2571,10 @@ function closeV(){g('VM').classList.remove('on');document.body.style.overflow=''
 function updP(){
   if(U){
     g('PO').style.display='none';g('PI').style.display='block';
-    g('PAV').textContent='👤';g('PNM').textContent=U.name;g('PLC').textContent=`📍 ${U.city||'France'}`;g('PBIO').textContent=U.bio||'—';
+    g('PAV').textContent='👤';g('PNM').textContent=U.name;g('PLC').textContent='📍 '+(U.city||'France');g('PBIO').textContent=U.bio||'—';
     const ip=U.status==='pending';
     g('PDT').style.background=ip?'#F39C12':'var(--gn)';g('PSL').textContent=ip?'En attente':'Profil actif';g('PSL').style.color=ip?'#F39C12':'var(--gn)';
-    g('PSC').innerHTML=`<div class="ms2">Statut</div><div class="ms3">${ip?'⏳ Dossier en cours. Réponse sous 48h.':'✅ Profil actif et visible.'}</div>`;
+    g('PSC').innerHTML='<div class="ms2">Statut</div><div class="ms3">'+(ip?'⏳ Dossier en cours. Réponse sous 48h.':'✅ Profil actif')+'</div>';
     g('STAT_LIKES').textContent=MY_LIKES.size;g('STAT_MATCHES').textContent=MY_MUTUAL.length;
   }else{g('PO').style.display='block';g('PI').style.display='none'}
 }
@@ -3090,7 +2861,7 @@ function bQ(){
      +'<button id="QBRT" style="display:none;width:100%;padding:14px;border-radius:12px;border:none;background:var(--nv);color:#fff;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.02em">← '+tq.q7_retry+'</button>'
      +'</div>'
      +'<div class="ds"><div class="dl"></div><div class="dt">'+tq.q7_upload_title+'</div><div class="dl"></div></div>'
-     +'<div class="uz" id="QUZ"><div style="font-size:1.7rem;margin-bottom:5px">📤</div><div style="font-size:.8rem;font-weight:500;color:var(--nv)">'+tq.q7_upload_btn+'</div><div style="font-size:.68rem;color:var(--td)">'+tq.q7_upload_size+'</div><input type="file" id="QUF" accept="video/*" style="display:none"></div>'
+     +'<div class="uz" id="QUZ"><div style="font-size:1.7rem;margin-bottom:5px">📤</div><div style="font-size:.8rem;font-weight:500;color:var(--nv)">'+tq.q7_upload_btn+'</div><div style="font-size:.68rem;color:var(--td)">'+tq.q7_upload_size+'</div><input type="file" id="QUF" accept="video/*" capture="camcorder" style="display:none"></div>'
      +'<div id="QUS" style="display:none;padding:8px 11px;border-radius:8px;margin-bottom:8px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.18);font-size:.73rem;color:var(--gn)"></div>'
      +'<div style="text-align:center;margin-bottom:8px"><span style="font-size:.7rem;color:var(--td);cursor:pointer;text-decoration:underline" id="QSK">'+skipLbl+'</span></div>'
      +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
@@ -3106,7 +2877,7 @@ function bQ(){
       [LANG==='th'?'อายุ':'Âge', QA.age?QA.age+ageSuffix:'—'],
       [LANG==='th'?'เมือง':'Ville', QA.ville||'—'],
       [LANG==='th'?'ส่วนสูง / น้ำหนัก':'Taille / Poids', (QA.height||'—')+' cm / '+(QA.weight||'—')+' kg'],
-      [LANG==='th'?'ภาษา':'Langues', iF?'🇫🇷 '+(QA.lfr||'—')+' / 🇬🇧 '+(QA.len||'—'):'🇹🇭 '+(QA.lth||'—')+' / 🇬🇧 '+(QA.len||'—')],
+      [LANG==='th'?'ภาษาอังกฤษ':'Anglais', '🇬🇧 '+(QA.len||'—')],
       [LANG==='th'?'มองหา':'Recherche', QA.looking||'—'],
       [LANG==='th'?'ครอบครัว':'Situation', (QA.fam==='single'?(LANG==='th'?'โสดไม่มีลูก':'Célibataire sans enfant'):(QA.fam==='kids_with'?(LANG==='th'?'มีลูกอยู่ด้วย':'Avec enfant(s)'):(QA.fam==='kids_away'?(LANG==='th'?'มีลูก':'Enfant(s) hors foyer'):'—')))],
       [LANG==='th'?'ช่วงอายุ':'Âge souhaité', (QA.sk&&QA.sk.length>0)?QA.sk.join(', '):'—'],
@@ -3206,7 +2977,7 @@ function applyTranslations(lang){
   if(!t) return;
 
   // 1. Apply all data-t elements
-  document.querySelectorAll('[data-t]').forEach(el=>{
+  document.querySelectorAll('[data-t]').forEach(function(el){
     const key = el.getAttribute('data-t');
     if(t[key] !== undefined) el.innerHTML = t[key];
   });
@@ -3218,7 +2989,7 @@ function applyTranslations(lang){
   // 3. Footer buttons
   const footerBtns = document.querySelectorAll('[onclick*="openMl"]');
   const footerKeys = ['footer_legal','footer_cgu','footer_rgpd','footer_cookies'];
-  footerBtns.forEach((btn,i)=>{ if(t[footerKeys[i]]) btn.textContent = t[footerKeys[i]] });
+  footerBtns.forEach(function(btn,i){ if(t[footerKeys[i]]) btn.textContent = t[footerKeys[i]] });
 
   // 4. Nav buttons (when logged out)
   const bl2=g('BL2');if(bl2)bl2.textContent=t.nav_login;
@@ -3280,6 +3051,62 @@ function applyTranslations(lang){
   document.body.style.fontSize = lang === 'th' ? '94%' : '';
 }
 
+
+// ═══════════════════════════════════════════════════════
+// BACKEND : localStorage pour tests + Supabase/Cloudinary à connecter
+// ═══════════════════════════════════════════════════════
+
+function uploadPhoto(blob){
+  // Simulation : retourne une data URL pour les tests
+  return new Promise(function(resolve){
+    var reader=new FileReader();
+    reader.onload=function(e){resolve(e.target.result);};
+    reader.readAsDataURL(blob);
+  });
+}
+
+function uploadVideo(blob){
+  // Simulation : retourne une blob URL pour les tests
+  if(!blob&&QA.vidBlob)blob=QA.vidBlob;
+  if(!blob)return null;
+  return URL.createObjectURL(blob);
+}
+
+function saveToSupabase(qa){
+  // Simulation : retourne un ID local
+  return 'local_'+Date.now();
+}
+
+function saveToAirtable(qa){
+  // Sauvegarde locale pour les tests admin
+  try{
+    var inscriptions=JSON.parse(localStorage.getItem('ls_inscriptions')||'[]');
+    var entry={
+      id:'ins_'+Date.now(),
+      date:new Date().toISOString(),
+      status:'pending',
+      name:qa.name||'',
+      age:qa.age||'',
+      gender:qa.g||'',
+      email:qa.email||'',
+      whatsapp:qa.whats||'',
+      city:qa.city||'',
+      country:qa.country||'',
+      height:qa.height||'',
+      weight:qa.weight||'',
+      bio:qa.desc||'',
+      englishLevel:qa.len||'',
+      looking:qa.looking||'',
+      family:qa.fam||'',
+      photos:qa.photoUrls||[],
+      video:qa.vidUrl||'',
+      supa_id:qa.supa_id||''
+    };
+    inscriptions.unshift(entry);
+    localStorage.setItem('ls_inscriptions',JSON.stringify(inscriptions));
+    console.log('✅ Inscription sauvegardée localement',entry.id);
+  }catch(e){console.error('saveToAirtable error',e);}
+}
 
 // INIT
 document.querySelectorAll(".pg").forEach(function(p){
