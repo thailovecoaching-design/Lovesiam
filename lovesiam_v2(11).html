@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>LoveSiam</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --g:#C4962A;--gl:#E8B84B;--gd:rgba(196,150,42,.1);
+  --nv:#1A2744;--b2:#F8F6F2;--tm:#4A5568;--td:#8A95A8;
+  --rd:#C0392B;--gn:#27AE60;
+  --serif:"Cormorant Garamond",Georgia,serif;
+  --sans:"DM Sans",system-ui,sans-serif
+}
+
+/* ── MOBILE BASE (défaut) ─────────────────────────── */
+body{
+  font-family:var(--sans);font-size:16px;color:var(--nv);
+  background:#fff;-webkit-font-smoothing:antialiased;
+  position:fixed;width:100%;height:100%;overflow:hidden;
+  overscroll-behavior:none
+}
+
+/* Pages = couches fixes empilées */
+.pg{
+  position:fixed;inset:0;display:none;
+  flex-direction:column;background:var(--b2);z-index:10
+}
+.pg.on{display:flex}
+
+/* Scroll interne mobile */
+.scroll{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;padding-bottom:70px
+}
+
+/* ── NAV TOP ──────────────────────────────────────── */
+.tnav{
+  background:#fff;border-bottom:1px solid rgba(26,39,68,.08);
+  padding:0 14px;display:flex;align-items:center;
+  justify-content:space-between;height:50px;flex-shrink:0;
+  position:sticky;top:0;z-index:100
+}
+.logo{font-family:var(--serif);font-size:1.2rem;color:var(--nv);cursor:pointer}
+.logo em{color:var(--g);font-style:italic}
+.lang-tog{display:flex;background:rgba(26,39,68,.06);border-radius:20px;padding:2px;gap:2px}
+.lbtn{padding:4px 10px;border-radius:18px;border:none;font-size:.8rem;
+  cursor:pointer;background:transparent;font-family:var(--sans);transition:all .15s}
+.lbtn.on{background:var(--nv);color:#fff}
+
+/* ── NAV BAS ──────────────────────────────────────── */
+.bn{
+  position:fixed;bottom:0;left:0;right:0;height:62px;
+  display:flex;background:#fff;border-top:1px solid rgba(26,39,68,.08);z-index:200
+}
+.bi{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:2px;border:none;background:none;
+  cursor:pointer;font-family:var(--sans);padding:5px 0;position:relative
+}
+.bi-i{font-size:1.35rem;line-height:1;color:#B0B8C8;transition:color .15s}
+.bi.on .bi-i{color:var(--g)}
+.bi-l{font-size:.55rem;letter-spacing:.04em;text-transform:uppercase;
+  color:#B0B8C8;font-weight:500;transition:color .15s}
+.bi.on .bi-l{color:var(--g);font-weight:700}
+.nbadge{
+  position:absolute;top:4px;right:calc(50% - 22px);
+  background:var(--rd);color:#fff;font-size:.58rem;font-weight:700;
+  min-width:16px;height:16px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;padding:0 4px
+}
+
+/* ── HERO ─────────────────────────────────────────── */
+.hero{
+  padding:36px 20px 40px;text-align:center;
+  background:linear-gradient(160deg,#FFFBF4,#fff 50%,#F8F6FF);
+  padding-bottom:80px
+}
+.ey{font-size:.78rem;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--g);margin-bottom:14px;font-weight:500}
+h1{
+  font-family:var(--serif);font-size:clamp(2.4rem,7vw,3rem);
+  font-weight:300;line-height:1.06;margin-bottom:12px;color:var(--nv)
+}
+h1 em{font-style:italic;color:var(--g)}
+.hs{font-size:1rem;color:var(--tm);line-height:1.8;max-width:380px;margin:0 auto 24px}
+.ct{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.bg-btn{
+  padding:13px 26px;background:linear-gradient(135deg,var(--g),var(--gl));
+  color:#fff;border:none;border-radius:30px;font-family:var(--sans);
+  font-size:.92rem;font-weight:600;cursor:pointer;
+  box-shadow:0 5px 16px rgba(196,150,42,.28)
+}
+.bo-btn{
+  padding:13px 26px;background:#fff;color:var(--nv);
+  border:1.5px solid rgba(26,39,68,.15);border-radius:30px;
+  font-family:var(--sans);font-size:.92rem;cursor:pointer
+}
+.stats-row{
+  display:flex;background:#fff;border-radius:14px;
+  box-shadow:0 4px 14px rgba(0,0,0,.07);border:1px solid rgba(196,150,42,.1);
+  max-width:340px;margin:0 auto
+}
+.stat{flex:1;padding:14px 8px;text-align:center;position:relative}
+.stat:not(:last-child)::after{
+  content:"";position:absolute;right:0;top:20%;
+  height:60%;width:1px;background:rgba(196,150,42,.15)
+}
+.stat-n{font-family:var(--serif);font-size:2.4rem;color:var(--g);font-weight:600;line-height:1}
+.stat-l{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--nv);margin-top:4px;font-weight:600}
+
+/* ── SECTIONS ─────────────────────────────────────── */
+.sc{padding:36px 18px;text-align:center}
+.sc.a{background:var(--b2)}
+.sc.n{background:var(--nv);color:#fff}
+.sc-inner{max-width:480px;margin:0 auto}
+.se{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--g);margin-bottom:8px;font-weight:600}
+h2{font-family:var(--serif);font-size:2rem;font-weight:300;
+  margin-bottom:10px;color:var(--nv)}
+h2 em{font-style:italic;color:var(--g)}
+.n h2{color:#fff}
+.ss{font-size:.95rem;color:var(--tm);line-height:1.72;margin-bottom:20px}
+.n .ss{color:rgba(255,255,255,.6)}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.dc{background:#fff;border-radius:12px;padding:14px;
+  border:1px solid rgba(26,39,68,.07);box-shadow:0 2px 7px rgba(0,0,0,.04);text-align:left}
+.dc i{font-size:1.6rem;margin-bottom:6px;display:block}
+.dc h4{font-size:.95rem;font-weight:600;margin-bottom:4px;color:var(--nv)}
+.dc p{font-size:.85rem;color:var(--tm);line-height:1.6}
+.pi-step{
+  display:flex;gap:12px;padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.1);text-align:left
+}
+.pi-step:last-child{border:none}
+.pn{font-family:var(--serif);font-size:1.8rem;color:rgba(196,150,42,.4);
+  width:32px;flex-shrink:0;line-height:1}
+.pt h4{font-size:.95rem;font-weight:600;margin-bottom:4px;color:#fff}
+.pt p{font-size:.88rem;color:rgba(255,255,255,.6);line-height:1.6}
+
+/* ── PREMIUM SECTION (compact mobile) ─────────────── */
+.sc-premium{padding:24px 18px;text-align:center;background:var(--nv);color:#fff}
+.premium-box{
+  background:rgba(255,255,255,.07);border:1px solid rgba(196,150,42,.2);
+  border-radius:12px;padding:16px;max-width:380px;margin:12px auto 0
+}
+.premium-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  margin-bottom:12px;text-align:left
+}
+.premium-item{font-size:.82rem;color:rgba(255,255,255,.8)}
+.premium-item span{color:var(--gl)}
+
+/* ── FEED ─────────────────────────────────────────── */
+.feed-bar{
+  background:#fff;border-bottom:1px solid rgba(26,39,68,.08);
+  padding:7px 13px;display:flex;align-items:center;
+  justify-content:space-between;flex-shrink:0
+}
+.vtog{display:flex;background:rgba(26,39,68,.06);border-radius:12px;padding:3px;gap:2px}
+.vbtn{
+  padding:5px 12px;border-radius:9px;border:none;font-size:.76rem;
+  font-weight:600;cursor:pointer;background:transparent;
+  color:var(--td);font-family:var(--sans);transition:all .15s
+}
+.vbtn.on{background:var(--g);color:#fff}
+
+/* ── SWIPE ────────────────────────────────────────── */
+#SWIPE_VIEW{
+  flex:1;display:flex;flex-direction:column;
+  position:relative;min-height:0
+}
+#SW_WRAP{
+  flex:1;position:relative;margin:10px 12px 0;
+  border-radius:18px;overflow:hidden;min-height:200px
+}
+.swc{
+  position:absolute;inset:0;border-radius:18px;overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:0 8px 28px rgba(0,0,0,.18);
+  cursor:grab;touch-action:none;user-select:none;will-change:transform
+}
+/* Wrapper swipe limité en hauteur */
+#pg-swipe #SW_WRAP .swc{border-radius:16px}
+.swc-photo{
+  height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:80px;position:relative;flex-shrink:0
+}
+.swc-grd{
+  position:absolute;bottom:0;left:0;right:0;height:40%;
+  background:linear-gradient(to top,rgba(0,0,0,.7),transparent);
+  pointer-events:none
+}
+.swc-info{display:none}
+.swc-name{font-family:var(--serif);font-size:1.2rem;font-weight:700;color:#fff}
+.swc-loc{font-size:.75rem;color:rgba(255,255,255,.7);margin:2px 0 6px}
+.swc-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.stag{
+  font-size:.62rem;padding:3px 7px;border-radius:6px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+  color:#fff;font-weight:500
+}
+.stag.gn{background:rgba(39,174,96,.25);border-color:#27AE60}
+.stag.gl{background:rgba(196,150,42,.25);border-color:var(--g)}
+.stag.rd{background:rgba(192,57,43,.25);border-color:var(--rd)}
+.swc-stats{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.swst{background:rgba(0,0,0,.3);border-radius:6px;padding:4px 8px}
+.swst-l{display:block;font-size:.5rem;color:rgba(255,255,255,.4);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:1px}
+.swst-v{font-size:.74rem;font-weight:600;color:#fff}
+.sw-badge-like,.sw-badge-nope{
+  position:absolute;top:14px;border-radius:9px;padding:5px 11px;
+  font-size:.9rem;font-weight:800;color:#fff;opacity:0;
+  pointer-events:none;z-index:5;text-transform:uppercase
+}
+.sw-badge-like{left:10px;background:rgba(39,174,96,.92);
+  border:3px solid #27AE60;transform:rotate(-15deg)}
+.sw-badge-nope{right:10px;background:rgba(192,57,43,.92);
+  border:3px solid var(--rd);transform:rotate(15deg)}
+.sw-dots{display:flex;justify-content:center;gap:4px;padding:5px 0 3px;flex-shrink:0}
+.sdot{width:5px;height:5px;border-radius:3px;background:rgba(26,39,68,.12);transition:all .2s}
+.sdot.on{background:var(--g);width:14px}
+.sw-acts{
+  flex-shrink:0;height:70px;display:flex;align-items:center;
+  justify-content:center;gap:14px;
+  background:linear-gradient(to top,var(--b2) 55%,transparent)
+}
+.sw-ibtn{
+  width:40px;height:40px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid rgba(26,39,68,.1);background:#fff;
+  font-size:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.1)
+}
+.sw-xbtn{
+  width:54px;height:54px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid rgba(26,39,68,.1);background:#fff;
+  font-size:1.3rem;box-shadow:0 4px 12px rgba(0,0,0,.1)
+}
+.sw-hbtn{
+  width:62px;height:62px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  border:none;background:linear-gradient(135deg,var(--rd),#E74C3C);
+  font-size:1.6rem;box-shadow:0 5px 16px rgba(192,57,43,.4)
+}
+.sw-ibtn:active,.sw-xbtn:active,.sw-hbtn:active{transform:scale(.85)}
+
+/* ── GRILLE ───────────────────────────────────────── */
+.g-tabs{
+  display:flex;border-bottom:2px solid var(--b2);background:#fff;
+  position:sticky;top:0;z-index:5
+}
+.gtb{
+  flex:1;padding:10px 3px;border:none;background:transparent;
+  font-size:.72rem;cursor:pointer;font-weight:500;color:var(--td);
+  border-bottom:2px solid transparent;margin-bottom:-2px;
+  font-family:var(--sans);transition:all .2s
+}
+.gtb.on{color:var(--g);border-bottom-color:var(--g);font-weight:700}
+.gcnt{background:var(--g);color:#fff;border-radius:6px;
+  padding:1px 5px;font-size:.6rem;margin-left:3px}
+.gcnt.rd{background:var(--rd)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px}
+.gc{
+  position:relative;aspect-ratio:2/3;overflow:hidden;
+  cursor:pointer;background:#222;border-radius:3px
+}
+.gc-bg{width:100%;height:100%;display:flex;align-items:center;
+  justify-content:center;font-size:2.5rem}
+.gc-grd{position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.9) 0%,transparent 55%)}
+.gc-info{position:absolute;bottom:26px;left:0;right:0;padding:0 5px}
+.gc-dot{display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--gn);margin-right:2px;vertical-align:middle}
+.gc-name{font-size:.7rem;font-weight:700;color:#fff}
+.gc-sub{font-size:.58rem;color:rgba(255,255,255,.65)}
+.gc-act{position:absolute;bottom:0;left:0;right:0;height:26px}
+.gc-hbtn{width:100%;height:100%;background:rgba(192,57,43,.65);
+  border:none;color:#fff;font-size:.82rem;cursor:pointer}
+.gc-hbtn.liked{background:var(--rd)}
+.gc-new{position:absolute;top:3px;left:3px;background:#1A6B3C;
+  color:#fff;font-size:.48rem;font-weight:700;padding:2px 4px;
+  border-radius:3px;text-transform:uppercase}
+
+/* ── PROFIL DETAIL ────────────────────────────────── */
+.pp-bg{position:fixed;inset:0;z-index:400;background:#fff;display:none;flex-direction:column}
+.pp-bg.on{display:flex}
+.pp-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:#fff;
+  border-bottom:1px solid rgba(26,39,68,.08);flex-shrink:0;height:50px
+}
+.pp-back-btn{background:none;border:none;color:var(--g);
+  font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--sans)}
+.pp-top-btns{display:flex;gap:8px}
+.pp-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.pp-photos{
+  display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
+  height:240px;flex-shrink:0;scrollbar-width:none
+}
+.pp-photos::-webkit-scrollbar{display:none}
+.pp-photo-slide{
+  min-width:100%;height:100%;scroll-snap-align:start;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;flex-shrink:0;font-size:7rem
+}
+.pp-photo-grd{
+  position:absolute;bottom:0;left:0;right:0;height:40%;
+  background:linear-gradient(to top,#fff,transparent);pointer-events:none
+}
+.pp-online{
+  position:absolute;top:10px;left:10px;background:var(--gn);
+  color:#fff;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:9px
+}
+.pp-dots{display:flex;justify-content:center;gap:5px;
+  padding:6px 0;flex-shrink:0;background:#fff}
+.pp-pdot{height:6px;border-radius:3px;background:rgba(26,39,68,.15);
+  transition:all .2s;width:6px}
+.pp-pdot.on{background:var(--g);width:16px}
+.pp-body{padding:12px 16px 20px}
+.pp-name{font-family:var(--serif);font-size:1.9rem;font-weight:600;
+  color:var(--nv);margin-bottom:3px}
+.pp-meta{font-size:.82rem;color:var(--td);margin-bottom:10px}
+.pp-chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.pp-chip{font-size:.72rem;padding:4px 10px;border-radius:8px;
+  background:var(--b2);color:var(--nv);font-weight:500}
+.pp-chip.gn{background:rgba(39,174,96,.12);color:var(--gn)}
+.pp-chip.gl{background:var(--gd);color:var(--g);border:1px solid rgba(196,150,42,.2)}
+.pp-chip.rd{background:rgba(192,57,43,.08);color:var(--rd)}
+.pp-lbl{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--g);font-weight:600;margin-bottom:7px;margin-top:12px}
+.pp-bio{font-size:.88rem;color:var(--tm);line-height:1.7;
+  background:var(--b2);padding:12px;border-radius:11px}
+.pp-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.pp-info-item{background:var(--b2);border-radius:9px;padding:9px}
+.pp-info-lbl{font-size:.56rem;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--td);display:block;margin-bottom:2px}
+.pp-info-val{font-size:.84rem;font-weight:600;color:var(--nv);word-break:break-word}
+
+/* ── MESSAGES ─────────────────────────────────────── */
+.m-tabs{display:flex;border-bottom:2px solid var(--b2);background:#fff;
+  position:sticky;top:0;z-index:5}
+.mtb{flex:1;padding:11px 4px;border:none;background:transparent;
+  font-size:.74rem;cursor:pointer;font-weight:500;color:var(--td);
+  border-bottom:2px solid transparent;margin-bottom:-2px;
+  font-family:var(--sans);text-align:center;transition:all .2s}
+.mtb.on{color:var(--g);border-bottom-color:var(--g);font-weight:700}
+.msg-row{
+  display:flex;align-items:center;gap:10px;padding:11px 14px;
+  background:#fff;border-bottom:1px solid var(--b2);
+  cursor:pointer;transition:background .15s;position:relative;overflow:hidden
+}
+.msg-row:active{background:var(--b2)}
+.msg-av{width:46px;height:46px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-size:1.4rem;
+  flex-shrink:0;position:relative}
+.msg-av-dot{position:absolute;bottom:1px;right:1px;width:10px;height:10px;
+  background:var(--gn);border-radius:50%;border:2px solid #fff}
+.msg-body{flex:1;min-width:0}
+.msg-name{font-size:.88rem;font-weight:700;color:var(--nv);margin-bottom:2px}
+.msg-prev{font-size:.76rem;color:var(--td);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.msg-prev.unread{color:var(--nv);font-weight:500}
+.msg-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.msg-time{font-size:.68rem;color:var(--td)}
+
+/* ── CONVERSATION ─────────────────────────────────── */
+.conv-hdr{
+  padding:8px 12px;background:#fff;border-bottom:1px solid var(--b2);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;height:50px
+}
+.conv-back{background:none;border:none;color:var(--g);
+  font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--sans);
+  padding:8px;margin-left:-8px;min-width:44px}
+.conv-av{width:34px;height:34px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.conv-body{
+  flex:1;overflow-y:auto;padding:12px;
+  background:var(--b2);display:flex;flex-direction:column;gap:7px
+}
+.bbl{max-width:76%;padding:8px 11px;border-radius:13px;
+  font-size:.84rem;line-height:1.55;word-break:break-word}
+.bbl.them{background:#fff;color:var(--nv);
+  border-radius:3px 13px 13px 13px;align-self:flex-start;
+  box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.bbl.me{background:var(--nv);color:#fff;
+  border-radius:13px 3px 13px 13px;align-self:flex-end}
+.bbl-time{font-size:.58rem;color:var(--td);margin-top:2px}
+
+/* ── COEURS ───────────────────────────────────────── */
+.h-tabs{display:flex;border-bottom:2px solid var(--b2);background:#fff;
+  position:sticky;top:0;z-index:5}
+.htb{flex:1;padding:9px 4px;border:none;background:transparent;
+  font-size:.7rem;cursor:pointer;font-weight:500;color:var(--td);
+  border-bottom:2px solid transparent;margin-bottom:-2px;
+  font-family:var(--sans);text-align:center;transition:all .2s}
+.htb.on{color:var(--g);border-bottom-color:var(--g);font-weight:700}
+.htb-icon{font-size:.9rem;display:block;margin-bottom:1px}
+.p-row{display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:#fff;border-bottom:1px solid var(--b2);cursor:pointer}
+.p-row:active{background:var(--b2)}
+.p-av{width:42px;height:42px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.match-row{background:#FFF5F5}
+
+/* ── MON PROFIL ───────────────────────────────────── */
+.my-hdr{background:var(--nv);padding:20px 20px 16px;text-align:center;flex-shrink:0}
+.my-stats{display:flex;justify-content:space-around;
+  background:rgba(255,255,255,.1);border-radius:10px;padding:10px;margin-top:10px}
+.mst-n{font-family:var(--serif);font-size:1.3rem;color:var(--gl);font-weight:600}
+.mst-l{font-size:.56rem;color:rgba(255,255,255,.5);margin-top:2px}
+.set-sec{padding:9px 16px 3px;font-size:.56rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--g);font-weight:600;background:var(--b2)}
+.set-item{
+  display:flex;align-items:center;gap:10px;padding:12px 16px;
+  background:#fff;border-bottom:1px solid var(--b2);cursor:pointer;
+  font-size:.86rem;color:var(--nv);width:100%;
+  border-left:none;border-right:none;border-top:none;
+  font-family:var(--sans);text-align:left;transition:background .15s
+}
+.set-item:active{background:var(--b2)}
+.set-item .arr{margin-left:auto;color:var(--td)}
+.set-item.danger{color:var(--rd)}
+
+/* ── MODALS ───────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:500;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.on{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;
+  max-width:480px;max-height:88vh;overflow-y:auto;padding-bottom:24px}
+.modal-handle{width:32px;height:4px;background:rgba(26,39,68,.12);
+  border-radius:2px;margin:10px auto 0}
+.modal-title{text-align:center;font-family:var(--serif);font-size:1.1rem;
+  color:var(--nv);padding:10px 14px 4px}
+.modal-sec{padding:12px 16px;border-bottom:1px solid var(--b2)}
+.modal-sec-t{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--g);font-weight:600;margin-bottom:8px}
+.modal-field{margin-bottom:10px}
+.modal-lbl{display:block;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--nv);font-weight:600;margin-bottom:4px}
+.modal-input{width:100%;padding:10px 12px;border:1.5px solid rgba(26,39,68,.12);
+  border-radius:9px;font-size:.9rem;font-family:var(--sans);
+  outline:none;background:#fff;box-sizing:border-box}
+.modal-input:focus{border-color:var(--g)}
+.tog-row{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--b2)}
+.tog-row:last-child{border:none}
+.tog{width:40px;height:22px;background:var(--g);border-radius:11px;
+  position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+.tog.off{background:#D1D5DB}
+.tog::after{content:"";position:absolute;width:18px;height:18px;
+  background:#fff;border-radius:50%;top:2px;left:2px;
+  transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tog:not(.off)::after{left:20px}
+.modal-footer{display:flex;gap:8px;padding:12px 16px 0}
+.btn-cancel{flex:1;padding:11px;background:var(--b2);border:none;
+  border-radius:10px;font-size:.88rem;cursor:pointer;
+  color:var(--td);font-family:var(--sans)}
+.btn-save{flex:1;padding:11px;
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  border:none;border-radius:10px;font-size:.88rem;font-weight:700;
+  cursor:pointer;color:#fff;font-family:var(--sans)}
+.btn-danger{flex:1;padding:11px;background:var(--rd);border:none;
+  border-radius:10px;font-size:.88rem;font-weight:700;
+  cursor:pointer;color:#fff;font-family:var(--sans)}
+.upload-zone{border:2px dashed rgba(196,150,42,.3);border-radius:10px;
+  padding:18px;text-align:center;cursor:pointer;background:var(--b2);
+  margin-bottom:8px}
+.fchip{padding:6px 11px;border-radius:14px;border:1.5px solid rgba(26,39,68,.12);
+  background:#fff;font-size:.78rem;cursor:pointer;
+  font-family:var(--sans);color:var(--nv);transition:all .15s}
+.fchip.on{background:var(--gd);border-color:var(--g);color:var(--g);font-weight:600}
+
+/* ── MATCH ────────────────────────────────────────── */
+.match-sc{
+  position:fixed;inset:0;z-index:600;background:#7B1818;
+  display:none;flex-direction:column;align-items:center;
+  justify-content:center;padding:24px;text-align:center
+}
+.match-sc.on{display:flex}
+
+/* ── TOAST ────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:74px;left:50%;transform:translateX(-50%);
+  background:var(--nv);color:#fff;padding:8px 16px;border-radius:18px;
+  font-size:.82rem;z-index:999;pointer-events:none;white-space:nowrap;
+  box-shadow:0 4px 14px rgba(0,0,0,.2)
+}
+
+/* ── QUESTIONNAIRE ────────────────────────────────── */
+.qp{padding:60px 14px 70px;max-width:440px;margin:0 auto}
+.qc{background:#fff;border:1px solid rgba(26,39,68,.07);
+  border-radius:16px;padding:20px 16px;box-shadow:0 4px 18px rgba(0,0,0,.06)}
+.qpb{height:3px;background:var(--b2);border-radius:2px;margin-bottom:18px;overflow:hidden}
+.qpf{height:100%;background:linear-gradient(90deg,var(--g),var(--gl));transition:width .4s}
+.qt{font-family:var(--serif);font-size:1.7rem;font-weight:300;
+  line-height:1.15;margin-bottom:7px;color:var(--nv)}
+.qs{font-size:.92rem;color:var(--tm);line-height:1.7;margin-bottom:14px}
+.qe{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--g);margin-bottom:5px;font-weight:600}
+.cs2{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.cd{display:flex;align-items:center;gap:10px;padding:11px 13px;
+  background:var(--b2);border:1.5px solid rgba(26,39,68,.08);
+  border-radius:10px;cursor:pointer;user-select:none}
+.cd.sl{border-color:var(--g);background:rgba(196,150,42,.06)}
+.ci2{font-size:1.2rem;flex-shrink:0}
+.cl{font-size:.92rem;font-weight:500;margin-bottom:1px;color:var(--nv)}
+.cs3{font-size:.78rem;color:var(--td);line-height:1.5}
+.ck{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(26,39,68,.17);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:.6rem;margin-left:auto}
+.cd.sl .ck{background:var(--g);border-color:var(--g);color:#fff}
+.fg{margin-bottom:11px}
+.fl{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--nv);display:block;margin-bottom:5px;font-weight:600}
+.fi,.fsl,.fa{
+  width:100%;background:var(--b2);border:1.5px solid rgba(26,39,68,.1);
+  border-radius:8px;padding:9px 11px;color:var(--nv);
+  font-family:var(--sans);font-size:.9rem;outline:none;-webkit-appearance:none
+}
+.fi:focus,.fsl:focus,.fa:focus{border-color:var(--g)}
+.fa{resize:none;line-height:1.6}
+.fsl option{background:#fff;color:var(--nv)}
+.qn{display:flex;gap:8px;margin-top:10px}
+.qb{flex:1;padding:10px;background:var(--b2);border:1.5px solid rgba(26,39,68,.1);
+  border-radius:10px;color:var(--td);font-family:var(--sans);font-size:.8rem;cursor:pointer}
+.qx{flex:2;padding:10px;background:linear-gradient(135deg,var(--g),var(--gl));
+  border:none;border-radius:10px;color:#fff;
+  font-family:var(--sans);font-size:.82rem;font-weight:600;cursor:pointer}
+.qf{flex:1}
+.su{text-align:center;padding:10px 0}
+.su i{font-size:2.6rem;margin-bottom:10px;display:block}
+.su h3{font-family:var(--serif);font-size:1.6rem;margin-bottom:5px;color:var(--nv)}
+.su p{font-size:.78rem;color:var(--tm);line-height:1.65;margin-bottom:14px}
+
+/* ══════════════════════════════════════════════════
+   DESKTOP ≥769px
+   ══════════════════════════════════════════════════ */
+@media(min-width:769px){
+  /* Body : scroll classique */
+  body{
+    position:static!important;height:auto!important;
+    overflow:auto!important;overflow-x:hidden!important;
+    background:#F0EDE8!important
+  }
+  /* Pages : flux normal */
+  .pg{
+    position:static!important;inset:auto!important;
+    height:auto!important;min-height:100vh;
+    overflow:visible!important;z-index:auto
+  }
+  .pg.on{display:flex}
+  /* Nav top sticky */
+  .tnav,#pg-h>div:first-child{
+    position:sticky!important;top:0!important;
+    left:0!important;right:0!important;
+    width:100%!important;max-width:100%!important;
+    transform:none!important;z-index:100;
+    padding:0 60px!important
+  }
+  /* Nav bas fixée */
+  .bn{
+    position:fixed!important;bottom:0!important;
+    left:0!important;right:0!important;
+    width:100%!important;max-width:100%!important;transform:none!important
+  }
+  /* Scroll visible */
+  .scroll{overflow:visible!important;height:auto!important;padding-bottom:80px}
+  /* Hero 2 colonnes */
+  .hero{padding:80px 60px 100px!important;text-align:left!important}
+  .hero-wrap{
+    display:flex;flex-direction:row;gap:80px;
+    align-items:center;max-width:1200px;margin:0 auto
+  }
+  .hero-left{flex:1}
+  .hero-right{flex:1}
+  h1{font-size:3.8rem!important}
+  .hs{margin:0 0 24px!important;max-width:none!important}
+  .ct{justify-content:flex-start!important}
+  .stats-row{margin:0!important;max-width:none!important}
+  /* Sections */
+  .sc,.sc-premium{padding:80px 60px!important}
+  .sc-inner{max-width:1200px!important;margin:0 auto!important}
+  h2{font-size:2.8rem!important}
+  .dg{grid-template-columns:repeat(4,1fr)!important;gap:20px!important}
+  /* Feed profils */
+  .feed-bar{padding:10px 60px!important}
+  /* SWIPE sur desktop : hauteur fixe pour voir les cards */
+  #pg-f.on{
+    height:100vh!important;min-height:0!important;
+    overflow:hidden!important;position:fixed!important;
+    inset:0!important
+  }
+  #SWIPE_VIEW{
+    flex:1!important;display:flex!important;
+    flex-direction:column!important;min-height:0!important
+  }
+  #SW_WRAP{
+    flex:1!important;
+    max-width:440px!important;
+    width:440px!important;
+    margin:10px auto 0!important;
+    left:auto!important;right:auto!important;
+    transform:none!important
+  }
+  .grid3{
+    grid-template-columns:repeat(4,1fr)!important;
+    gap:6px!important;max-width:1200px!important;margin:0 auto!important
+  }
+  .g-tabs{max-width:1200px!important;margin:0 auto!important;width:100%!important}
+  /* Modals */
+  .modal-bg,.pp-bg{
+    position:fixed!important;inset:0!important;
+    max-width:520px!important;left:50%!important;
+    right:auto!important;transform:translateX(-50%)!important
+  }
+  .match-sc{position:fixed!important;inset:0!important}
+  .toast{bottom:80px!important;left:50%!important;transform:translateX(-50%)!important}
+  /* Pages intérieures centrées */
+  .m-tabs,.h-tabs{max-width:800px!important;margin:0 auto!important;width:100%!important}
+  #MSG_LIST .msg-row{max-width:800px!important;margin:0 auto!important;width:100%!important}
+  #h-jaime .p-row,#h-maiment .p-row,#h-matchs .p-row{
+    max-width:800px!important;margin:0 auto!important;width:100%!important}
+  .set-sec{padding:9px 60px 3px!important}
+  .set-item{padding:12px 60px!important}
+  .my-hdr{padding:40px 60px!important}
+  .conv-hdr{padding:8px 60px!important}
+  .conv-body{padding:20px 60px!important;max-width:900px!important;margin:0 auto!important}
+  /* Premium */
+  .premium-box{max-width:500px!important}
+  .premium-grid{grid-template-columns:repeat(4,1fr)!important}
+}
+@keyframes bk{0%,100%{opacity:1}50%{opacity:.2}}
+</style>
+</head>
+<body>
+
+<!-- ACCUEIL -->
+<div id="pg-h" class="pg on">
+<div style="position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.97);border-bottom:1px solid rgba(196,150,42,.12);height:54px;display:flex;align-items:center;padding:0 16px;justify-content:space-between;box-sizing:border-box;flex-shrink:0">
+  <div style="font-family:var(--serif);font-size:1.35rem;color:var(--nv);font-weight:600;cursor:pointer" onclick="goPage('pg-h')">Love<em style="color:var(--g);font-style:italic;font-weight:300">Siam</em></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="lang-tog">
+      <button class="lbtn on" onclick="setLang('fr')">&#127467;&#127479;</button>
+      <button class="lbtn" onclick="setLang('th')">&#127481;&#127469;</button>
+    </div>
+    <button onclick="goPage('pg-f')" style="background:none;border:1.5px solid rgba(26,39,68,.2);color:var(--nv);border-radius:18px;padding:6px 12px;font-size:.76rem;cursor:pointer;font-family:var(--sans)">Connexion</button>
+    <button onclick="goPage('pg-inscription')" style="background:linear-gradient(135deg,var(--g),var(--gl));border:none;color:#fff;border-radius:18px;padding:6px 12px;font-size:.76rem;font-weight:600;cursor:pointer;font-family:var(--sans)">M'inscrire</button>
+  </div>
+</div>
+
+<div class="scroll">
+  <div class="hero">
+    <div class="hero-wrap">
+      <div class="hero-left">
+        <div style="text-align:center;margin-bottom:20px">
+          <img src="./logo.png" alt="LoveSiam" style="width:120px;height:auto;filter:drop-shadow(0 4px 12px rgba(196,150,42,.25))" onerror="this.style.display='none'">
+          <div style="font-family:var(--serif);font-size:2rem;color:var(--nv);font-weight:600;margin-top:8px">Love<em style="color:var(--g);font-style:italic;font-weight:300">Siam</em></div>
+        </div>
+        <div class="ey">&#10022; Un accompagnement humain et personnalis&eacute;</div>
+        <h1>La rencontre<br><em>franco-tha&iuml;landaise</em></h1>
+        <p class="hs">Un service sur-mesure, de l'inscription &agrave; la rencontre. Chaque profil est s&eacute;lectionn&eacute; avec soin.</p>
+        <div class="ct">
+          <button class="bg-btn" onclick="goPage('pg-inscription')">M'inscrire maintenant</button>
+          <button class="bo-btn" onclick="goPage('pg-f')">Voir les profils &rarr;</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n">247</div><div class="stat-l">Membres</div></div>
+          <div class="stat"><div class="stat-n">38</div><div class="stat-l">Couples</div></div>
+          <div class="stat"><div class="stat-n">12</div><div class="stat-l">En ligne</div></div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div style="font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--g);font-weight:600;margin-bottom:12px;text-align:center">&#10022; Profils r&eacute;cents</div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px">
+          <div style="flex:1;max-width:140px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.09);border:1px solid rgba(196,150,42,.15);cursor:pointer" onclick="goPage('pg-f')">
+            <div style="height:100px;background:linear-gradient(160deg,#E8D5C4,#C4A080);display:flex;align-items:center;justify-content:center;position:relative"><span style="font-size:2.8rem">&#128105;</span><div style="position:absolute;top:6px;right:6px;background:var(--gn);width:8px;height:8px;border-radius:50%;border:2px solid #fff"></div></div>
+            <div style="padding:9px"><div style="font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--nv)">Ning, 26</div><div style="font-size:.72rem;color:var(--td);margin-bottom:5px">&#128205; Bangkok</div><div style="font-size:.65rem;padding:2px 8px;background:var(--gd);color:var(--g);border-radius:7px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">&#127467;&#127479; Moyen</div></div>
+          </div>
+          <div style="flex:1;max-width:140px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,.13);border:2px solid rgba(196,150,42,.22);margin-top:-8px;cursor:pointer" onclick="goPage('pg-f')">
+            <div style="height:100px;background:linear-gradient(160deg,#D4C4E8,#9080B8);display:flex;align-items:center;justify-content:center"><span style="font-size:2.8rem">&#128105;</span></div>
+            <div style="padding:9px"><div style="font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--nv)">Pim, 24</div><div style="font-size:.72rem;color:var(--td);margin-bottom:5px">&#128205; Phuket</div><div style="font-size:.65rem;padding:2px 8px;background:var(--gd);color:var(--g);border-radius:7px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">&#127467;&#127479; Excellent</div></div>
+          </div>
+          <div style="flex:1;max-width:140px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.09);border:1px solid rgba(196,150,42,.15);cursor:pointer" onclick="goPage('pg-f')">
+            <div style="height:100px;background:linear-gradient(160deg,#C4D8E8,#7090A8);display:flex;align-items:center;justify-content:center;position:relative"><span style="font-size:2.8rem">&#128105;</span><div style="position:absolute;top:6px;left:6px;background:var(--rd);color:#fff;font-size:.5rem;padding:2px 6px;border-radius:5px;font-weight:600">Nouveau</div></div>
+            <div style="padding:9px"><div style="font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--nv)">Noi, 29</div><div style="font-size:.72rem;color:var(--td);margin-bottom:5px">&#128205; Chiang Mai</div><div style="font-size:.65rem;padding:2px 8px;background:var(--gd);color:var(--g);border-radius:7px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">&#127467;&#127479; Un peu</div></div>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,var(--nv),#243156);border-radius:16px;padding:18px;color:#fff">
+          <div style="font-family:var(--serif);font-size:1.4rem;margin-bottom:12px;text-align:center">Pourquoi <em style="color:var(--gl)">LoveSiam</em>&nbsp;?</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="display:flex;align-items:center;gap:7px;font-size:.85rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-weight:700">&#10003;</span>Profils v&eacute;rifi&eacute;s</div>
+            <div style="display:flex;align-items:center;gap:7px;font-size:.85rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-weight:700">&#10003;</span>Vid&eacute;os FR&#8596;TH</div>
+            <div style="display:flex;align-items:center;gap:7px;font-size:.85rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-weight:700">&#10003;</span>Accompagnement</div>
+            <div style="display:flex;align-items:center;gap:7px;font-size:.85rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-weight:700">&#10003;</span>Z&eacute;ro faux profil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc a"><div class="sc-inner">
+    <div class="se">&#10022; Pourquoi LoveSiam</div><h2>Ce qui nous <em>distingue</em></h2>
+    <p class="ss">Un service humain &mdash; pas un algorithme.</p>
+    <div class="dg">
+      <div class="dc"><i style="font-style:normal">&#10022;</i><h4>Profils valid&eacute;s</h4><p>Chaque candidature est &eacute;tudi&eacute;e avant publication.</p></div>
+      <div class="dc"><i style="font-style:normal">&#9672;</i><h4>Profils authentiques</h4><p>Une vid&eacute;o r&eacute;elle pour vous pr&eacute;senter.</p></div>
+      <div class="dc"><i style="font-style:normal">&#9654;</i><h4>Vid&eacute;os FR&#8596;TH</h4><p>Traduction simultan&eacute;e sur chaque vid&eacute;o.</p></div>
+      <div class="dc"><i style="font-style:normal">&#8801;</i><h4>Questionnaire</h4><p>Pour mieux vous accompagner vers la bonne rencontre.</p></div>
+    </div>
+  </div></div>
+
+  <div class="sc n"><div class="sc-inner">
+    <div class="se">&#10022; Le Processus</div><h2>Comment <em>&ccedil;a marche</em></h2>
+    <p class="ss">Simple, transparent et humain.</p>
+    <div class="pi-step"><div class="pn">01</div><div class="pt"><h4>Inscription guid&eacute;e</h4><p>Remplissez votre profil. Votre dossier est &eacute;tudi&eacute;.</p></div></div>
+    <div class="pi-step"><div class="pn">02</div><div class="pt"><h4>Validation et publication</h4><p>Votre vid&eacute;o est publi&eacute;e avec traduction FR&#8596;TH.</p></div></div>
+    <div class="pi-step"><div class="pn">03</div><div class="pt"><h4>Coup de c&#339;ur partag&eacute;</h4><p>Deux coups de c&#339;ur mutuels permettent une mise en relation.</p></div></div>
+    <div class="pi-step"><div class="pn">04</div><div class="pt"><h4>Accompagnement premium</h4><p>Consulting, coaching et suivi personnalis&eacute;.</p></div></div>
+  </div></div>
+
+  <div class="sc a"><div class="sc-inner" style="max-width:640px">
+    <div class="se">&#10022; Votre consultant</div><h2>Un accompagnement <em>sur-mesure</em></h2>
+    <div style="background:#fff;border-radius:14px;padding:18px;border:1px solid rgba(26,39,68,.07);box-shadow:0 2px 9px rgba(0,0,0,.05);text-align:center">
+      <div style="font-size:2.4rem;margin-bottom:6px">&#128084;</div>
+      <p style="font-size:1rem;color:var(--g);font-weight:600;margin-bottom:10px">Vous souhaitez aller plus loin&nbsp;?</p>
+      <p style="font-size:.95rem;color:var(--tm);line-height:1.7;margin-bottom:12px">Sp&eacute;cialiste des relations franco-tha&iuml;landaises, votre consultant vous accompagne de l'inscription &agrave; la rencontre.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px">
+        <span style="padding:4px 10px;background:var(--gd);border-radius:12px;font-size:.85rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500">&#10022; Love Coach</span>
+        <span style="padding:4px 10px;background:var(--gd);border-radius:12px;font-size:.85rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500">&#127481;&#127469; Expert Tha&iuml;lande</span>
+        <span style="padding:4px 10px;background:var(--gd);border-radius:12px;font-size:.85rem;color:var(--g);border:1px solid rgba(196,150,42,.18);font-weight:500">&#129309; Consultant</span>
+      </div>
+      <a href="mailto:contact@lovesiam.com" style="display:block;width:100%;padding:13px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border-radius:28px;font-family:var(--sans);font-size:.92rem;font-weight:600;text-align:center;text-decoration:none;box-shadow:0 5px 16px rgba(196,150,42,.28)">Prendre contact</a>
+    </div>
+  </div></div>
+
+  <!-- PREMIUM COMPACT -->
+  <div class="sc-premium">
+    <div class="se" style="margin-bottom:6px">&#10022; Acc&egrave;s Premium</div>
+    <h2 style="font-size:1.8rem;margin-bottom:6px;color:#fff">Rejoignez <em>LoveSiam</em></h2>
+    <p style="font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.55;margin-bottom:0">Gratuit pour les femmes tha&iuml;landaises &bull; Premium pour les hommes fran&ccedil;ais</p>
+    <div class="premium-box">
+      <div class="premium-grid">
+        <div class="premium-item"><span>&#10003;</span> Vid&eacute;os FR&#8596;TH</div>
+        <div class="premium-item"><span>&#10003;</span> Introduction</div>
+        <div class="premium-item"><span>&#10003;</span> Messagerie TH</div>
+        <div class="premium-item"><span>&#10003;</span> Coaching perso</div>
+      </div>
+      <div style="font-family:var(--serif);font-size:1.5rem;color:var(--gl);font-weight:600;margin-bottom:3px">&#192; venir</div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.35);margin-bottom:10px">Tarifs en cours de finalisation</div>
+      <button style="width:100%;padding:10px;background:rgba(196,150,42,.2);color:rgba(255,255,255,.4);border:1px solid rgba(196,150,42,.2);border-radius:18px;font-size:.82rem;cursor:not-allowed;font-family:var(--sans)">Bient&ocirc;t disponible</button>
+    </div>
+  </div>
+</div><!-- fin .scroll -->
+
+<div class="bn">
+  <button class="bi on" onclick="goPage('pg-h')"><span class="bi-i">&#127968;</span><span class="bi-l">Accueil</span></button>
+  <button class="bi" onclick="goPage('pg-f')"><span class="bi-i">&#127916;</span><span class="bi-l">Profils</span></button>
+  <button class="bi" onclick="goPage('pg-msg')"><span class="bi-i">&#128172;</span><span class="nbadge" id="nb-msg" style="display:none">0</span><span class="bi-l">Messages</span></button>
+  <button class="bi" onclick="goPage('pg-hearts')"><span class="bi-i">&#10084;&#65039;</span><span class="nbadge" id="nb-hearts" style="display:none">0</span><span class="bi-l">C&#339;urs</span></button>
+  <button class="bi" onclick="goPage('pg-me')"><span class="bi-i">&#128100;</span><span class="bi-l">Profil</span></button>
+</div>
+</div><!-- fin pg-h -->
+
+<!-- INSCRIPTION -->
+<div id="pg-inscription" class="pg">
+<div class="tnav"><button onclick="goPage('pg-h')" style="background:none;border:none;color:var(--g);font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--sans)">&#8592; Retour</button><div class="logo">Love<em>Siam</em></div><div style="width:60px"></div></div>
+<div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch">
+<div class="qp"><div class="qc">
+  <div style="font-family:var(--serif);font-size:1rem;color:var(--nv);margin-bottom:12px;font-weight:600">LoveSiam</div>
+  <div class="qpb"><div class="qpf" id="QP" style="width:12%"></div></div>
+  <div id="QB"></div>
+</div></div>
+</div>
+</div>
+
+<!-- PROFILS -->
+<div id="pg-f" class="pg">
+<div class="tnav">
+  <div class="logo">Love<em>Siam</em></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button onclick="goPage('pg-swipe')" style="background:var(--gd);border:1px solid rgba(196,150,42,.2);border-radius:14px;padding:5px 12px;font-size:.74rem;color:var(--g);font-weight:600;cursor:pointer;font-family:var(--sans)">&#9889; Swipe</button>
+    <button onclick="openModal('m-filters')" style="background:none;border:1.5px solid rgba(26,39,68,.12);border-radius:14px;padding:5px 12px;font-size:.74rem;color:var(--nv);cursor:pointer;font-family:var(--sans)">&#8856; Filtres</button>
+  </div>
+</div>
+<div class="g-tabs">
+  <button class="gtb on" onclick="setGTab('all',this)">Tous <span class="gcnt" id="g-all">0</span></button>
+  <button class="gtb" onclick="setGTab('new',this)">Nouveaux <span class="gcnt" id="g-new">0</span></button>
+  <button class="gtb" onclick="setGTab('liked',this)">M'aiment <span class="gcnt rd" id="g-liked">0</span></button>
+</div>
+<div style="flex:1;overflow-y:auto">
+  <div class="grid3" id="GRID"></div>
+</div>
+<div class="bn">
+  <button class="bi" onclick="goPage('pg-h')"><span class="bi-i">&#127968;</span><span class="bi-l">Accueil</span></button>
+  <button class="bi on" onclick="goPage('pg-f')"><span class="bi-i">&#127916;</span><span class="bi-l">Profils</span></button>
+  <button class="bi" onclick="goPage('pg-msg')"><span class="bi-i">&#128172;</span><span class="bi-l">Messages</span></button>
+  <button class="bi" onclick="goPage('pg-hearts')"><span class="bi-i">&#10084;&#65039;</span><span class="bi-l">C&#339;urs</span></button>
+  <button class="bi" onclick="goPage('pg-me')"><span class="bi-i">&#128100;</span><span class="bi-l">Profil</span></button>
+</div>
+</div>
+
+<!-- PROFIL DETAIL -->
+<div class="pp-bg" id="PP">
+<div class="pp-topbar">
+  <button class="pp-back-btn" id="pp-back" style="font-size:1.2rem;padding:8px 14px 8px 4px;min-width:44px">&#8592;</button>
+  <div class="pp-top-btns">
+    <button id="pp-msg-btn" onclick="msgFromProfile()" style="padding:7px 14px;border:none;border-radius:16px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:var(--sans);background:var(--nv);color:#fff">&#128172; Message</button>
+    <button onclick="likeFromProfile()" style="padding:7px 14px;border:none;border-radius:16px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:var(--sans);background:linear-gradient(135deg,var(--rd),#E74C3C);color:#fff">&#10084;&#65039;</button>
+  </div>
+</div>
+<div class="pp-scroll">
+  <div class="pp-photos" id="pp-photos"></div>
+  <div class="pp-dots" id="pp-dots"></div>
+  <div class="pp-body">
+    <div id="pp-name" class="pp-name"></div>
+    <div id="pp-meta" class="pp-meta"></div>
+    <div id="pp-chips" class="pp-chips"></div>
+    <div class="pp-lbl">&#10022; Pr&eacute;sentation</div>
+    <div id="pp-bio" class="pp-bio"></div>
+    <div class="pp-lbl">&#10022; Informations</div>
+    <div id="pp-info" class="pp-info-grid"></div>
+  </div>
+</div>
+<div style="display:flex;flex-shrink:0;height:80px">
+  <button onclick="passFromProfile()" style="flex:1;background:#1e1e2e;border:none;border-right:1px solid rgba(255,255,255,.08);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><line x1="7" y1="7" x2="25" y2="25" stroke="rgba(255,255,255,.5)" stroke-width="2.5" stroke-linecap="round"/><line x1="25" y1="7" x2="7" y2="25" stroke="rgba(255,255,255,.5)" stroke-width="2.5" stroke-linecap="round"/></svg>
+    <span style="font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:rgba(255,255,255,.35)">PASSER</span>
+  </button>
+  <button onclick="likeFromProfileSwipe()" style="flex:1;background:var(--rd);border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px">
+    <span style="font-size:32px;line-height:1;color:#fff">&#10084;</span>
+    <span style="font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:rgba(255,255,255,.9)">J'AIME</span>
+  </button>
+</div>
+</div>
+
+
+<!-- PAGE SWIPE -->
+<div id="pg-swipe" class="pg">
+<div class="tnav">
+  <button onclick="goPage('pg-f')" style="background:none;border:none;color:var(--g);font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--sans)">&#8592; Grille</button>
+  <div class="logo">Love<em>Siam</em></div>
+  <div style="font-size:.7rem;color:var(--td)"><span style="color:var(--gn)">&#9679;</span> 3 en ligne</div>
+</div>
+<div id="SWIPE_VIEW" style="flex:1;display:flex;flex-direction:column;min-height:0;position:relative;padding:8px 12px 0">
+  <div class="sw-dots" id="SW_DOTS"></div>
+  <div id="SW_WRAP" style="flex:1;position:relative;border-radius:18px;overflow:hidden;min-height:0;max-height:calc(100vh - 220px)"></div>
+  <div class="sw-acts" id="SW_ACTS" style="height:80px;display:flex;align-items:center;justify-content:center;gap:20px;flex-shrink:0">
+    <button onclick="doSwipe('left')" style="width:68px;height:68px;border-radius:50%;background:#fff;border:2px solid rgba(26,39,68,.12);font-size:1.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.12)">&#10005;</button>
+    <button onclick="doSwipe('right')" style="width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--rd),#E74C3C);border:none;font-size:2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 16px rgba(192,57,43,.4)">&#10084;&#65039;</button>
+  </div>
+</div>
+<div class="bn">
+  <button class="bi" onclick="goPage('pg-h')"><span class="bi-i">&#127968;</span><span class="bi-l">Accueil</span></button>
+  <button class="bi on" onclick="goPage('pg-f')"><span class="bi-i">&#127916;</span><span class="bi-l">Profils</span></button>
+  <button class="bi" onclick="goPage('pg-msg')"><span class="bi-i">&#128172;</span><span class="bi-l">Messages</span></button>
+  <button class="bi" onclick="goPage('pg-hearts')"><span class="bi-i">&#10084;&#65039;</span><span class="bi-l">C&#339;urs</span></button>
+  <button class="bi" onclick="goPage('pg-me')"><span class="bi-i">&#128100;</span><span class="bi-l">Profil</span></button>
+</div>
+</div>
+<!-- MESSAGES -->
+<div id="pg-msg" class="pg">
+<div class="tnav"><div></div><div class="logo">Love<em>Siam</em></div><div style="width:60px"></div></div>
+<div class="m-tabs">
+  <button class="mtb on" onclick="setMTab('unread',this)">Non lus <span class="gcnt" id="unread-cnt">3</span></button>
+  <button class="mtb" onclick="setMTab('all',this)">Tous</button>
+</div>
+<div class="scroll" id="MSG_LIST"></div>
+<div class="bn">
+  <button class="bi" onclick="goPage('pg-h')"><span class="bi-i">&#127968;</span><span class="bi-l">Accueil</span></button>
+  <button class="bi" onclick="goPage('pg-f')"><span class="bi-i">&#127916;</span><span class="bi-l">Profils</span></button>
+  <button class="bi on"><span class="bi-i">&#128172;</span><span class="bi-l">Messages</span></button>
+  <button class="bi" onclick="goPage('pg-hearts')"><span class="bi-i">&#10084;&#65039;</span><span class="bi-l">C&#339;urs</span></button>
+  <button class="bi" onclick="goPage('pg-me')"><span class="bi-i">&#128100;</span><span class="bi-l">Profil</span></button>
+</div>
+</div>
+
+<!-- CONVERSATION -->
+<div id="pg-conv" class="pg">
+<div class="conv-hdr">
+  <button class="conv-back" onclick="goPage('pg-msg')">&#8592;</button>
+  <div class="conv-av" id="conv-av"></div>
+  <div style="flex:1"><div style="font-size:.88rem;font-weight:700;color:var(--nv)" id="conv-name"></div><div style="font-size:.68rem;color:var(--gn)" id="conv-status"></div></div>
+  <button onclick="openProfile(currentConvP)" style="background:none;border:none;color:var(--g);font-size:.76rem;font-weight:600;cursor:pointer;font-family:var(--sans)">Voir profil</button>
+</div>
+<div class="conv-body" id="conv-body"></div>
+<div style="display:flex;gap:8px;padding:8px 12px;background:#fff;border-top:1px solid var(--b2);flex-shrink:0;align-items:center">
+  <input id="conv-inp" type="text" placeholder="Message..." style="flex:1;padding:9px 12px;border:1.5px solid rgba(26,39,68,.1);border-radius:20px;font-size:16px;font-family:var(--sans);outline:none;-webkit-appearance:none;min-width:0" onkeydown="if(event.key==='Enter'){event.preventDefault();sendMsg();}">
+  <button onclick="sendMsg()" style="width:40px;height:40px;min-width:40px;border-radius:50%;background:var(--nv);border:none;color:#fff;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center">&#10148;</button>
+</div>
+</div>
+
+<!-- COEURS -->
+<div id="pg-hearts" class="pg">
+<div class="tnav"><div></div><div class="logo">Love<em>Siam</em></div><div style="width:60px"></div></div>
+<div class="h-tabs">
+  <button class="htb on" onclick="setHTab('h-jaime',this)"><span class="htb-icon">&#10084;&#65039;</span>J'aime <span class="gcnt" id="h-jaime-cnt">0</span></button>
+  <button class="htb" onclick="setHTab('h-maiment',this)"><span class="htb-icon">&#129293;</span>Qui m'aiment <span class="gcnt rd">3</span></button>
+  <button class="htb" onclick="setHTab('h-matchs',this)"><span class="htb-icon">&#128149;</span>Matchs <span class="gcnt rd" id="h-matchs-cnt">0</span></button>
+</div>
+<div class="scroll">
+  <div id="h-jaime"></div>
+  <div id="h-maiment" style="display:none">
+    <div class="p-row"><div class="p-av" style="background:linear-gradient(135deg,#0A2A3C,#051520);cursor:pointer" onclick="openProfile(PROFILES[2])"><span>&#128105;</span></div><div style="flex:1" onclick="openProfile(PROFILES[2])"><div style="font-size:.86rem;font-weight:600;color:var(--nv)">Noi, 29</div><div style="font-size:.74rem;color:var(--td)">&#128205; Chiang Mai</div></div><button onclick="event.stopPropagation();likeFromMaiment(2,this)" style="background:none;border:2px solid var(--rd);border-radius:50%;width:36px;height:36px;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--rd);flex-shrink:0">&#9825;</button></div>
+    <div class="p-row"><div class="p-av" style="background:linear-gradient(135deg,#0A3C1A,#051508);cursor:pointer" onclick="openProfile(PROFILES[3])"><span>&#128105;</span></div><div style="flex:1" onclick="openProfile(PROFILES[3])"><div style="font-size:.86rem;font-weight:600;color:var(--nv)">Fah, 34</div><div style="font-size:.74rem;color:var(--td)">&#128205; Bangkok</div></div><button onclick="event.stopPropagation();likeFromMaiment(3,this)" style="background:none;border:2px solid var(--rd);border-radius:50%;width:36px;height:36px;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--rd);flex-shrink:0">&#9825;</button></div>
+    <div class="p-row"><div class="p-av" style="background:linear-gradient(135deg,#5C2A0A,#2E1505);cursor:pointer" onclick="openProfile(PROFILES[0])"><span>&#128105;</span></div><div style="flex:1" onclick="openProfile(PROFILES[0])"><div style="font-size:.86rem;font-weight:600;color:var(--nv)">Ning, 26</div><div style="font-size:.74rem;color:var(--td)">&#128205; Bangkok</div></div><button onclick="event.stopPropagation();likeFromMaiment(0,this)" style="background:none;border:2px solid var(--rd);border-radius:50%;width:36px;height:36px;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--rd);flex-shrink:0">&#9825;</button></div>
+  </div>
+  <div id="h-matchs" style="display:none"></div>
+</div>
+<div class="bn">
+  <button class="bi" onclick="goPage('pg-h')"><span class="bi-i">&#127968;</span><span class="bi-l">Accueil</span></button>
+  <button class="bi" onclick="goPage('pg-f')"><span class="bi-i">&#127916;</span><span class="bi-l">Profils</span></button>
+  <button class="bi" onclick="goPage('pg-msg')"><span class="bi-i">&#128172;</span><span class="bi-l">Messages</span></button>
+  <button class="bi on"><span class="bi-i">&#10084;&#65039;</span><span class="bi-l">C&#339;urs</span></button>
+  <button class="bi" onclick="goPage('pg-me')"><span class="bi-i">&#128100;</span><span class="bi-l">Profil</span></button>
+</div>
+</div>
+
+<!-- MON PROFIL -->
+<div id="pg-me" class="pg">
+<div class="tnav"><div></div><div class="logo">Love<em>Siam</em></div><div style="width:60px"></div></div>
+<div class="scroll">
+  <div class="my-hdr">
+    <div style="font-size:3.2rem;margin-bottom:6px">&#128104;</div>
+    <div style="font-family:var(--serif);font-size:1.4rem;color:#fff;margin-bottom:2px">Patrick</div>
+    <div style="font-size:.76rem;color:rgba(255,255,255,.5)">Membre LoveSiam</div>
+    <div class="my-stats">
+      <div style="text-align:center"><div class="mst-n" id="stat-jaime">0</div><div class="mst-l">J'aime</div></div>
+      <div style="text-align:center"><div class="mst-n">3</div><div class="mst-l">M'aiment</div></div>
+      <div style="text-align:center"><div class="mst-n" id="stat-matchs">0</div><div class="mst-l">Matchs</div></div>
+    </div>
+  </div>
+  <div class="set-sec">Mon profil</div>
+  <button class="set-item" onclick="openModal('m-infos')"><span>&#9999;&#65039;</span><span>Modifier mes informations</span><span class="arr">&#8250;</span></button>
+  <button class="set-item" onclick="openModal('m-photos')"><span>&#128247;</span><span>Changer mes photos</span><span class="arr">&#8250;</span></button>
+  <button class="set-item" onclick="openModal('m-video')"><span>&#127916;</span><span>Ma vid&eacute;o de pr&eacute;sentation</span><span class="arr">&#8250;</span></button>
+  <div class="set-sec">Compte</div>
+  <button class="set-item" onclick="openModal('m-logout')"><span>&#128260;</span><span>Se d&eacute;connecter</span><span class="arr">&#8250;</span></button>
+  <button class="set-item danger" onclick="openModal('m-delete')"><span>&#128465;</span><span>Supprimer mon compte</span><span class="arr">&#8250;</span></button>
+</div>
+<div class="bn">
+  <button class="bi" onclick="goPage('pg-h')"><span class="bi-i">&#127968;</span><span class="bi-l">Accueil</span></button>
+  <button class="bi" onclick="goPage('pg-f')"><span class="bi-i">&#127916;</span><span class="bi-l">Profils</span></button>
+  <button class="bi" onclick="goPage('pg-msg')"><span class="bi-i">&#128172;</span><span class="bi-l">Messages</span></button>
+  <button class="bi" onclick="goPage('pg-hearts')"><span class="bi-i">&#10084;&#65039;</span><span class="bi-l">C&#339;urs</span></button>
+  <button class="bi on"><span class="bi-i">&#128100;</span><span class="bi-l">Profil</span></button>
+</div>
+</div>
+
+<!-- MATCH -->
+<div class="match-sc" id="MATCH">
+  <div style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:7px">LoveSiam</div>
+  <div style="font-family:var(--serif);font-size:1.9rem;color:#fff;font-weight:600;margin-bottom:4px">C'est un Match !</div>
+  <div style="display:flex;gap:12px;justify-content:center;align-items:center;margin:16px 0;position:relative">
+    <div style="width:88px;height:108px;border-radius:13px;background:linear-gradient(135deg,#9B6040,#6B4020);display:flex;align-items:center;justify-content:center;font-size:2.8rem;transform:rotate(-5deg);box-shadow:0 8px 22px rgba(0,0,0,.4)">&#128104;</div>
+    <div style="position:absolute;background:#fff;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 4px 12px rgba(0,0,0,.4);z-index:1">&#10084;&#65039;</div>
+    <div id="match-av" style="width:88px;height:108px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;transform:rotate(5deg);box-shadow:0 8px 22px rgba(0,0,0,.4)">&#128105;</div>
+  </div>
+  <div id="match-sub" style="font-size:.88rem;color:rgba(255,255,255,.7);margin-bottom:14px"></div>
+  <input id="match-inp" type="text" style="width:100%;max-width:300px;padding:11px;border-radius:11px;border:none;font-size:.88rem;background:rgba(255,255,255,.15);color:#fff;outline:none;margin-bottom:9px;font-family:var(--sans)" placeholder="Votre premier message...">
+  <button onclick="closeMatch()" style="width:100%;max-width:300px;padding:11px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:11px;font-size:.88rem;font-weight:700;cursor:pointer;margin-bottom:9px">Envoyer</button>
+  <button onclick="closeMatch()" style="color:rgba(255,255,255,.4);background:none;border:none;font-size:.84rem;cursor:pointer;text-decoration:underline">Fermer</button>
+</div>
+
+<!-- MODALS -->
+<div class="modal-bg" id="m-infos" onclick="if(event.target===this)closeModal('m-infos')">
+<div class="modal"><div class="modal-handle"></div><div class="modal-title">Modifier mes informations</div>
+<div class="modal-sec">
+  <div class="modal-field"><label class="modal-lbl">Pr&eacute;nom</label><input class="modal-input" type="text" value="Patrick"></div>
+  <div class="modal-field"><label class="modal-lbl">&Acirc;ge</label><input class="modal-input" type="number" value="45"></div>
+  <div class="modal-field"><label class="modal-lbl">Ville</label><input class="modal-input" type="text" value="Paris"></div>
+  <div class="modal-field"><label class="modal-lbl">Je recherche</label><select class="modal-input"><option>Mariage</option><option>Relation s&eacute;rieuse</option><option>Se faire des amis</option></select></div>
+</div>
+<div class="modal-footer"><button class="btn-cancel" onclick="closeModal('m-infos')">Annuler</button><button class="btn-save" onclick="saveModal('m-infos','Informations mises a jour !')">Enregistrer</button></div>
+</div></div>
+
+<div class="modal-bg" id="m-photos" onclick="if(event.target===this)closeModal('m-photos')">
+<div class="modal"><div class="modal-handle"></div><div class="modal-title">Mes photos</div>
+<div class="modal-sec"><div class="upload-zone" onclick="toast('Selectionnez une photo...')"><div style="font-size:1.8rem;margin-bottom:5px">&#128247;</div><div style="font-size:.86rem;color:var(--tm);font-weight:500">Photo principale</div><div style="font-size:.72rem;color:var(--td);margin-top:2px">JPG, PNG · Max 5 Mo</div></div></div>
+<div class="modal-footer"><button class="btn-cancel" onclick="closeModal('m-photos')">Fermer</button><button class="btn-save" onclick="saveModal('m-photos','Photos mises a jour !')">Enregistrer</button></div>
+</div></div>
+
+<div class="modal-bg" id="m-video" onclick="if(event.target===this)closeModal('m-video')">
+<div class="modal"><div class="modal-handle"></div><div class="modal-title">Ma vid&eacute;o</div>
+<div class="modal-sec"><div class="upload-zone" onclick="toast('Selectionnez une video...')"><div style="font-size:1.8rem;margin-bottom:5px">&#127916;</div><div style="font-size:.86rem;color:var(--tm);font-weight:500">Importer depuis mon telephone</div><div style="font-size:.72rem;color:var(--td);margin-top:2px">MP4, MOV · Max 60 secondes</div></div></div>
+<div class="modal-footer"><button class="btn-cancel" onclick="closeModal('m-video')">Annuler</button><button class="btn-save" onclick="saveModal('m-video','Video mise a jour !')">Enregistrer</button></div>
+</div></div>
+
+<div class="modal-bg" id="m-logout" onclick="if(event.target===this)closeModal('m-logout')">
+<div class="modal"><div class="modal-handle"></div><div style="text-align:center;padding:22px 18px"><div style="font-size:2.4rem;margin-bottom:9px">&#128075;</div><div style="font-family:var(--serif);font-size:1.1rem;color:var(--nv)">Se d&eacute;connecter ?</div></div>
+<div class="modal-footer"><button class="btn-cancel" onclick="closeModal('m-logout')">Annuler</button><button class="btn-save" onclick="saveModal('m-logout','A bientot !')">D&eacute;connecter</button></div>
+</div></div>
+
+<div class="modal-bg" id="m-delete" onclick="if(event.target===this)closeModal('m-delete')">
+<div class="modal"><div class="modal-handle"></div><div style="text-align:center;padding:22px 18px"><div style="font-size:2.4rem;margin-bottom:9px">&#9888;&#65039;</div><div style="font-family:var(--serif);font-size:1.1rem;color:var(--rd)">Supprimer mon compte</div><div style="font-size:.86rem;color:var(--tm);line-height:1.6;margin-top:7px">Cette action est <strong>irreversible</strong>.</div></div>
+<div class="modal-footer"><button class="btn-cancel" onclick="closeModal('m-delete')">Annuler</button><button class="btn-danger" onclick="saveModal('m-delete','Compte supprime.')">Supprimer</button></div>
+</div></div>
+
+<div class="modal-bg" id="m-filters" onclick="if(event.target===this)closeModal('m-filters')">
+<div class="modal"><div class="modal-handle"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px 3px">
+  <div style="font-family:var(--serif);font-size:1.1rem;color:var(--nv)">Filtres</div>
+  <button onclick="closeModal('m-filters')" style="background:none;border:none;font-size:.82rem;color:var(--g);font-weight:600;cursor:pointer;font-family:var(--sans)">Fermer</button>
+</div>
+<div class="modal-sec"><div class="modal-sec-t">Niveau francais</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:3px">
+    <button class="fchip on" onclick="selectChip(this,this.parentElement)">Tous</button>
+    <button class="fchip" onclick="selectChip(this,this.parentElement)">Un peu</button>
+    <button class="fchip" onclick="selectChip(this,this.parentElement)">Moyen</button>
+    <button class="fchip" onclick="selectChip(this,this.parentElement)">Excellent</button>
+  </div>
+</div>
+<div class="modal-sec"><div class="modal-sec-t">Je recherche</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:3px">
+    <button class="fchip on" onclick="selectChip(this,this.parentElement)">Tous</button>
+    <button class="fchip" onclick="selectChip(this,this.parentElement)">Mariage</button>
+    <button class="fchip" onclick="selectChip(this,this.parentElement)">Relation serieuse</button>
+    <button class="fchip" onclick="selectChip(this,this.parentElement)">Se faire des amis</button>
+  </div>
+</div>
+<div class="modal-footer"><button class="btn-cancel" onclick="closeModal('m-filters')">Annuler</button><button class="btn-save" onclick="applyFilters()">Appliquer</button></div>
+</div></div>
+
+<script>
+var g=function(id){return document.getElementById(id)};
+var LANG="fr";
+var NOW=Date.now(),DAY=86400000;
+var PROFILES=[
+  {id:1,name:"Ning",age:26,ville:"Bangkok",taille:"162 cm",poids:"52 kg",fam:"Celibataire sans enfant",looking:"Relation serieuse",en:"Un peu",online:true,joinedAt:0,likedMe:true,bio:"Enseignante de yoga a Bangkok. Je cherche un homme sincere et attentionne.",emoji:"&#128105;",bg:"linear-gradient(160deg,#5C2A0A,#2E1505)"},
+  {id:2,name:"Pim",age:24,ville:"Phuket",taille:"158 cm",poids:"48 kg",fam:"Celibataire sans enfant",looking:"Relation serieuse",en:"Excellent",online:true,joinedAt:0,likedMe:false,bio:"Guide touristique a Phuket. Passionnee de plongee et voyages.",emoji:"&#128105;",bg:"linear-gradient(160deg,#2A0A5C,#150530)"},
+  {id:3,name:"Noi",age:29,ville:"Chiang Mai",taille:"160 cm",poids:"50 kg",fam:"Celibataire sans enfant",looking:"Mariage",en:"Moyen",online:false,joinedAt:0,likedMe:true,bio:"Artiste bijou a Chiang Mai. La famille est ma valeur essentielle.",emoji:"&#128105;",bg:"linear-gradient(160deg,#0A2A3C,#051520)"},
+  {id:4,name:"Fah",age:34,ville:"Bangkok",taille:"165 cm",poids:"55 kg",fam:"Celibataire avec enfant",looking:"Mariage",en:"Moyen",online:true,joinedAt:0,likedMe:true,bio:"Infirmiere a Bangkok. Une fille de 8 ans. Je cherche un homme serieux.",emoji:"&#128105;",bg:"linear-gradient(160deg,#0A3C1A,#051508)"},
+  {id:5,name:"Wan",age:27,ville:"Pattaya",taille:"157 cm",poids:"47 kg",fam:"Celibataire sans enfant",looking:"Relation serieuse",en:"Excellent",online:false,joinedAt:2*3600000,likedMe:false,bio:"Professeure d'anglais a Pattaya. Je reve de visiter la France.",emoji:"&#128105;",bg:"linear-gradient(160deg,#3C0A1A,#200508)"}
+];
+PROFILES[0].joinedAt=NOW-5*DAY;
+PROFILES[1].joinedAt=NOW-2*3600000;
+PROFILES[2].joinedAt=NOW-12*3600000;
+PROFILES[3].joinedAt=NOW-30*DAY;
+PROFILES[4].joinedAt=NOW-60*DAY;
+PROFILES.forEach(function(p){p.isNew=(NOW-p.joinedAt)<DAY;});
+
+var MSGS=[
+  {id:1,pid:0,name:"Ning",emoji:"&#128105;",bg:"linear-gradient(135deg,#E8D5C4,#C4A080)",time:"5min",prev:"Bonjour, ravie de vous rencontrer !",unread:1,online:true},
+  {id:2,pid:1,name:"Pim",emoji:"&#128105;",bg:"linear-gradient(135deg,#D4C4E8,#9080B8)",time:"17h09",prev:"Comment allez-vous ?",unread:1,online:true},
+  {id:3,pid:2,name:"Noi",emoji:"&#128105;",bg:"linear-gradient(135deg,#C4D8E8,#7090A8)",time:"16h58",prev:"Bonjour, je suis Noi.",unread:1,online:false},
+  {id:4,pid:3,name:"Fah",emoji:"&#128105;",bg:"linear-gradient(135deg,#C4E8D8,#60A880)",time:"14h42",prev:"Bonsoir !",unread:0,online:true}
+];
+var likedSet=new Set(),matchSet=new Set(),convData={},currentConvP=null,currentPP=null,matchProfile=null;
+var gTab="all",mTab="unread",swIdx=0,swAnim=false,swDx=0,swStartX=0,swDrag=false;
+var FILT={anglais:[]};
+
+function goPage(id){
+  document.querySelectorAll(".pg").forEach(function(el){el.classList.remove("on");});
+  var pp=g("PP");if(pp)pp.classList.remove("on");
+  var ms=g("MATCH");if(ms)ms.classList.remove("on");
+  var el=g(id);if(el)el.classList.add("on");
+  var map={"pg-h":0,"pg-f":1,"pg-msg":2,"pg-hearts":3,"pg-me":4};
+  var idx=map[id];
+  document.querySelectorAll(".bi").forEach(function(b,i){b.classList.toggle("on",idx!==undefined&&i%5===idx);});
+  if(id==="pg-f"){renderGrid(gTab);}
+  if(id==="pg-swipe"){renderSwipe();}
+  if(id==="pg-msg")renderMsgList(mTab);
+  if(id==="pg-inscription"){QS=0;QA={};QD=false;setTimeout(bQ,50);}
+  if(window.innerWidth>=769){
+    setTimeout(function(){
+      document.body.style.cssText="overflow:auto;position:static;height:auto;background:#F0EDE8";
+      if(id==="pg-f"){
+        var pf=g("pg-f");
+        if(pf)pf.style.cssText="position:fixed;inset:0;display:flex;flex-direction:column;background:var(--b2)";
+      }
+      window.scrollTo(0,0);
+    },10);
+  }
+}
+
+function setLang(lang){
+  LANG=lang;
+  document.querySelectorAll(".lbtn").forEach(function(b){
+    b.classList.toggle("on",(lang==="fr"&&b.innerHTML.includes("127467"))||(lang==="th"&&b.innerHTML.includes("127481")));
+  });
+}
+
+function sinceLabel(p){
+  var ms=NOW-p.joinedAt;
+  if(ms<DAY)return "Nouveau aujourd'hui";
+  var m=Math.max(1,Math.round(ms/DAY/30));
+  return m+" mois";
+}
+
+function getFilteredProfiles(){
+  return PROFILES.filter(function(p){
+    if(FILT.anglais.length>0&&!FILT.anglais.includes(p.en))return false;
+    return true;
+  });
+}
+
+function renderDots(){
+  var el=g("SW_DOTS");if(!el)return;
+  var fp=getFilteredProfiles();
+  el.innerHTML=fp.map(function(p,i){return"<div class=\"sdot"+(i===swIdx?" on":"")+"\"></div>";}).join("");
+}
+
+function enLabel(en){
+  if(en==="Excellent")return "&#127468;&#127463; Excellent";
+  if(en==="Moyen")return "&#127468;&#127463; Moyen";
+  if(en==="Un peu")return "&#127468;&#127463; Un peu";
+  return en;
+}
+function renderSwipe(){
+  var wrap=g("SW_WRAP"),acts=g("SW_ACTS");
+  if(!wrap)return;
+  wrap.innerHTML="";
+  var FP=getFilteredProfiles();
+  renderDots();
+  if(swIdx>=FP.length){
+    if(acts)acts.style.display="none";
+    wrap.innerHTML="<div style=\"display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;text-align:center\"><div style=\"font-size:2.4rem;margin-bottom:10px\">&#127881;</div><div style=\"font-size:1.1rem;color:var(--nv);margin-bottom:14px;font-weight:600\">Tous les profils vus !</div><button onclick=\"swIdx=0;likedSet.clear();updateHeartsUI();renderSwipe()\" style=\"padding:10px 22px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:20px;font-size:.86rem;font-weight:600;cursor:pointer\">Recommencer</button></div>";
+    return;
+  }
+  if(acts)acts.style.display="flex";
+  var max=Math.min(swIdx+2,FP.length-1);
+  for(var i=max;i>=swIdx;i--){
+    var p=FP[i],isTop=(i===swIdx),sp=i-swIdx;
+    var card=document.createElement("div");
+    card.className="swc";card.id="swc"+i;
+    card.style.transform="scale("+(1-sp*0.04)+") translateY("+(sp*8)+"px)";
+    card.style.zIndex=100-i;
+    if(!isTop)card.style.transition="transform .3s ease";
+    // Badges simples : En ligne + Nouveau + anglais
+    var badges="";
+    if(p.online)badges+="<span style=\"background:rgba(39,174,96,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px\">&#9679; En ligne</span>";
+    if(p.isNew)badges+="<span style=\"background:rgba(196,150,42,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px\">&#10024; Nouveau</span>";
+    badges+="<span style=\"background:rgba(0,0,0,.45);color:#fff;font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:12px\">"+enLabel(p.en)+"</span>";
+    // Carte épurée : photo + info minimale
+    card.innerHTML="<div class=\"swc-photo\" style=\"background:"+p.bg+";height:100%\"><span style=\"font-size:80px\">"+p.emoji+"</span>"
+      +"<div class=\"sw-badge-like\" id=\"sl"+i+"\">LIKE</div>"
+      +"<div class=\"sw-badge-nope\" id=\"sn"+i+"\">PASSE</div>"
+      +"<div style=\"position:absolute;bottom:0;left:0;right:0;padding:12px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 100%);\">"
+      +"<div style=\"font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:2px\">"+p.name+", "+p.age+"</div>"
+      +"<div style=\"font-size:.8rem;color:rgba(255,255,255,.8);margin-bottom:7px\">"+p.ville+" &middot; "+p.taille+" &middot; "+p.poids+"</div>"
+      +"<div>"+badges+"</div>"
+      +"</div></div>";
+    if(isTop){(function(card,idx){
+      var bl=g("sl"+idx),bn_=g("sn"+idx);
+      function fs(x){if(swAnim)return;swDrag=true;swStartX=x;swDx=0;card.style.transition="none";}
+      function fm(x){if(!swDrag)return;swDx=x-swStartX;card.style.transform="translateX("+swDx+"px) rotate("+(swDx*0.06)+"deg)";var pct=Math.min(Math.abs(swDx)/90,1);if(bl)bl.style.opacity=swDx>0?pct:0;if(bn_)bn_.style.opacity=swDx<0?pct:0;}
+      function fe(){if(!swDrag)return;swDrag=false;if(swDx>80)doSwipe("right");else if(swDx<-80)doSwipe("left");else{card.style.transition="transform .4s cubic-bezier(.175,.885,.32,1.275)";card.style.transform="scale(1) translateY(0)";if(bl)bl.style.opacity=0;if(bn_)bn_.style.opacity=0;}}
+      card.addEventListener("touchstart",function(e){fs(e.touches[0].clientX);},{passive:true});
+      card.addEventListener("touchmove",function(e){e.preventDefault();fm(e.touches[0].clientX);},{passive:false});
+      card.addEventListener("touchend",fe);
+      card.addEventListener("mousedown",function(e){fs(e.clientX);e.preventDefault();});
+      document.addEventListener("mousemove",function(e){if(swDrag)fm(e.clientX);});
+      document.addEventListener("mouseup",fe);
+      card.addEventListener("click",function(){if(Math.abs(swDx)<5)openProfile(FP[swIdx]);});
+    })(card,i);}
+    wrap.appendChild(card);
+  }
+}
+
+function doSwipe(dir){
+  if(swAnim||swIdx>=PROFILES.length)return;swAnim=true;
+  var FP=getFilteredProfiles();var p=FP[swIdx],card=g("swc"+swIdx);
+  if(!p){swIdx=0;renderSwipe();return;}
+  if(card){card.style.transition="transform .36s ease,opacity .36s ease";card.style.transform=(dir==="right"?"translateX(130vw) rotate(25deg)":"translateX(-130vw) rotate(-25deg)");card.style.opacity="0";}
+  if(dir==="right"){
+    likedSet.add(p.id);updateHeartsUI();
+    if(p.likedMe&&!matchSet.has(p.id)){matchSet.add(p.id);addMatch(p);setTimeout(function(){showMatch(p);},400);return;}
+    toast("&#10084;&#65039; "+p.name+" ajoute aux coups de coeur !");
+  } else toast("Passe");
+  setTimeout(function(){swIdx++;swAnim=false;renderSwipe();},380);
+}
+
+function renderGrid(tab){
+  gTab=tab||"all";var grid=g("GRID");if(!grid)return;
+  var FP=getFilteredProfiles();
+  var ea=g("g-all");if(ea)ea.textContent=FP.length;
+  var en=g("g-new");if(en)en.textContent=FP.filter(function(p){return p.isNew;}).length;
+  var el=g("g-liked");if(el)el.textContent=FP.filter(function(p){return p.likedMe;}).length;
+  var list=FP.filter(function(p){if(gTab==="new")return p.isNew;if(gTab==="liked")return p.likedMe;return true;});
+  grid.innerHTML="";
+  list.forEach(function(p){
+    var liked=likedSet.has(p.id),gc=document.createElement("div");gc.className="gc";
+    gc.innerHTML="<div class=\"gc-bg\" style=\"background:"+p.bg+"\"><span>"+p.emoji+"</span></div><div class=\"gc-grd\"></div>"+(p.isNew?"<div class=\"gc-new\">NEW</div>":"")+"<div class=\"gc-info\">"+(p.online?"<span class=\"gc-dot\"></span>":"")+"<div class=\"gc-name\">"+p.name+", "+p.age+"</div><div class=\"gc-sub\">"+p.ville+" &middot; "+p.en+"</div></div><div class=\"gc-act\"><button class=\"gc-hbtn"+(liked?" liked":"")+"\">"+( liked?"&#10084;":"&#9825;")+"</button></div>";
+    gc.querySelector(".gc-hbtn").onclick=function(e){
+      e.stopPropagation();
+      if(likedSet.has(p.id)){likedSet.delete(p.id);this.innerHTML="&#9825;";this.classList.remove("liked");updateHeartsUI();}
+      else{likedSet.add(p.id);this.innerHTML="&#10084;";this.classList.add("liked");updateHeartsUI();if(p.likedMe&&!matchSet.has(p.id)){matchSet.add(p.id);addMatch(p);setTimeout(function(){showMatch(p);},300);}else toast("&#10084;&#65039; "+p.name);}
+    };
+    gc.onclick=function(){openProfile(p);};
+    grid.appendChild(gc);
+  });
+}
+
+function setGTab(tab,btn){gTab=tab;document.querySelectorAll(".gtb").forEach(function(b){b.classList.remove("on");});btn.classList.add("on");renderGrid(tab);}
+function setView(v){
+  g("SWIPE_VIEW").style.display=v==="swipe"?"flex":"none";
+  g("GRID_VIEW").style.display=v==="grid"?"block":"none";
+  g("VB_SW").classList.toggle("on",v==="swipe");
+  g("VB_GR").classList.toggle("on",v==="grid");
+}
+
+function updateHeartsUI(){
+  var n=likedSet.size;
+  document.querySelectorAll("[id^=nb-]").forEach(function(b){b.textContent=n;b.style.display=n>0?"flex":"none";});
+  var e=g("stat-jaime");if(e)e.textContent=n;
+  renderJaimeTab();
+}
+
+function renderJaimeTab(){
+  var el=g("h-jaime");if(!el)return;el.innerHTML="";
+  PROFILES.filter(function(p){return likedSet.has(p.id);}).forEach(function(p){
+    var row=document.createElement("div");row.className="p-row";
+    row.innerHTML="<div class=\"p-av\" style=\"background:"+p.bg+"\"><span>"+p.emoji+"</span></div><div style=\"flex:1\"><div style=\"font-size:.86rem;font-weight:600;color:var(--nv)\">"+p.name+", "+p.age+"</div><div style=\"font-size:.74rem;color:var(--td)\">&#128205; "+p.ville+"</div></div><span>&#10084;&#65039;</span>";
+    row.onclick=function(){openProfile(p);};el.appendChild(row);
+  });
+  var cnt=g("h-jaime-cnt");if(cnt)cnt.textContent=likedSet.size;
+}
+
+function addMatch(p){
+  var mc=g("h-matchs-cnt");if(mc)mc.textContent=matchSet.size;
+  var el=g("h-matchs");if(!el)return;
+  var pidx=PROFILES.indexOf(p);
+  var row=document.createElement("div");row.className="p-row match-row";
+  row.innerHTML="<div class=\"p-av\" style=\"background:"+p.bg+"\"><span>"+p.emoji+"</span></div><div style=\"flex:1\"><div style=\"font-size:.86rem;font-weight:600;color:var(--nv)\">"+p.name+", "+p.age+"</div><div style=\"font-size:.74rem;color:var(--rd)\">&#128149; Match &middot; "+p.ville+"</div></div><button onclick=\"event.stopPropagation();openConv("+pidx+")\" style=\"padding:5px 11px;background:var(--nv);color:#fff;border:none;border-radius:14px;font-size:.74rem;cursor:pointer;font-family:var(--sans)\">&#128172;</button>";
+  row.onclick=function(){openProfile(p);};el.appendChild(row);
+  var sm=g("stat-matchs");if(sm)sm.textContent=matchSet.size;
+}
+
+function setHTab(id,btn){
+  document.querySelectorAll(".htb").forEach(function(b){b.classList.remove("on");});btn.classList.add("on");
+  ["h-jaime","h-maiment","h-matchs"].forEach(function(hid){var he=g(hid);if(he)he.style.display=hid===id?"block":"none";});
+}
+
+function openProfile(p){
+  if(!p)return;currentPP=p;
+  var strip=g("pp-photos"),dots=g("pp-dots");
+  if(strip){
+    var bgs=[p.bg,"linear-gradient(135deg,#C8B8A2,#A09070)","linear-gradient(135deg,#A8C8D0,#6898A0)"];
+    strip.innerHTML=bgs.map(function(bg,i){return"<div class=\"pp-photo-slide\" style=\"background:"+bg+"\">"+p.emoji+(i===0&&p.online?"<div class=\"pp-online\">&#9679; En ligne</div>":"")+"<div class=\"pp-photo-grd\"></div></div>";}).join("");
+    if(dots){
+      dots.innerHTML=bgs.map(function(c,i){return"<div class=\"pp-pdot"+(i===0?" on":"")+"\"></div>";}).join("");
+      strip.onscroll=function(){var idx=Math.round(strip.scrollLeft/strip.offsetWidth);dots.querySelectorAll(".pp-pdot").forEach(function(d,i){d.classList.toggle("on",i===idx);});};
+    }
+  }
+  g("pp-name").textContent=p.name;
+  g("pp-meta").innerHTML=p.age+" ans &middot; &#128205; "+p.ville+" &middot; "+p.taille+" &middot; "+p.poids;
+  var chips=g("pp-chips");chips.innerHTML="";
+  [[p.online?"&#9679; En ligne":null,"gn"],[p.isNew?"&#10024; Nouveau":null,"gl"],[p.likedMe?"&#10084;&#65039; Vous aime":null,"rd"],["&#127468;&#127463; "+p.en,""],[p.looking,""]].forEach(function(c){
+    if(!c[0])return;var s=document.createElement("span");s.className="pp-chip"+(c[1]?" "+c[1]:"");s.innerHTML=c[0];chips.appendChild(s);
+  });
+  g("pp-bio").textContent=p.bio;
+  g("pp-info").innerHTML=[["Situation",p.fam.split(",")[0]],["Recherche",p.looking],["Anglais",p.en],["Membre depuis",sinceLabel(p)]].map(function(item){return"<div class=\"pp-info-item\"><span class=\"pp-info-lbl\">"+item[0]+"</span><div class=\"pp-info-val\">"+item[1]+"</div></div>";}).join("");
+  g("pp-back").onclick=function(){g("PP").classList.remove("on");};
+  g("PP").classList.add("on");
+}
+
+function passFromProfile(){g("PP").classList.remove("on");toast("Passe");}
+function likeFromProfileSwipe(){
+  if(!currentPP)return;var p=currentPP;
+  g("PP").classList.remove("on");likedSet.add(p.id);updateHeartsUI();
+  if(p.likedMe&&!matchSet.has(p.id)){matchSet.add(p.id);addMatch(p);setTimeout(function(){showMatch(p);},200);}
+  else{toast("&#10084;&#65039; "+p.name);doSwipe("right");}
+}
+function likeFromProfile(){
+  if(!currentPP)return;var p=currentPP;likedSet.add(p.id);updateHeartsUI();
+  if(p.likedMe&&!matchSet.has(p.id)){matchSet.add(p.id);addMatch(p);g("PP").classList.remove("on");setTimeout(function(){showMatch(p);},200);}
+  else toast("&#10084;&#65039; "+p.name);
+}
+function msgFromProfile(){
+  if(!currentPP)return;
+  if(!matchSet.has(currentPP.id)){toast("Matchez d'abord !");return;}
+  g("PP").classList.remove("on");openConv(PROFILES.indexOf(currentPP));
+}
+function likeFromMaiment(pidx,btn){
+  var p=PROFILES[pidx];if(!p)return;
+  likedSet.add(p.id);updateHeartsUI();
+  if(!matchSet.has(p.id)){matchSet.add(p.id);addMatch(p);var row=btn?btn.closest(".p-row"):null;if(row&&row.parentElement)row.parentElement.removeChild(row);setTimeout(function(){showMatch(p);},200);}
+  else toast("Deja en match avec "+p.name);
+}
+
+function renderMsgList(tab){
+  mTab=tab||"unread";var el=g("MSG_LIST");if(!el)return;
+  var list=mTab==="unread"?MSGS.filter(function(m){return m.unread>0&&!m.sentByMe;}):MSGS.slice();
+  var ut=MSGS.filter(function(m){return m.unread>0&&!m.sentByMe;}).length;
+  var uc=g("unread-cnt");if(uc)uc.textContent=ut||"";
+  document.querySelectorAll("[id^=nb-msg]").forEach(function(b){b.textContent=ut;b.style.display=ut>0?"flex":"none";});
+  el.innerHTML="";
+  if(list.length===0){el.innerHTML="<div style=\"text-align:center;padding:30px;color:var(--td);font-size:.86rem\">Aucun message</div>";return;}
+  list.forEach(function(m){
+    var isU=m.unread>0&&!m.sentByMe;
+    var row=document.createElement("div");row.className="msg-row";
+    row.innerHTML="<div class=\"msg-av\" style=\"background:"+m.bg+"\"><span>"+m.emoji+"</span>"+(m.online?"<div class=\"msg-av-dot\"></div>":"")+"</div><div class=\"msg-body\"><div class=\"msg-name\">"+m.name+"</div><div class=\"msg-prev"+(isU?" unread":"")+"\">"+m.prev+"</div></div><div class=\"msg-right\"><div class=\"msg-time\">"+m.time+"</div><button onclick=\"event.stopPropagation();deleteMsgById("+m.id+")\" style=\"background:none;border:none;color:#C8C0B8;font-size:.9rem;cursor:pointer;padding:0;margin-top:2px\">&#128465;</button></div>";
+    row.onclick=function(){if(m.unread&&!m.sentByMe){m.unread=0;if(mTab==="unread")renderMsgList(mTab);}openConv(m.pid);};
+    el.appendChild(row);
+  });
+}
+
+function deleteMsgById(id){MSGS=MSGS.filter(function(m){return m.id!==id;});renderMsgList(mTab);toast("Supprime");}
+function setMTab(tab,btn){mTab=tab;document.querySelectorAll(".mtb").forEach(function(b){b.classList.remove("on");});if(btn)btn.classList.add("on");renderMsgList(tab);}
+
+function openConv(pidx){
+  var p=PROFILES[pidx];if(!p)return;currentConvP=p;
+  g("conv-av").innerHTML=p.emoji;g("conv-av").style.background=p.bg;
+  g("conv-name").textContent=p.name+", "+p.age;
+  g("conv-status").innerHTML=p.online?"<span style=\"color:var(--gn)\">&#9679;</span> En ligne":"";
+  if(!convData[p.id])convData[p.id]=[{me:false,text:"Bonjour ! Ravie de vous rencontrer.",time:"16h30"}];
+  g("conv-inp").setAttribute("data-pid",p.id);
+  renderConv(p.id);goPage("pg-conv");
+}
+function renderConv(pid){
+  var el=g("conv-body");if(!el)return;el.innerHTML="";
+  (convData[pid]||[]).forEach(function(msg){
+    var w2=document.createElement("div");w2.style.cssText="display:flex;flex-direction:column;align-items:"+(msg.me?"flex-end":"flex-start");
+    var b=document.createElement("div");b.className="bbl "+(msg.me?"me":"them");b.textContent=msg.text;
+    var ti=document.createElement("div");ti.className="bbl-time";ti.textContent=msg.time;
+    w2.appendChild(b);w2.appendChild(ti);el.appendChild(w2);
+  });
+  el.scrollTop=el.scrollHeight;
+}
+function sendMsg(){
+  var inp=g("conv-inp");var pid=parseInt(inp.getAttribute("data-pid")||"0");var text=inp.value.trim();if(!text)return;
+  if(!convData[pid])convData[pid]=[];
+  var now=new Date();var ts=now.getHours()+"h"+String(now.getMinutes()).padStart(2,"0");
+  convData[pid].push({me:true,text:text,time:ts});inp.value="";
+  var mo=MSGS.find(function(m){return m.pid===pid;});
+  if(mo){mo.prev="Vous : "+text;mo.time=ts;mo.sentByMe=true;mo.unread=1;}
+  else if(PROFILES[pid]){var p=PROFILES[pid];MSGS.unshift({id:Date.now(),pid:pid,name:p.name,emoji:p.emoji,bg:p.bg,time:ts,prev:"Vous : "+text,unread:1,sentByMe:true,online:p.online});}
+  renderConv(pid);
+}
+
+function showMatch(p){
+  matchProfile=p;g("match-av").innerHTML=p.emoji;g("match-av").style.background=p.bg;
+  g("match-sub").textContent=p.name+" vous apprecie aussi !";
+  g("match-inp").value="";g("MATCH").classList.add("on");
+}
+function closeMatch(){
+  g("MATCH").classList.remove("on");swIdx++;swAnim=false;renderSwipe();
+  var mt=g("match-inp").value.trim();
+  if(mt&&matchProfile){
+    var pidx=PROFILES.indexOf(matchProfile);
+    if(!convData[matchProfile.id])convData[matchProfile.id]=[];
+    var now=new Date();var ts=now.getHours()+"h"+String(now.getMinutes()).padStart(2,"0");
+    convData[matchProfile.id].push({me:true,text:mt,time:ts});
+    var mo=MSGS.find(function(m){return m.pid===pidx;});
+    if(mo){mo.prev="Vous : "+mt;mo.time=ts;mo.sentByMe=true;mo.unread=1;}
+    else if(pidx>=0){var p=PROFILES[pidx];MSGS.unshift({id:Date.now(),pid:pidx,name:p.name,emoji:p.emoji,bg:p.bg,time:ts,prev:"Vous : "+mt,unread:1,sentByMe:true,online:p.online});}
+    if(pidx>=0)openConv(pidx);
+    else toast("&#128149; Match avec "+matchProfile.name+" !");
+  } else toast("&#128149; Match enregistre !");
+}
+
+function openModal(id){var el=g(id);if(el)el.classList.add("on");}
+function closeModal(id){var el=g(id);if(el)el.classList.remove("on");}
+function saveModal(id,msg){closeModal(id);toast(msg);}
+function selectChip(btn,container){container.querySelectorAll(".fchip").forEach(function(c){c.classList.remove("on");});btn.classList.add("on");}
+function applyFilters(){
+  var sel=[];
+  document.querySelectorAll("#m-filters .fchip").forEach(function(c){if(c.classList.contains("on")&&["Un peu","Moyen","Excellent"].includes(c.textContent.trim()))sel.push(c.textContent.trim());});
+  FILT.anglais=sel;closeModal("m-filters");renderSwipe();renderGrid(gTab);toast("Filtres appliques !");
+}
+function toast(msg){var old=document.querySelector(".toast");if(old)old.remove();var el=document.createElement("div");el.className="toast";el.innerHTML=msg;document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.remove();},2500);}
+
+// Questionnaire
+var QS=0,QA={},QD=false;var QT=8;
+function bQ(){
+  var pb=g("QP");if(pb)pb.style.width=((QS+1)/QT*100)+"%";
+  if(QD){g("QB").innerHTML="<div class=\"su\"><i>&#127881;</i><h3>Inscription envoyee !</h3><p>Votre dossier a bien ete recu. Reponse sous 48h.</p><button class=\"qx qf\" onclick=\"goPage('pg-h')\">Retour</button></div>";if(pb)pb.style.width="100%";return;}
+  var h="";
+  if(QS===0){h="<div class=\"qe\">Etape 1/"+QT+"</div><div class=\"qt\">Je suis <em>un...</em></div><div class=\"cs2\"><div class=\"cd "+(QA.g==="h"?"sl":"")+"\" data-cd=\"g:h\"><div class=\"ci2\">&#128104;</div><div><div class=\"cl\">Homme francais</div><div class=\"cs3\">Je recherche une femme thai sincere</div></div><div class=\"ck\">"+(QA.g==="h"?"&#10003;":"")+"</div></div><div class=\"cd "+(QA.g==="f"?"sl":"")+"\" data-cd=\"g:f\"><div class=\"ci2\">&#128105;</div><div><div class=\"cl\">Femme thailandaise</div><div class=\"cs3\">Je recherche un homme francais sincere</div></div><div class=\"ck\">"+(QA.g==="f"?"&#10003;":"")+"</div></div></div><div class=\"qn\"><button class=\"qx qf\" id=\"QNX\">Continuer &rarr;</button></div>";}
+  else if(QS===1){h="<div class=\"qe\">Etape 2/"+QT+"</div><div class=\"qt\">Votre <em>identite</em></div><div class=\"fg\"><label class=\"fl\">Prenom</label><input class=\"fi\" id=\"QN\" type=\"text\" value=\""+(QA.name||"")+"\"></div><div class=\"fg\"><label class=\"fl\">Age</label><input class=\"fi\" id=\"QAG\" type=\"number\" min=\"18\" max=\"75\" value=\""+(QA.age||"")+"\"></div><div class=\"fg\"><label class=\"fl\">Ville</label><input class=\"fi\" id=\"QV2\" type=\"text\" value=\""+(QA.ville||"")+"\"></div><div class=\"qn\"><button class=\"qb\" id=\"QBK\">&larr; Retour</button><button class=\"qx\" id=\"QNX\">Continuer &rarr;</button></div>";}
+  else if(QS<QT-1){var labels=["Description","Age souhaite","Recherche","Situation","Video","Contact"];h="<div class=\"qe\">Etape "+(QS+1)+"/"+QT+"</div><div class=\"qt\">"+(labels[QS-2]||"Suite")+"</div><div class=\"qn\"><button class=\"qb\" id=\"QBK\">&larr; Retour</button><button class=\"qx\" id=\"QNX\">Continuer &rarr;</button></div>";}
+  else{h="<div class=\"qe\">Etape "+QT+"/"+QT+"</div><div class=\"qt\">Votre <em>contact</em></div><div class=\"fg\"><label class=\"fl\">Email *</label><input class=\"fi\" id=\"QE\" type=\"email\" placeholder=\"votre@email.com\"></div><div class=\"fg\"><label class=\"fl\">WhatsApp (optionnel)</label><input class=\"fi\" id=\"QWH\" type=\"tel\" placeholder=\"+33 6 xx xx xx xx\"></div><div class=\"qn\"><button class=\"qb\" id=\"QBK\">&larr; Retour</button><button class=\"qx\" id=\"QSND\">Envoyer &#10022;</button></div>";}
+  g("QB").innerHTML=h;
+  if(pb)pb.style.width=((QS+1)/QT*100)+"%";
+  if(g("QNX"))g("QNX").onclick=function(){
+    if(QS===0){if(!QA.g){toast("Choisissez votre profil");return;}QS++;bQ();}
+    else if(QS===1){var n=g("QN");if(n)QA.name=n.value.trim();var a=g("QAG");if(a)QA.age=a.value;var v=g("QV2");if(v)QA.ville=v.value.trim();QS++;bQ();}
+    else{QS=Math.min(QS+1,QT-1);bQ();}
+  };
+  if(g("QBK"))g("QBK").onclick=function(){QS=Math.max(QS-1,0);bQ();};
+  if(g("QSND"))g("QSND").onclick=function(){var e=g("QE");if(!e||!e.value.trim()){toast("Email requis");return;}QD=true;bQ();};
+  g("QB").querySelectorAll("[data-cd]").forEach(function(b){
+    b.onclick=function(){var parts=b.getAttribute("data-cd").split(":");var k=parts[0];var v=parts[1];b.closest(".cs2").querySelectorAll(".cd").forEach(function(c){c.classList.remove("sl");c.querySelector(".ck").innerHTML="";});b.classList.add("sl");b.querySelector(".ck").innerHTML="&#10003;";QA[k]=v;};
+  });
+}
+
+// INIT
+renderGrid("all");
+renderMsgList("unread");
+
+// Desktop layout
+(function(){
+  if(window.innerWidth>=769){
+    document.body.style.cssText="overflow:auto;position:static;height:auto;background:#F0EDE8";
+    // S'assurer que seule pg-h est visible au démarrage
+    document.querySelectorAll(".pg").forEach(function(p){
+      if(p.id!=="pg-h") p.style.display="none";
+    });
+  }
+})();
+</script>
+</body>
+</html>
