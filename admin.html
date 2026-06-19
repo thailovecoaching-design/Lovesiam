@@ -2321,73 +2321,49 @@ const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 
 async function qSub(){
  var btn=g('QSND');
- var timedOut=false;
  var safety=setTimeout(function(){
-   timedOut=true;
    if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}
-   show('&#10060; Ça prend trop de temps. Vérifiez votre connexion et réessayez.');
- },15000);
+   toast('&#10060; Délai dépassé. Vérifiez votre connexion.');
+ },20000);
  try{
   var em=g('QE'), wh=g('QWH');
   if(!em){clearTimeout(safety);return;}
   var ev=(em.value||'').trim();
   var wv=wh?(wh.value||'').trim():'';
-  if(!ev){clearTimeout(safety);show('&#9888; Email requis');return;}
+  if(!ev){clearTimeout(safety);if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}toast('&#9888; Email requis');return;}
   QA.email=ev; QA.whats=wv;
 
+  // Upload photo (avec timeout 8s)
   var photoUrl='';
   try{
     if(QA.photos&&QA.photos[0]){
-      var fd1=new FormData();
-      fd1.append('file',QA.photos[0]);
-      fd1.append('upload_preset','lovesiam_videos');
-      var pr=await fetch('https://api.cloudinary.com/v1_1/dfxxg3dk4/image/upload',{method:'POST',body:fd1});
-      var pd=await pr.json();
-      photoUrl=pd.secure_url||'';
+      toast('📷 Upload photo…');
+      var ac1=new AbortController();
+      var t1=setTimeout(function(){ac1.abort();},8000);
+      var fd1=new FormData();fd1.append('file',QA.photos[0]);fd1.append('upload_preset','lovesiam_videos');
+      var pr=await fetch('https://api.cloudinary.com/v1_1/dfxxg3dk4/image/upload',{method:'POST',body:fd1,signal:ac1.signal});
+      clearTimeout(t1);
+      var pd=await pr.json();photoUrl=pd.secure_url||'';
     }
-  }catch(e){console.log('upload photo échoué',e);}
+  }catch(e){console.log('photo upload ignoré',e);}
 
+  // Upload vidéo (avec timeout 15s)
   var videoUrl='';
   try{
     if(QA.vidBlob){
-      var fd2=new FormData();
-      fd2.append('file',QA.vidBlob,'video.webm');
-      fd2.append('upload_preset','lovesiam_videos');
-      var vr=await fetch('https://api.cloudinary.com/v1_1/dfxxg3dk4/video/upload',{method:'POST',body:fd2});
-      var vd=await vr.json();
-      videoUrl=vd.secure_url||'';
+      toast('🎥 Upload vidéo…');
+      var ac2=new AbortController();
+      var t2=setTimeout(function(){ac2.abort();},15000);
+      var fd2=new FormData();fd2.append('file',QA.vidBlob,'video.mp4');fd2.append('upload_preset','lovesiam_videos');
+      var vr=await fetch('https://api.cloudinary.com/v1_1/dfxxg3dk4/video/upload',{method:'POST',body:fd2,signal:ac2.signal});
+      clearTimeout(t2);
+      var vd=await vr.json();videoUrl=vd.secure_url||'';
     }
-  }catch(e){console.log('upload vidéo échoué',e);}
+  }catch(e){console.log('vidéo upload ignoré',e);}
 
-  var entry={
-    id:'ins_'+Date.now(),
-    date:new Date().toISOString(),
-    status:'pending',
-    name:QA.name||'',
-    age:QA.age||'',
-    gender:QA.g||'',
-    email:ev,
-    whatsapp:wv||'',
-    city:QA.ville||QA.city||'',
-    country:QA.country||'',
-    height:QA.height||'',
-    weight:QA.weight||'',
-    bio:QA.desc||'',
-    englishLevel:QA.len||'',
-    looking:QA.looking||'',
-    family:QA.fam||'',
-    ageRange:(QA.ageRange||[]).join(', '),
-    photos:photoUrl?[photoUrl]:[],
-    video:videoUrl,
-    note:''
-  };
-  try{
-    var existing=[];
-    try{existing=JSON.parse(localStorage.getItem('ls_inscriptions')||'[]');}catch(e){}
-    existing.unshift(entry);
-    localStorage.setItem('ls_inscriptions',JSON.stringify(existing));
-  }catch(saveErr){console.log('save error:',saveErr);}
+  toast('💾 Enregistrement…');
 
+  // Sauvegarde Supabase
   var saved=false;
   try{
     var payload={
@@ -2395,123 +2371,60 @@ async function qSub(){
       name:QA.name||'',
       age:QA.age?parseInt(QA.age):null,
       gender:QA.g==='h'?'homme':(QA.g==='f'?'femme':(QA.g||'')),
-      email:ev,
-      whatsapp:wv||'',
-      city:QA.ville||QA.city||'',
-      country:QA.country||'',
-      height:QA.height||'',
-      weight:QA.weight||'',
-      bio:QA.desc||'',
-      english_level:QA.len||'',
-      looking:QA.looking||'',
-      family:QA.fam||'',
+      email:ev,whatsapp:wv||'',
+      city:QA.ville||QA.city||'',country:QA.country||'',
+      height:QA.height||'',weight:QA.weight||'',
+      bio:QA.desc||'',english_level:QA.len||'',
+      looking:QA.looking||'',family:QA.fam||'',
       age_range:(QA.ageRange||[]).join(', '),
-      photo_url:photoUrl||'',
-      video_url:videoUrl||'',
+      photo_url:photoUrl||'',video_url:videoUrl||'',
       note:'langFR:'+(QA.lfr||'—')+' langTH:'+(QA.lth||'—')
     };
+    var ac3=new AbortController();
+    var t3=setTimeout(function(){ac3.abort();},10000);
     var sres=await fetch(SB_URL+'/rest/v1/inscriptions',{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=minimal'},
-      body:JSON.stringify(payload)
+      body:JSON.stringify(payload),signal:ac3.signal
     });
+    clearTimeout(t3);
     saved=sres.ok;
-    if(!sres.ok){
-      var errText=await sres.text();
-      console.log('Supabase a refusé',sres.status,errText);
-      show('Supabase erreur '+sres.status+': '+errText.substring(0,80));
-    }else{
-      console.log('Supabase OK - inscription enregistrée');
-    }
-  }catch(e){console.log('Échec Supabase',e);show('Erreur réseau: '+e.message);}
+    if(!sres.ok){var et=await sres.text();console.log('Supabase refus',sres.status,et);toast('Erreur Supabase '+sres.status);}
+  }catch(e){console.log('Supabase fetch échoué',e);}
 
   if(!saved){
     clearTimeout(safety);
     if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}
-    show('&#10060; Erreur réseau. Vérifiez votre connexion et réessayez.');
+    toast('&#10060; Erreur réseau. Réessayez.');
     return;
   }
 
+  // Emails (non-bloquants)
+  var msgAdmin='Nouvelle inscription\nPrénom: '+(QA.name||'—')+'\nEmail: '+ev+'\nGender: '+(QA.g||'—')+'\nVille: '+(QA.ville||'—')+'\nRecherche: '+(QA.looking||'—')+'\nVidéo: '+(videoUrl||'non');
+  fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',template_params:{to_email:'contact@thailovematching.com',from_name:QA.name||'Candidat',from_email:ev,subject:'Nouvelle inscription LoveSiam — '+(QA.name||ev),message:msgAdmin}})}).catch(function(){});
+  var msgConfirm='Bonjour '+(QA.name||'')+',\n\nVotre inscription LoveSiam a bien été reçue.\nPatrick vous contactera sous 48h.\n\nCordialement,\nPatrick Hessel — LoveSiam';
+  fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',template_params:{to_email:ev,from_name:'LoveSiam',from_email:'contact@thailovematching.com',subject:'Votre inscription LoveSiam est confirmée ✓',message:msgConfirm}})}).catch(function(){});
+
   clearTimeout(safety);
-
-  // Notification email admin (non-bloquante)
-  var msgEmail='NOUVELLE INSCRIPTION LoveSiam\n'
-    +'=================================\n'
-    +'Profil: '+(QA.g==='h'?'Homme français':'Femme thaïlandaise')+'\n'
-    +'Prénom: '+(QA.name||'—')+'\n'
-    +'Âge: '+(QA.age||'—')+' ans\n'
-    +'Ville: '+(QA.ville||QA.city||'—')+'\n'
-    +'Anglais: '+(QA.len||'—')+'\n'
-    +'Recherche: '+(QA.looking||'—')+'\n'
-    +'Situation familiale: '+(QA.fam||'—')+'\n'
-    +'Âge souhaité: '+((QA.ageRange||[]).join(', ')||'—')+'\n'
-    +'Vidéo: '+(videoUrl?'✅ '+videoUrl:'Non enregistrée')+'\n'
-    +'Email: '+ev+'\n'
-    +'WhatsApp: '+(wv||'Non fourni');
-  fetch('https://api.emailjs.com/api/v1.0/email/send',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      service_id:'service_9mpf0pc',
-      template_id:'template_yvczjb6',
-      user_id:'_62gqRQHF8yL_AVRb',
-      template_params:{
-        to_email:'contact@thailovematching.com',
-        from_name:(QA.name||'Candidat'),
-        from_email:ev,
-        subject:'Nouvelle inscription LoveSiam — '+(QA.name||ev),
-        message:msgEmail
-      }
-    })
-  }).catch(function(e){console.log('email admin échoué',e);});
-
-  // Email de confirmation au candidat (à son adresse)
-  var msgConfirm='Bonjour '+(QA.name||'')+',\n\n'
-    +'Votre inscription sur LoveSiam a bien été reçue.\n\n'
-    +'Patrick Hessel, votre consultant, examinera votre dossier et vous contactera sous 48h.\n\n'
-    +'Récapitulatif de votre inscription :\n'
-    +'- Recherche : '+(QA.looking||'—')+'\n'
-    +'- Âge souhaité : '+((QA.ageRange||[]).join(', ')||'—')+'\n'
-    +'- Vidéo : '+(videoUrl?'Enregistrée ✅':'À enregistrer plus tard')+'\n\n'
-    +'Pour toute question : contact@thailovematching.com\n\n'
-    +'Cordialement,\nPatrick Hessel — LoveSiam';
-  fetch('https://api.emailjs.com/api/v1.0/email/send',{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',
-      template_params:{
-        to_email:ev,
-        from_name:'LoveSiam — Patrick Hessel',
-        from_email:'contact@thailovematching.com',
-        subject:'Votre inscription LoveSiam est bien reçue ✓',
-        message:msgConfirm
-      }
-    })
-  }).catch(function(e){console.log('email confirmation candidat échoué',e);});
-
-  // Afficher le message de succès directement — sans dépendre de bQ()
-  var qwrap = document.getElementById('QB') || document.querySelector('.qwrap') || document.querySelector('#pg-inscription .scroll');
+  // Succès
+  var qwrap=document.getElementById('QB');
   if(qwrap){
-    qwrap.innerHTML = '<div style="text-align:center;padding:48px 28px">'
+    qwrap.innerHTML='<div style="text-align:center;padding:48px 28px">'
       +'<div style="font-family:\'Cormorant Garamond\',serif;font-size:2rem;font-weight:600;color:var(--nv);margin-bottom:12px">Inscription envoyée</div>'
       +'<div style="width:48px;height:2px;background:linear-gradient(to right,var(--g),var(--gl));margin:0 auto 20px"></div>'
-      +'<div style="font-size:.95rem;color:var(--tm);line-height:1.8;margin-bottom:32px">Nous avons bien reçu votre dossier.<br>Patrick vous contactera sous 48h à l\'adresse<br><strong style="color:var(--nv)">'+ev+'</strong></div>'
+      +'<div style="font-size:.95rem;color:var(--tm);line-height:1.8;margin-bottom:32px">Nous avons bien reçu votre dossier.<br>Patrick vous contactera sous 48h à<br><strong style="color:var(--nv)">'+ev+'</strong></div>'
       +'<button onclick="goPage(\'pg-h\')" style="padding:13px 30px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:30px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:var(--sans)">Retour à l\'accueil</button>'
       +'</div>';
   }
-  U={name:QA.name||'',city:QA.ville||QA.city||'',bio:QA.desc||'',gender:QA.g||'',email:ev,status:'pending'};
-  try{updNav();}catch(e){}
-  QD=true;
-  try{bQ();}catch(e){}
-  try{rFG();}catch(e){}
+  QD=true;try{updNav();}catch(e){}
  }catch(fatal){
   clearTimeout(safety);
-  console.log('qSub erreur fatale',fatal);
-  var btn2=g('QSND');
-  if(btn2){btn2.textContent='Envoyer ma candidature ✦';btn2.disabled=false;}
-  show('&#10060; Une erreur est survenue. Réessayez.');
+  console.log('qSub fatal',fatal);
+  if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}
+  toast('&#10060; Erreur inattendue. Réessayez.');
  }
 }
+
 
 
 
