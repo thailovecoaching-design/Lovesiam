@@ -2935,8 +2935,12 @@ function bQ(){
     e.preventDefault();
     var b=g('QSND');
     if(b&&b.disabled)return;
-    if(b){b.textContent='Envoi…';b.disabled=true;}
-    qSub();
+    if(b){b.textContent='Envoi\u2026';b.disabled=true;}
+    qSub().catch(function(err){
+      var btn2=g('QSND');
+      if(btn2){btn2.textContent='Envoyer ma candidature \u2756';btn2.disabled=false;}
+      toast('\u274C Erreur: '+(err&&err.message?err.message:'inattendue'));
+    });
   };
   if(g('QBA'))g('QBA').onclick=qCamOn;
   if(g('QBR2'))g('QBR2').onclick=qCamRec;
