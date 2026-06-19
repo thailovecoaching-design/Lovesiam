@@ -2320,110 +2320,100 @@ const SB_URL='https://sbglyelgqceydofgllop.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
 
 // XHR fiable sur tous iOS - remplace fetch pour l'envoi critique
-function xhrPost(url, headers, body, timeoutMs){
-  return new Promise(function(resolve, reject){
-    var xhr=new XMLHttpRequest();
-    xhr.open('POST', url, true);
-    for(var h in headers) xhr.setRequestHeader(h, headers[h]);
-    xhr.timeout = timeoutMs;
-    xhr.onload = function(){
-      resolve({
-        ok: xhr.status>=200 && xhr.status<300,
-        status: xhr.status,
-        text: xhr.responseText
-      });
-    };
-    xhr.onerror = function(){ reject(new Error('Erreur réseau')); };
-    xhr.ontimeout = function(){ reject(new Error('Délai dépassé')); };
-    xhr.send(body);
-  });
-}
-
-async function qSub(){
- var btn=g('QSND');
- try{
-  var em=g('QE'), wh=g('QWH');
-  if(!em){if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}return;}
-  var ev=(em.value||'').trim();
-  var wv=wh?(wh.value||'').trim():'';
-  if(!ev){if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}toast('&#9888; Email requis');return;}
-  QA.email=ev; QA.whats=wv;
-
-  toast('&#128190; Envoi en cours…');
-
-  var saved=false;
-  var inscriptionId=null;
-  try{
-    var payload={
-      status:'pending',
-      name:QA.name||'',
-      age:QA.age?parseInt(QA.age):null,
-      gender:QA.g==='h'?'homme':(QA.g==='f'?'femme':(QA.g||'')),
-      email:ev,whatsapp:wv||'',
-      city:QA.ville||QA.city||'',country:QA.country||'',
-      height:QA.height||'',weight:QA.weight||'',
-      bio:QA.desc||'',english_level:QA.len||'',
-      looking:QA.looking||'',family:QA.fam||'',
-      age_range:(QA.ageRange||[]).join(', '),
-      photo_url:'',video_url:'',
-      note:'langFR:'+(QA.lfr||'—')+' langTH:'+(QA.lth||'—')
-    };
-    var res=await xhrPost(
-      SB_URL+'/rest/v1/inscriptions',
-      {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=representation'},
-      JSON.stringify(payload),
-      10000
-    );
-    saved=res.ok;
-    if(res.ok){
-      try{var rd=JSON.parse(res.text);if(rd&&rd[0])inscriptionId=rd[0].id;}catch(e){}
-    }else{
-      console.log('Supabase refus',res.status,res.text);
-    }
-  }catch(e){
-    console.log('XHR échoué:',e.message);
-  }
-
-  if(!saved){
-    if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}
-    toast('&#10060; Erreur ('+( typeof res!=='undefined'?res.status:'réseau')+') – Réessayez.');
+function qSub(){
+  var btn=g('QSND');
+  var em=g('QE');
+  var wh=g('QWH');
+  if(!em||!em.value.trim()){
+    if(btn){btn.textContent='Envoyer ma candidature \u2756';btn.disabled=false;}
+    alert('Veuillez entrer votre email.');
     return;
   }
+  var ev=em.value.trim();
+  var wv=wh?wh.value.trim():'';
+  QA.email=ev;QA.whats=wv;
 
-  // Succès
+  // 1. Sauvegarder localement en premier
+  var entry={
+    id:'ins_'+Date.now(),
+    date:new Date().toISOString(),
+    status:'pending',
+    name:QA.name||'',age:QA.age||'',
+    gender:QA.g==='h'?'homme':(QA.g==='f'?'femme':''),
+    email:ev,whatsapp:wv,
+    city:QA.ville||QA.city||'',
+    height:QA.height||'',weight:QA.weight||'',
+    bio:QA.desc||'',english_level:QA.len||'',
+    looking:QA.looking||'',family:QA.fam||'',
+    age_range:(QA.ageRange||[]).join(', ')
+  };
+  try{
+    var lst=JSON.parse(localStorage.getItem('ls_inscriptions')||'[]');
+    lst.unshift(entry);localStorage.setItem('ls_inscriptions',JSON.stringify(lst));
+  }catch(e){}
+
+  // 2. Afficher succès IMMÉDIATEMENT
   var qwrap=document.getElementById('QB');
   if(qwrap){
-    qwrap.innerHTML='<div style="text-align:center;padding:48px 28px">'
-      +'<div style="font-family:\'Cormorant Garamond\',serif;font-size:2rem;font-weight:600;color:var(--nv);margin-bottom:12px">Inscription envoy\u00e9e</div>'
-      +'<div style="width:48px;height:2px;background:linear-gradient(to right,var(--g),var(--gl));margin:0 auto 20px"></div>'
-      +'<div style="font-size:.95rem;color:var(--tm);line-height:1.8;margin-bottom:32px">Nous avons bien re\u00e7u votre dossier.<br>Patrick vous contactera sous 48h \u00e0<br><strong style="color:var(--nv)">'+ev+'</strong></div>'
-      +'<button onclick="goPage(\'pg-h\')" style="padding:13px 30px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:30px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:var(--sans)">Retour \u00e0 l\'accueil</button>'
+    qwrap.innerHTML='<div style="text-align:center;padding:48px 24px">'
+      +'<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.9rem;font-weight:600;color:var(--nv);margin-bottom:10px">Inscription envoy\u00e9e</div>'
+      +'<div style="width:40px;height:2px;background:linear-gradient(to right,var(--g),var(--gl));margin:0 auto 18px"></div>'
+      +'<div style="font-size:.92rem;color:var(--tm);line-height:1.8;margin-bottom:28px">Dossier bien re\u00e7u.<br>Patrick vous contactera sous 48h<br>à <strong style="color:var(--nv)">'+ev+'</strong></div>'
+      +'<button onclick="goPage(\'pg-h\')" style="padding:13px 28px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:30px;font-size:.92rem;font-weight:600;cursor:pointer">Retour à l\'accueil</button>'
       +'</div>';
   }
   QD=true;try{updNav();}catch(e){}
 
-  // Emails arrière-plan
-  var msg1='Nouvelle inscription\nPr\u00e9nom: '+(QA.name||'?')+'\nEmail: '+ev+'\nGenre: '+(payload.gender)+'\nVille: '+(QA.ville||'?')+'\nRecherche: '+(QA.looking||'?');
-  fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',template_params:{to_email:'contact@thailovematching.com',from_name:QA.name||'Candidat',from_email:ev,subject:'Nouvelle inscription LoveSiam \u2014 '+(QA.name||ev),message:msg1}})}).catch(function(){});
-  fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',template_params:{to_email:ev,from_name:'LoveSiam',from_email:'contact@thailovematching.com',subject:'Votre inscription LoveSiam est confirm\u00e9e',message:'Bonjour '+(QA.name||'')+',\n\nVotre inscription LoveSiam a bien \u00e9t\u00e9 re\u00e7ue.\nPatrick vous contactera sous 48h.\n\nCordialement,\nLoveSiam'}})}).catch(function(){});
+  // 3. Envoyer à Supabase en arrière-plan (non-bloquant)
+  setTimeout(function(){
+    var payload=JSON.stringify({
+      status:'pending',
+      name:entry.name,age:entry.age?parseInt(entry.age):null,
+      gender:entry.gender,email:entry.email,whatsapp:entry.whatsapp,
+      city:entry.city,height:entry.height,weight:entry.weight,
+      bio:entry.bio,english_level:entry.english_level,
+      looking:entry.looking,family:entry.family,
+      age_range:entry.age_range,photo_url:'',video_url:'',
+      note:'local_id:'+entry.id
+    });
+    var xhr=new XMLHttpRequest();
+    xhr.onreadystatechange=function(){
+      if(xhr.readyState!==4)return;
+      if(xhr.status>=200&&xhr.status<300){
+        console.log('Supabase OK',xhr.status);
+      }else{
+        console.log('Supabase erreur',xhr.status,xhr.responseText);
+      }
+    };
+    xhr.ontimeout=function(){console.log('Supabase timeout');};
+    xhr.onerror=function(){console.log('Supabase onerror');};
+    xhr.open('POST',SB_URL+'/rest/v1/inscriptions',true);
+    xhr.setRequestHeader('Content-Type','application/json');
+    xhr.setRequestHeader('apikey',SB_KEY);
+    xhr.setRequestHeader('Authorization','Bearer '+SB_KEY);
+    xhr.setRequestHeader('Prefer','return=minimal');
+    xhr.timeout=15000;
+    xhr.send(payload);
+  },200);
 
-  // Upload médias en arrière-plan
-  if(inscriptionId&&(QA.vidBlob||(QA.photos&&QA.photos[0]))){
-    setTimeout(function(){
-      (async function(){
-        var pu='',vu='';
-        try{if(QA.photos&&QA.photos[0]){var f1=new FormData();f1.append('file',QA.photos[0]);f1.append('upload_preset','lovesiam_videos');var r1=await fetch('https://api.cloudinary.com/v1_1/dfxxg3dk4/image/upload',{method:'POST',body:f1});var d1=await r1.json();pu=d1.secure_url||'';}}catch(e){}
-        try{if(QA.vidBlob){var f2=new FormData();f2.append('file',QA.vidBlob,'video.mp4');f2.append('upload_preset','lovesiam_videos');var r2=await fetch('https://api.cloudinary.com/v1_1/dfxxg3dk4/video/upload',{method:'POST',body:f2});var d2=await r2.json();vu=d2.secure_url||'';}}catch(e){}
-        if((pu||vu)&&inscriptionId){fetch(SB_URL+'/rest/v1/inscriptions?id=eq.'+inscriptionId,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY},body:JSON.stringify({photo_url:pu,video_url:vu})}).catch(function(){});}
-      })();
-    },1000);
-  }
+  // 4. Email admin en arrière-plan
+  setTimeout(function(){
+    var msg='Inscription LoveSiam\nPrénom: '+entry.name+'\nEmail: '+entry.email+'\nGenre: '+entry.gender+'\nVille: '+entry.city+'\nRecherche: '+entry.looking;
+    var xhr2=new XMLHttpRequest();
+    xhr2.open('POST','https://api.emailjs.com/api/v1.0/email/send',true);
+    xhr2.setRequestHeader('Content-Type','application/json');
+    xhr2.timeout=10000;
+    xhr2.send(JSON.stringify({service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',template_params:{to_email:'contact@thailovematching.com',from_name:entry.name||'Candidat',from_email:entry.email,subject:'Nouvelle inscription LoveSiam \u2014 '+entry.name,message:msg}}));
+  },400);
 
- }catch(fatal){
-  console.log('qSub fatal:',fatal);
-  if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}
-  toast('&#10060; Erreur inattendue. R\u00e9essayez.');
- }
+  // 5. Email confirmation candidat en arrière-plan
+  setTimeout(function(){
+    var xhr3=new XMLHttpRequest();
+    xhr3.open('POST','https://api.emailjs.com/api/v1.0/email/send',true);
+    xhr3.setRequestHeader('Content-Type','application/json');
+    xhr3.timeout=10000;
+    xhr3.send(JSON.stringify({service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',template_params:{to_email:entry.email,from_name:'LoveSiam',from_email:'contact@thailovematching.com',subject:'Votre inscription LoveSiam est confirm\u00e9e',message:'Bonjour '+entry.name+',\n\nVotre inscription a bien \u00e9t\u00e9 re\u00e7ue.\nPatrick vous contactera sous 48h.\n\nCordialement,\nLoveSiam'}}));
+  },600);
 }
 
 
