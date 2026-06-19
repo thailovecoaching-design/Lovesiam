@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -120,6 +121,17 @@ body{font-family:var(--sans);background:#F0EDE8;color:var(--nv);min-height:100vh
 </head>
 <body>
 
+<div id="LOGIN_OVERLAY" style="position:fixed;inset:0;background:#1A2744;z-index:1000;display:flex;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:32px;width:320px;max-width:90vw">
+    <div style="font-family:var(--serif);font-size:1.4rem;color:var(--nv);margin-bottom:4px;text-align:center">Love<em style="color:var(--g);font-style:italic">Siam</em></div>
+    <div style="font-size:.78rem;color:var(--td);text-align:center;margin-bottom:20px">Espace administrateur</div>
+    <input id="LOGIN_EMAIL" type="email" placeholder="Email" style="width:100%;padding:10px 12px;border:1.5px solid rgba(26,39,68,.15);border-radius:8px;margin-bottom:10px;font-family:var(--sans);font-size:.88rem;outline:none;box-sizing:border-box">
+    <input id="LOGIN_PASS" type="password" placeholder="Mot de passe" style="width:100%;padding:10px 12px;border:1.5px solid rgba(26,39,68,.15);border-radius:8px;margin-bottom:14px;font-family:var(--sans);font-size:.88rem;outline:none;box-sizing:border-box">
+    <button id="LOGIN_BTN" style="width:100%;padding:11px;background:var(--g);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(--sans)">Se connecter</button>
+    <div id="LOGIN_ERR" style="color:var(--rd);font-size:.78rem;text-align:center;margin-top:10px;display:none"></div>
+  </div>
+</div>
+
 <div class="nav">
   <div class="nav-logo">Love<em>Siam</em> <span style="font-size:.7rem;opacity:.5;font-family:var(--sans)">Admin</span></div>
   <div class="nav-info">Page d'administration privée</div>
@@ -165,29 +177,115 @@ body{font-family:var(--sans);background:#F0EDE8;color:var(--nv);min-height:100vh
 <div class="toast" id="TOAST"></div>
 
 <script>
+var SUPA_URL='https://sbglyelgqceydofgllop.supabase.co';
+var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
+var SESSION_TOKEN=null;
+var ALL_DATA=[];
+
+// Restaurer la session depuis localStorage si disponible
+(function(){
+  try{
+    var stored=localStorage.getItem('ls_admin_token');
+    if(stored){
+      SESSION_TOKEN=stored;
+      document.getElementById('LOGIN_OVERLAY').style.display='none';
+      refreshData().then(function(){
+        // Si aucune donnée et token potentiellement expiré, re-forcer le login
+        if(ALL_DATA.length===0){
+          // Tester si le token fonctionne vraiment
+          fetch(SUPA_URL+'/rest/v1/inscriptions?select=count&limit=1',{
+            headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN}
+          }).then(function(r){
+            if(r.status===401||r.status===403){
+              localStorage.removeItem('ls_admin_token');
+              SESSION_TOKEN=null;
+              document.getElementById('LOGIN_OVERLAY').style.display='flex';
+            }
+          });
+        }
+      });
+    }
+  }catch(e){}
+})();
+
+function loginAdmin(email,pass){
+  return fetch(SUPA_URL+'/auth/v1/token?grant_type=password',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SUPA_KEY},
+    body:JSON.stringify({email:email,password:pass})
+  }).then(function(r){return r.json();});
+}
+
+document.getElementById('LOGIN_BTN').onclick=function(){
+  var email=document.getElementById('LOGIN_EMAIL').value.trim();
+  var pass=document.getElementById('LOGIN_PASS').value;
+  var err=document.getElementById('LOGIN_ERR');
+  err.style.display='none';
+  if(!email||!pass){err.textContent='Remplissez email et mot de passe';err.style.display='block';return;}
+  loginAdmin(email,pass).then(function(data){
+    if(data&&data.access_token){
+      SESSION_TOKEN=data.access_token;
+      try{localStorage.setItem('ls_admin_token',SESSION_TOKEN);}catch(e){}
+      document.getElementById('LOGIN_OVERLAY').style.display='none';
+      refreshData();
+    }else{
+      err.textContent='Email ou mot de passe incorrect';err.style.display='block';
+    }
+  }).catch(function(){err.textContent='Erreur de connexion';err.style.display='block';});
+};
+document.getElementById('LOGIN_PASS').addEventListener('keydown',function(e){
+  if(e.key==='Enter')document.getElementById('LOGIN_BTN').click();
+});
+
 var CURRENT_PAGE='inscriptions';
 var CURRENT_FILTER='all';
 var SEARCH='';
 
 // ═══════════════════════════════
-// DONNÉES
+// DONNÉES (Supabase)
 // ═══════════════════════════════
-function getInscriptions(){
-  try{return JSON.parse(localStorage.getItem('ls_inscriptions')||'[]');}
-  catch(e){return [];}
+function mapRow(d){
+  return{
+    id:d.id,
+    date:d.created_at,
+    status:d.status,
+    name:d.name,age:d.age,gender:d.gender,email:d.email,whatsapp:d.whatsapp,
+    city:d.city,country:d.country,height:d.height,weight:d.weight,bio:d.bio,
+    englishLevel:d.english_level,looking:d.looking,family:d.family,
+    photos:d.photo_url?[d.photo_url]:[],
+    video:d.video_url||'',
+    videoTranslated:!!d.video_translated,
+    note:d.note||''
+  };
 }
 
-function saveInscriptions(data){
-  localStorage.setItem('ls_inscriptions',JSON.stringify(data));
+function getInscriptions(){return ALL_DATA;}
+
+function refreshData(){
+  return fetch(SUPA_URL+'/rest/v1/inscriptions?select=*&order=created_at.desc',{
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN}
+  }).then(function(r){return r.json();}).then(function(rows){
+    ALL_DATA=(rows||[]).map(mapRow);
+    render();
+  }).catch(function(e){console.log('fetch error',e);});
 }
 
 function updateStatus(id,status,note){
-  var data=getInscriptions();
-  data=data.map(function(d){
-    if(d.id===id){d.status=status;if(note)d.note=note;}
-    return d;
-  });
-  saveInscriptions(data);
+  var body={status:status};
+  if(note!==undefined)body.note=note;
+  return fetch(SUPA_URL+'/rest/v1/inscriptions?id=eq.'+id,{
+    method:'PATCH',
+    headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN,'Prefer':'return=minimal'},
+    body:JSON.stringify(body)
+  }).then(function(){return refreshData();});
+}
+
+function setVideoTranslated(id,val){
+  return fetch(SUPA_URL+'/rest/v1/inscriptions?id=eq.'+id,{
+    method:'PATCH',
+    headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN,'Prefer':'return=minimal'},
+    body:JSON.stringify({video_translated:val})
+  }).then(function(){return refreshData();});
 }
 
 // ═══════════════════════════════
@@ -328,6 +426,9 @@ function openDetail(id){
     videoHtml+='<div class="no-video">🎥 Aucune vidéo soumise</div>';
   }
   videoHtml+='</div>';
+  if(d.video){
+    videoHtml+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><input type="checkbox" id="DP_TRANSLATED" '+(d.videoTranslated?'checked':'')+' onchange="setVideoTranslated(\''+d.id+'\',this.checked)" style="width:18px;height:18px;cursor:pointer"><label for="DP_TRANSLATED" style="font-size:.84rem;color:var(--nv);font-weight:500;cursor:pointer">🇫🇷↔🇹🇭 Vidéo traduite</label></div>';
+  }
 
   dp.innerHTML=
     '<div class="dp-hdr">'+
@@ -421,38 +522,38 @@ var testFamily=['Celibataire sans enfant','Celibataire avec enfant'];
 
 function genTest(n){
   var log=document.getElementById('TEST_LOG');
-  var data=getInscriptions();
   var added=[];
+  var promises=[];
   for(var i=0;i<n;i++){
     var isFemme=Math.random()>0.4;
     var entry={
-      id:'ins_'+Date.now()+'_'+i,
-      date:new Date(Date.now()-Math.random()*7*24*3600*1000).toISOString(),
-      status:'pending',
       name:testNames[Math.floor(Math.random()*testNames.length)],
-      age:18+Math.floor(Math.random()*30),
+      age:String(18+Math.floor(Math.random()*30)),
       gender:isFemme?'f':'m',
       email:'test'+Math.floor(Math.random()*9999)+'@lovesiam.com',
       whatsapp:'+66'+Math.floor(Math.random()*999999999),
       city:testCities[Math.floor(Math.random()*testCities.length)],
-      country:isFemme?'Thaïlande':'France',
+      country:isFemme?'Thailande':'France',
       height:(isFemme?(155+Math.floor(Math.random()*20)):(170+Math.floor(Math.random()*20)))+'cm',
       weight:(isFemme?(45+Math.floor(Math.random()*20)):(65+Math.floor(Math.random()*25)))+'kg',
-      bio:'Bonjour ! Je cherche une relation sincère et durable. J\'aime voyager, la cuisine et découvrir de nouvelles cultures.',
-      englishLevel:testEnglish[Math.floor(Math.random()*testEnglish.length)],
+      bio:'Bonjour ! Je cherche une relation sincere et durable. J\'aime voyager, la cuisine et decouvrir de nouvelles cultures.',
+      english_level:testEnglish[Math.floor(Math.random()*testEnglish.length)],
       looking:testLooking[Math.floor(Math.random()*testLooking.length)],
       family:testFamily[Math.floor(Math.random()*testFamily.length)],
-      photos:[],
-      video:'',
-      note:''
+      photo_url:'',video_url:'',note:''
     };
-    data.unshift(entry);
     added.push(entry.name+' ('+entry.gender+', '+entry.age+'ans)');
+    promises.push(fetch(SUPA_URL+'/rest/v1/inscriptions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
+      body:JSON.stringify(entry)
+    }));
   }
-  saveInscriptions(data);
-  if(log)log.textContent='✅ '+n+' inscription(s) ajoutée(s) :\n'+added.join('\n');
-  render();
-  showToast('✅ '+n+' inscription(s) de test générée(s)');
+  Promise.all(promises).then(function(){
+    if(log)log.textContent='✅ '+n+' inscription(s) ajoutée(s) :\n'+added.join('\n');
+    refreshData();
+    showToast('✅ '+n+' inscription(s) de test générée(s)');
+  });
 }
 
 function showStorage(){
@@ -484,10 +585,11 @@ function exportCSV(){
 }
 
 function clearAll(){
-  if(!confirm('Effacer TOUTES les inscriptions de test ?'))return;
-  localStorage.removeItem('ls_inscriptions');
-  render();
-  showToast('🗑 Données effacées');
+  if(!confirm('Effacer TOUTES les inscriptions ? Cette action est irreversible.'))return;
+  fetch(SUPA_URL+'/rest/v1/inscriptions?id=neq.00000000-0000-0000-0000-000000000000',{
+    method:'DELETE',
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN,'Prefer':'return=minimal'}
+  }).then(function(){refreshData();showToast('🗑 Données effacées');});
 }
 
 // ═══════════════════════════════
@@ -500,9 +602,9 @@ function showToast(msg){
 }
 
 // ═══════════════════════════════
-// INIT
+// INIT : on attend la connexion avant de charger les données
 // ═══════════════════════════════
-render();
+
 </script>
 </body>
 </html>
