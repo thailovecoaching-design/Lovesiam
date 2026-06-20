@@ -1474,6 +1474,9 @@ PROFILES.forEach(function(p){p.isNew=(NOW-p.joinedAt)<DAY;});
 
 var genderView='femme'; // par défaut: voir les femmes thaïlandaises
 
+const SB_URL='https://sbglyelgqceydofgllop.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
+
 function setGenderView(g2,btn){
   genderView=g2;
   var bf=document.getElementById('view-fem');
@@ -1499,72 +1502,39 @@ function showDbg(msg){
 
 function loadApprovedProfiles(filterGender){
   var gf=filterGender||genderView||'femme';
-  showDbg('🔄 Chargement profils en cours...');
-  var xhr=new XMLHttpRequest();
-  var url=SB_URL+'/rest/v1/inscriptions?select=*&status=eq.approved&order=created_at.desc';
-  showDbg('📡 Requête: '+url.substring(0,80));
-  xhr.open('GET',url,true);
-  xhr.setRequestHeader('apikey',SB_KEY);
-  xhr.setRequestHeader('Authorization','Bearer '+SB_KEY);
-  xhr.timeout=8000;
-  xhr.onreadystatechange=function(){
-    if(xhr.readyState!==4)return;
-    showDbg('✅ HTTP '+xhr.status+' — '+xhr.responseText.substring(0,150));
-    if(xhr.status>=200&&xhr.status<300){
-      try{
-        var rows=JSON.parse(xhr.responseText);
-        if(!rows||!rows.length){
-          renderGrid(gTab||'all');
-          return;
-        }
-        // Filtrer côté client — accepte toutes les variantes de genre stockées
-        var filtered=rows.filter(function(r){
-          var g=(r.gender||'').toLowerCase();
-          if(gf==='homme') return g==='homme'||g==='h'||g.indexOf('homme')>=0||g.indexOf('français')>=0||g.indexOf('francais')>=0;
-          if(gf==='femme') return g==='femme'||g==='f'||g.indexOf('femme')>=0||g.indexOf('tha')>=0;
-          return true;
-        });
-        if(!filtered.length){
-          toast('Aucun profil validé pour cette vue');
-          renderGrid(gTab||'all');
-          return;
-        }
-        var newProfiles=filtered.map(function(r,i){
-          var joinedMs=r.created_at?new Date(r.created_at).getTime():NOW-i*DAY;
-          return {
-            id:'sb_'+r.id,
-            name:r.name||'—',
-            age:r.age||0,
-            ville:r.city||'',
-            taille:r.height?(r.height+' cm'):'',
-            poids:r.weight?(r.weight+' kg'):'',
-            fam:r.family||'',
-            looking:r.looking||'',
-            en:r.english_level||'',
-            online:false,
-            joinedAt:joinedMs,
-            isNew:(NOW-joinedMs)<DAY,
-            likedMe:false,
-            bio:r.bio||'',
-            emoji:gf==='femme'?'&#128105;':'&#128104;',
-            photo:r.photo_url||'',
-            video:r.video_url||'',
-            bg:gf==='femme'?'linear-gradient(160deg,#1A2744,#0D1522)':'linear-gradient(160deg,#2A1A44,#150D22)',
-            fromSupabase:true
-          };
-        });
-        PROFILES.length=0;
-        newProfiles.forEach(function(p){PROFILES.push(p);});
-        renderGrid(gTab||'all');
-        renderSwipe();
-      }catch(e){console.log('Erreur parsing profils',e);}
-    }else{
-      showDbg('❌ Erreur HTTP '+xhr.status+': '+xhr.responseText.substring(0,100));
-    }
-  };
-  xhr.onerror=function(){showDbg('🔴 ERREUR RÉSEAU (onerror) — XHR bloqué ou CORS');};
-  xhr.ontimeout=function(){showDbg('⏱ TIMEOUT — pas de réponse après 8 secondes');};
-  xhr.send();
+  showDbg('🔄 Chargement...');
+  // Clé API dans l'URL (pas en header) = requête simple, pas de preflight CORS sur iOS Safari
+  var url=SB_URL+'/rest/v1/inscriptions?apikey='+SB_KEY+'&select=id,name,age,city,height,weight,family,looking,english_level,bio,photo_url,video_url,gender,status,created_at&status=eq.approved&order=created_at.desc';
+  fetch(url)
+  .then(function(r){showDbg('HTTP '+r.status);return r.json();})
+  .then(function(rows){
+    showDbg(rows.length+' profils reçus');
+    if(!rows||!rows.length){renderGrid(gTab||'all');return;}
+    var filtered=rows.filter(function(r){
+      var g=(r.gender||'').toLowerCase().trim();
+      if(gf==='homme') return g==='homme'||g==='h'||g.indexOf('homme')>=0||g===''||!g;
+      if(gf==='femme') return g==='femme'||g==='f'||g.indexOf('femme')>=0||g.indexOf('tha')>=0;
+      return true;
+    });
+    showDbg(filtered.length+' profils après filtre '+gf);
+    if(!filtered.length){toast('Aucun profil validé pour cette vue');renderGrid(gTab||'all');return;}
+    var NOW2=Date.now();
+    var newProfiles=filtered.map(function(r,i){
+      var jMs=r.created_at?new Date(r.created_at).getTime():NOW2-i*86400000;
+      return {id:'sb_'+r.id,name:r.name||'—',age:r.age||0,ville:r.city||'',
+        taille:r.height?(r.height+' cm'):'',poids:r.weight?(r.weight+' kg'):'',
+        fam:r.family||'',looking:r.looking||'',en:r.english_level||'',
+        online:false,joinedAt:jMs,isNew:(NOW2-jMs)<86400000,likedMe:false,bio:r.bio||'',
+        emoji:gf==='femme'?'&#128105;':'&#128104;',photo:r.photo_url||'',video:r.video_url||'',
+        bg:gf==='femme'?'linear-gradient(160deg,#1A2744,#0D1522)':'linear-gradient(160deg,#2A1A44,#150D22)',
+        fromSupabase:true};
+    });
+    PROFILES.length=0;
+    newProfiles.forEach(function(p){PROFILES.push(p);});
+    renderGrid(gTab||'all');
+    renderSwipe();
+  })
+  .catch(function(e){showDbg('🔴 fetch échoué: '+e.message);});
 }
 loadApprovedProfiles('femme');
 
@@ -2490,9 +2460,6 @@ var T = {
 }
 
 function setupCityAutocomplete(id,lang){/* stub */}
-
-const SB_URL='https://sbglyelgqceydofgllop.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
 
 // XHR fiable sur tous iOS - remplace fetch pour l'envoi critique
 function qNextStep(){
