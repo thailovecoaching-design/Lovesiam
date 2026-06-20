@@ -950,6 +950,8 @@ h2 em{font-style:italic;color:var(--g)}
   .pg.on{position:static !important;width:780px !important;margin:0 auto !important;box-shadow:0 0 50px rgba(0,0,0,.12) !important;min-height:100vh;overflow-x:hidden !important}
   .bn{position:fixed !important;left:50% !important;right:auto !important;width:780px !important;transform:translateX(-50%) !important}
 }
+.report-opt{width:100%;padding:14px 16px;background:var(--b2);border:none;border-radius:10px;font-size:.9rem;color:var(--nv);text-align:left;cursor:pointer;font-family:var(--sans);font-weight:500;transition:background .15s}
+.report-opt.sel{background:rgba(192,57,43,.12);color:#C0392B;font-weight:700}
 </style>
 </head>
 <body>
@@ -1119,6 +1121,10 @@ h2 em{font-style:italic;color:var(--g)}
     <button onclick="openModal('m-filters')" style="background:none;border:1.5px solid rgba(26,39,68,.14);border-radius:12px;padding:4px 10px;font-size:.74rem;color:var(--nv);cursor:pointer;font-family:var(--sans)">&#8856; Filtres</button>
   </div>
 </div>
+<div style="display:flex;justify-content:center;padding:8px 12px 0;gap:8px">
+  <button id="view-fem" onclick="setGenderView('femme',this)" style="flex:1;padding:8px;border-radius:12px;border:1.5px solid var(--g);background:var(--g);color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--sans)">&#127481;&#127469; Vue Femmes thaï</button>
+  <button id="view-hom" onclick="setGenderView('homme',this)" style="flex:1;padding:8px;border-radius:12px;border:1.5px solid rgba(26,39,68,.2);background:transparent;color:var(--nv);font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--sans)">&#127467;&#127479; Vue Hommes français</button>
+</div>
 <div class="g-tabs" style="position:sticky;top:50px;z-index:5;background:#fff;border-bottom:2px solid var(--b2)">
   <button class="gtb on" onclick="setGTab('all',this)">Tous <span class="gcnt" id="g-all">0</span></button>
   <button class="gtb" onclick="setGTab('new',this)">Nouveaux <span class="gcnt" id="g-new">0</span></button>
@@ -1226,13 +1232,35 @@ h2 em{font-style:italic;color:var(--g)}
   <button class="conv-back" onclick="goPage('pg-msg')">&#8592;</button>
   <div class="conv-av" id="conv-av" onclick="if(currentConvP)openProfile(currentConvP)" style="cursor:pointer;border:2px solid rgba(196,150,42,.3)"></div>
   <div style="flex:1;cursor:pointer" onclick="if(currentConvP)openProfile(currentConvP)"><div style="font-size:.88rem;font-weight:700;color:var(--nv)" id="conv-name"></div><div style="font-size:.68rem;color:var(--gn)" id="conv-status"></div></div>
-  <button onclick="openProfile(currentConvP)" style="background:none;border:none;color:var(--g);font-size:.76rem;font-weight:600;cursor:pointer;font-family:var(--sans)">Voir profil</button>
+  <button id="conv-trad-btn" onclick="toggleConvTrad()" style="background:rgba(26,39,68,.08);border:none;border-radius:20px;padding:5px 10px;font-size:.72rem;font-weight:600;color:var(--nv);cursor:pointer;font-family:var(--sans);white-space:nowrap">&#127760; Trad ON</button>
+  <button onclick="openReportModal()" style="background:none;border:none;font-size:1.15rem;cursor:pointer;padding:4px;margin-left:2px" title="Signaler">&#9888;&#65039;</button>
 </div>
 <div class="conv-body" id="conv-body"></div>
 <div style="display:flex;gap:8px;padding:8px 12px;background:#fff;border-top:1px solid var(--b2);flex-shrink:0;align-items:center">
   <input id="conv-inp" type="text" placeholder="Message..." style="flex:1;padding:9px 12px;border:1.5px solid rgba(26,39,68,.1);border-radius:20px;font-size:16px;font-family:var(--sans);outline:none;-webkit-appearance:none;min-width:0" onkeydown="if(event.key==='Enter'){event.preventDefault();sendMsg();}">
   <button onclick="sendMsg()" style="width:40px;height:40px;min-width:40px;border-radius:50%;background:var(--nv);border:none;color:#fff;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center">&#10148;</button>
 </div>
+</div>
+
+<!-- MODAL SIGNALEMENT -->
+<div id="modal-report" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.5);align-items:flex-end;justify-content:center">
+  <div style="background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:24px 20px 36px;font-family:var(--sans)">
+    <div style="font-family:var(--serif);font-size:1.2rem;font-weight:700;color:var(--nv);text-align:center;margin-bottom:6px">Signaler ce profil</div>
+    <div style="font-size:.82rem;color:var(--td);text-align:center;margin-bottom:18px" id="report-subtitle">Pourquoi souhaitez-vous signaler ce profil ?</div>
+    <div id="report-reasons" style="display:flex;flex-direction:column;gap:2px">
+      <button class="report-opt" onclick="selectReport(this,'Harcèlement')">Harcèlement</button>
+      <button class="report-opt" onclick="selectReport(this,'Spam')">Spam</button>
+      <button class="report-opt" onclick="selectReport(this,'Contenu inapproprié')">Contenu inapproprié</button>
+      <button class="report-opt" onclick="selectReport(this,'Faux profil')">Faux profil</button>
+      <button class="report-opt" onclick="selectReport(this,'Mineur')">Mineur</button>
+      <button class="report-opt" onclick="selectReport(this,'Autre')">Autre</button>
+    </div>
+    <div style="font-size:.75rem;color:var(--td);text-align:center;margin:14px 0 16px">La conversation sera bloquée et l'équipe de modération sera notifiée.</div>
+    <div style="display:flex;gap:10px">
+      <button onclick="closeReportModal()" style="flex:1;padding:13px;border-radius:12px;border:1.5px solid rgba(26,39,68,.15);background:#fff;color:var(--nv);font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--sans)">Annuler</button>
+      <button id="report-send-btn" onclick="sendReport()" disabled style="flex:1;padding:13px;border-radius:12px;border:none;background:rgba(192,57,43,.15);color:#C0392B;font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--sans);opacity:.5">Signaler et bloquer</button>
+    </div>
+  </div>
 </div>
 
 <!-- COEURS -->
@@ -1443,6 +1471,77 @@ PROFILES[2].joinedAt=NOW-12*3600000;
 PROFILES[3].joinedAt=NOW-30*DAY;
 PROFILES[4].joinedAt=NOW-60*DAY;
 PROFILES.forEach(function(p){p.isNew=(NOW-p.joinedAt)<DAY;});
+
+var genderView='femme'; // par défaut: voir les femmes thaïlandaises
+
+function setGenderView(g2,btn){
+  genderView=g2;
+  var bf=document.getElementById('view-fem');
+  var bh=document.getElementById('view-hom');
+  if(bf&&bh){
+    if(g2==='femme'){
+      bf.style.background='var(--g)';bf.style.color='#fff';bf.style.borderColor='var(--g)';
+      bh.style.background='transparent';bh.style.color='var(--nv)';bh.style.borderColor='rgba(26,39,68,.2)';
+    }else{
+      bh.style.background='var(--g)';bh.style.color='#fff';bh.style.borderColor='var(--g)';
+      bf.style.background='transparent';bf.style.color='var(--nv)';bf.style.borderColor='rgba(26,39,68,.2)';
+    }
+  }
+  loadApprovedProfiles(g2);
+}
+
+// Charger les vrais profils validés depuis Supabase
+function loadApprovedProfiles(filterGender){
+  var gf=filterGender||genderView||'femme';
+  var xhr=new XMLHttpRequest();
+  xhr.open('GET',SB_URL+'/rest/v1/inscriptions?select=*&status=eq.approved&gender=eq.'+gf+'&order=created_at.desc',true);
+  xhr.setRequestHeader('apikey',SB_KEY);
+  xhr.setRequestHeader('Authorization','Bearer '+SB_KEY);
+  xhr.timeout=8000;
+  xhr.onreadystatechange=function(){
+    if(xhr.readyState!==4)return;
+    if(xhr.status>=200&&xhr.status<300){
+      try{
+        var rows=JSON.parse(xhr.responseText);
+        if(!rows||!rows.length){
+          // Garder les profils démo si aucun profil réel validé
+          renderGrid(gTab||'all');
+          return;
+        }
+        var newProfiles=rows.map(function(r,i){
+          var joinedMs=r.created_at?new Date(r.created_at).getTime():NOW-i*DAY;
+          return {
+            id:'sb_'+r.id,
+            name:r.name||'—',
+            age:r.age||0,
+            ville:r.city||'',
+            taille:r.height?(r.height+' cm'):'',
+            poids:r.weight?(r.weight+' kg'):'',
+            fam:r.family||'',
+            looking:r.looking||'',
+            en:r.english_level||'',
+            online:false,
+            joinedAt:joinedMs,
+            isNew:(NOW-joinedMs)<DAY,
+            likedMe:false,
+            bio:r.bio||'',
+            emoji:gf==='femme'?'&#128105;':'&#128104;',
+            photo:r.photo_url||'',
+            video:r.video_url||'',
+            bg:gf==='femme'?'linear-gradient(160deg,#1A2744,#0D1522)':'linear-gradient(160deg,#2A1A44,#150D22)',
+            fromSupabase:true
+          };
+        });
+        PROFILES.length=0;
+        newProfiles.forEach(function(p){PROFILES.push(p);});
+        renderGrid(gTab||'all');
+        renderSwipe();
+      }catch(e){console.log('Erreur parsing profils',e);}
+    }
+  };
+  xhr.send();
+}
+loadApprovedProfiles('femme');
 
 var MSGS=[
   {id:1,pid:0,name:"Ning",emoji:"&#128105;",bg:"linear-gradient(135deg,#E8D5C4,#C4A080)",time:"5min",prev:"Bonjour, ravie de vous rencontrer !",unread:1,online:true},
@@ -1726,7 +1825,8 @@ function renderSwipe(){
     if(p.isNew)badges+="<span style=\"background:rgba(196,150,42,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px\">&#10024; Nouveau</span>";
     badges+="<span style=\"background:rgba(0,0,0,.45);color:#fff;font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:12px\">"+enLabel(p.en)+"</span>";
     // Carte épurée : photo + info minimale
-    card.innerHTML="<div class=\"swc-photo\" style=\"background:"+p.bg+";height:100%\"><span style=\"font-size:80px\">"+p.emoji+"</span>"
+    var swBg=p.photo?'background:url('+p.photo+') center/cover no-repeat':'background:'+p.bg;
+    card.innerHTML="<div class=\"swc-photo\" style=\""+swBg+";height:100%\">"+(p.photo?'':'<span style="font-size:80px">'+p.emoji+'</span>')
       +"<div class=\"sw-badge-like\" id=\"sl"+i+"\">LIKE</div>"
       +"<div class=\"sw-badge-nope\" id=\"sn"+i+"\">PASSE</div>"
       +"<div style=\"position:absolute;bottom:0;left:0;right:0;padding:12px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 100%);\">"
@@ -1795,7 +1895,9 @@ function renderGrid(tab){
   }
 }
 var enFlag=p.en==="Excellent"?"&#127468;&#127463;":p.en==="Moyen"?"&#127468;&#127463;":"&#127468;&#127463;";
-    gc.innerHTML="<div class=\"gc-bg\" style=\"background:"+p.bg+"\"><span>"+p.emoji+"</span></div><div class=\"gc-grd\"></div>"+(p.isNew?"<div class=\"gc-new\">NEW</div>":"")+"<div class=\"gc-info\">"+(p.online?"<span class=\"gc-dot\"></span>":"")+"<div class=\"gc-name\">"+p.name+", "+p.age+"</div><div class=\"gc-sub\">"+p.ville+" &middot; "+enFlag+" "+p.en+"</div></div><div class=\"gc-act\"><button class=\"gc-hbtn"+(liked?" liked":"")+"\">"+( liked?"&#10084;":"&#9825;")+"</button></div>";
+    var gcBg=p.photo?"background:url("+p.photo+") center/cover no-repeat":"background:"+p.bg;
+    gc.innerHTML="<div class=\"gc-bg\" style=\""+gcBg+"\">"
+      +(p.photo?"":"<span>"+p.emoji+"</span>")+"</div><div class=\"gc-grd\"></div>"+(p.isNew?"<div class=\"gc-new\">NEW</div>":"")+"<div class=\"gc-info\">"+(p.online?"<span class=\"gc-dot\"></span>":"")+"<div class=\"gc-name\">"+p.name+", "+p.age+"</div><div class=\"gc-sub\">"+p.ville+" &middot; "+enFlag+" "+p.en+"</div></div><div class=\"gc-act\"><button class=\"gc-hbtn"+(liked?" liked":"")+"\">"+( liked?"&#10084;":"&#9825;")+"</button></div>";
     gc.querySelector(".gc-hbtn").onclick=function(e){
       e.stopPropagation();
       if(likedSet.has(p.id)){likedSet.delete(p.id);this.innerHTML="&#9825;";this.classList.remove("liked");updateHeartsUI();}
@@ -1994,6 +2096,54 @@ function renderMsgList(tab){
 
 function deleteMsgById(id){MSGS=MSGS.filter(function(m){return m.id!==id;});renderMsgList(mTab);toast("Supprime");}
 function setMTab(tab,btn){mTab=tab;document.querySelectorAll(".mtb").forEach(function(b){b.classList.remove("on");});if(btn)btn.classList.add("on");renderMsgList(tab);}
+
+// ── TRADUCTION CONVERSATION ──────────────────────────
+var convTradOn=true;
+function toggleConvTrad(){
+  convTradOn=!convTradOn;
+  var btn=g('conv-trad-btn');
+  if(btn){
+    btn.textContent=convTradOn?'🌐 Trad ON':'🌐 Trad OFF';
+    btn.style.color=convTradOn?'var(--g)':'var(--td)';
+    btn.style.background=convTradOn?'rgba(196,150,42,.12)':'rgba(26,39,68,.08)';
+  }
+  if(currentConvP)renderConv(currentConvP.id);
+}
+
+// ── SIGNALEMENT ──────────────────────────────────────
+var reportReason='';
+function openReportModal(){
+  reportReason='';
+  document.querySelectorAll('.report-opt').forEach(function(b){b.classList.remove('sel');});
+  var sb=g('report-send-btn');if(sb){sb.disabled=true;sb.style.opacity='.5';}
+  var sub=g('report-subtitle');
+  if(sub&&currentConvP)sub.textContent='Pourquoi souhaitez-vous signaler '+currentConvP.name+' ?';
+  var m=g('modal-report');if(m){m.style.display='flex';}
+}
+function closeReportModal(){
+  var m=g('modal-report');if(m){m.style.display='none';}
+}
+function selectReport(btn,reason){
+  reportReason=reason;
+  document.querySelectorAll('.report-opt').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel');
+  var sb=g('report-send-btn');if(sb){sb.disabled=false;sb.style.opacity='1';sb.style.background='rgba(192,57,43,.2)';}
+}
+function sendReport(){
+  if(!reportReason)return;
+  var name=currentConvP?currentConvP.name:'Inconnu';
+  var msg='SIGNALEMENT LoveSiam\n===================\nProfil signalé: '+name+'\nRaison: '+reportReason+'\nSignalé par: '+(U?U.email:'visiteur')+'\nDate: '+new Date().toLocaleString('fr-FR');
+  // Envoi email admin
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST','https://api.emailjs.com/api/v1.0/email/send',true);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.send(JSON.stringify({
+    service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',
+    template_params:{to_email:'contact@thailovematching.com',from_name:'LoveSiam Modération',from_email:'contact@thailovematching.com',subject:'⚠ Signalement profil: '+name+' ('+reportReason+')',message:msg}
+  }));
+  closeReportModal();
+  toast('⚠ Signalement envoyé. Merci.');
+}
 
 function openConv(pidx){
   var p=PROFILES[pidx];if(!p)return;currentConvP=p;
@@ -2265,7 +2415,7 @@ var T = {
     q2_height: 'Taille',
     q2_weight: 'Poids',
     q2_photos: 'Vos photos',
-    q2_photo1: 'Photo principale *',
+    q2_photo1: 'Photo principale',
     q2_photo_add: 'Ajouter ma photo principale',
     q2_photo_size: 'JPG, PNG — max 5MB',
     q2_add: 'Ajouter',
@@ -2596,7 +2746,6 @@ function qFieldErr(el,msg){
   if(!el)return;
   el.style.border='2px solid #C0392B';
   el.style.background='rgba(192,57,43,.06)';
-  show('⚠ '+msg);
 }
 function qFieldOk(el){
   if(!el)return;
@@ -2606,12 +2755,22 @@ function qFieldOk(el){
 function qNI(){
   const n=g('QN'),a=g('QAG'),h2=g('QH'),w=g('QW');
   var ok=true;
-  if(!n||!n.value.trim()){qFieldErr(n,'Prénom requis');ok=false;}else{qFieldOk(n);}
-  if(!a||!a.value){if(ok)qFieldErr(a,'Âge requis');ok=false;}else{qFieldOk(a);}
-  if(!h2||!h2.value){if(ok)qFieldErr(h2,'Taille requise');ok=false;}else{qFieldOk(h2);}
-  if(!w||!w.value){if(ok)qFieldErr(w,'Poids requis');ok=false;}else{qFieldOk(w);}
-  if(!QA.len){if(ok)show('⚠ Niveau d\'anglais requis');ok=false;}
-  if(!ok)return;
+  if(!n||!n.value.trim()){qFieldErr(n);ok=false;}else{qFieldOk(n);}
+  if(!a||!a.value){qFieldErr(a);ok=false;}else{qFieldOk(a);}
+  if(!h2||!h2.value){qFieldErr(h2);ok=false;}else{qFieldOk(h2);}
+  if(!w||!w.value){qFieldErr(w);ok=false;}else{qFieldOk(w);}
+  // Anglais
+  var lenBlock=g('LENBLOCK');
+  var lenErr=g('len_err');
+  if(!QA.len){
+    if(lenBlock){lenBlock.style.outline='2px solid #C0392B';lenBlock.style.borderRadius='10px';}
+    if(lenErr){lenErr.style.display='block';}
+    ok=false;
+  } else {
+    if(lenBlock){lenBlock.style.outline='';lenBlock.style.borderRadius='';}
+    if(lenErr){lenErr.style.display='none';}
+  }
+  if(!ok){show('⚠ Veuillez compléter tous les champs requis (*)');return;}
   QA.name=n.value.trim();QA.age=a.value;
   const v=g('QV2');if(v)QA.ville=v.value.trim();
   QA.height=h2.value;QA.weight=w.value;
@@ -2774,7 +2933,7 @@ function bQ(){
     var lbl_th = LANG==='th' ? 'ภาษาไทย' : 'Thaïlandais';
     var lbl_fr_lang = LANG==='th' ? 'ภาษาฝรั่งเศส' : 'Français';
     var lbl_en = LANG==='th' ? 'ภาษาอังกฤษ' : 'Anglais';
-    var langBlock='<div class="lr"><div class="lh"><span>&#127468;&#127463;</span><span style="font-size:.9rem;font-weight:500">'+lbl_en+'<span style="color:#C0392B;margin-left:2px">*</span></span></div><div class="lp">'+langEN+'</div></div>'
+    var langBlock='<div class="lr" id="LENBLOCK"><div class="lh"><span>&#127468;&#127463;</span><span style="font-size:.9rem;font-weight:500">'+lbl_en+'<span style="color:#C0392B;margin-left:2px">*</span></span></div><div class="lp">'+langEN+'</div><div id="len_err" style="display:none;color:#C0392B;font-size:.8rem;margin-top:4px;font-weight:500">⚠ Niveau d\'anglais requis</div></div>'
     h='<div class="qe">'+stepLabel+' 2/'+QT_STEPS+'</div>'
      +'<div class="qt">'+tq.q2_title+'</div>'
      +'<div class="fg"><label class="fl">'+tq.q2_name+'<span style="color:#C0392B;margin-left:2px">*</span></label><input class="fi" id="QN" type="text" placeholder="'+tq.q2_name+'" value="'+(QA.name||'')+'"></div>'
@@ -2848,7 +3007,7 @@ function bQ(){
     var relHtml='';
     for(var ri2=0;ri2<relOpts.length;ri2++){var ro=relOpts[ri2];relHtml+='<div class="cd '+(QA.looking===ro.vl?'sl':'')+'" data-cd="looking:'+ro.vl+'"><div class="ci2">'+ro.ic+'</div><div><div class="cl">'+ro.lb+'</div><div class="cs3">'+ro.sb+'</div></div><div class="ck">'+(QA.looking===ro.vl?'✓':'')+'</div></div>';}
     h='<div class="qe">'+stepLabel+' 5/'+QT_STEPS+'</div>'
-     +'<div class="qt">'+(LANG==='th'?'คุณ<em>กำลังมองหา</em>อะไร':'Ce que vous <em>recherchez</em>')+'</div>'
+     +'<div class="qt">'+(LANG==='th'?'คุณ<em>กำลังมองหา</em>อะไร':'Ce que vous <em>recherchez</em>')+' <span style="color:#C0392B">*</span></div>'
      +'<div class="cs2">'+relHtml+'</div>'
      +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX" onclick="qNextStep()">'+contBtn+'</button></div>';
   }
