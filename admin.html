@@ -2925,12 +2925,18 @@ function bQ(){
     e.preventDefault();
     var b=g('QSND');
     if(b&&b.disabled)return;
+    var em=g('QE');
+    if(!em||!em.value.trim()){
+      var emailField=document.querySelector('#QE');
+      if(emailField){emailField.style.border='2px solid var(--rd)';emailField.focus();}
+      toast('&#9888; L\'adresse email est obligatoire');
+      return;
+    }
     if(b){b.textContent='Envoi\u2026';b.disabled=true;}
-    qSub().catch(function(err){
-      var btn2=g('QSND');
-      if(btn2){btn2.textContent='Envoyer ma candidature \u2756';btn2.disabled=false;}
-      toast('\u274C Erreur: '+(err&&err.message?err.message:'inattendue'));
-    });
+    try{qSub();}catch(err){
+      if(b){b.textContent='Envoyer ma candidature \u2756';b.disabled=false;}
+      toast('Erreur: '+(err&&err.message?err.message:'inattendue'));
+    }
   };
   if(g('QBA'))g('QBA').onclick=qCamOn;
   if(g('QBR2'))g('QBR2').onclick=qCamRec;
