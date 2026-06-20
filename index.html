@@ -1491,19 +1491,25 @@ function setGenderView(g2,btn){
 }
 
 // Charger les vrais profils validés depuis Supabase
+function showDbg(msg){
+  var dbg=document.getElementById('supabase-debug');
+  if(!dbg){dbg=document.createElement('div');dbg.id='supabase-debug';dbg.style.cssText='position:fixed;top:60px;left:10px;right:10px;background:#1A2744;color:#fff;padding:12px;border-radius:10px;font-size:.72rem;z-index:9999;word-break:break-all';document.body.appendChild(dbg);}
+  dbg.innerHTML=msg+'<br><button onclick="this.parentNode.remove()" style="margin-top:8px;padding:3px 10px;background:var(--g);border:none;color:#fff;border-radius:6px;cursor:pointer;font-size:.7rem">Fermer</button>';
+}
+
 function loadApprovedProfiles(filterGender){
   var gf=filterGender||genderView||'femme';
+  showDbg('🔄 Chargement profils en cours...');
   var xhr=new XMLHttpRequest();
-  xhr.open('GET',SB_URL+'/rest/v1/inscriptions?select=*&status=eq.approved&order=created_at.desc',true);
+  var url=SB_URL+'/rest/v1/inscriptions?select=*&status=eq.approved&order=created_at.desc';
+  showDbg('📡 Requête: '+url.substring(0,80));
+  xhr.open('GET',url,true);
   xhr.setRequestHeader('apikey',SB_KEY);
   xhr.setRequestHeader('Authorization','Bearer '+SB_KEY);
   xhr.timeout=8000;
   xhr.onreadystatechange=function(){
     if(xhr.readyState!==4)return;
-    // DEBUG PANEL PERMANENT
-    var dbg=document.getElementById('supabase-debug');
-    if(!dbg){dbg=document.createElement('div');dbg.id='supabase-debug';dbg.style.cssText='position:fixed;bottom:70px;left:10px;right:10px;background:#1A2744;color:#fff;padding:10px;border-radius:10px;font-size:.72rem;z-index:9999;word-break:break-all;max-height:120px;overflow-y:auto';document.body.appendChild(dbg);}
-    dbg.innerHTML='<b>HTTP '+xhr.status+'</b> — '+xhr.responseText.substring(0,200)+'<br><button onclick="this.parentNode.remove()" style="margin-top:6px;padding:2px 8px;background:var(--g);border:none;color:#fff;border-radius:6px;cursor:pointer;font-size:.7rem">Fermer</button>';
+    showDbg('✅ HTTP '+xhr.status+' — '+xhr.responseText.substring(0,150));
     if(xhr.status>=200&&xhr.status<300){
       try{
         var rows=JSON.parse(xhr.responseText);
@@ -1553,9 +1559,11 @@ function loadApprovedProfiles(filterGender){
         renderSwipe();
       }catch(e){console.log('Erreur parsing profils',e);}
     }else{
-      console.log('Erreur Supabase profils:',xhr.status,xhr.responseText);
+      showDbg('❌ Erreur HTTP '+xhr.status+': '+xhr.responseText.substring(0,100));
     }
   };
+  xhr.onerror=function(){showDbg('🔴 ERREUR RÉSEAU (onerror) — XHR bloqué ou CORS');};
+  xhr.ontimeout=function(){showDbg('⏱ TIMEOUT — pas de réponse après 8 secondes');};
   xhr.send();
 }
 loadApprovedProfiles('femme');
