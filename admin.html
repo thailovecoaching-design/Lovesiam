@@ -2320,6 +2320,32 @@ const SB_URL='https://sbglyelgqceydofgllop.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
 
 // XHR fiable sur tous iOS - remplace fetch pour l'envoi critique
+function qSubmitBtn(){
+  var em=g('QE');
+  var errDiv=document.getElementById('QE_ERR');
+  if(!em||!em.value.trim()){
+    em.style.border='2px solid #C0392B';
+    if(!errDiv){
+      var d=document.createElement('div');
+      d.id='QE_ERR';
+      d.style.cssText='color:#C0392B;font-size:.82rem;margin-top:4px;margin-bottom:8px;';
+      d.textContent='⚠ L\'adresse email est obligatoire';
+      em.parentNode.insertBefore(d,em.nextSibling);
+    }
+    em.focus();
+    return;
+  }
+  if(errDiv)errDiv.remove();
+  em.style.border='';
+  var btn=g('QSND');
+  if(btn&&btn.disabled)return;
+  if(btn){btn.textContent='Envoi…';btn.disabled=true;}
+  try{qSub();}catch(err){
+    if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}
+    alert('Erreur: '+(err&&err.message?err.message:'inattendue'));
+  }
+}
+
 function qSub(){
   var btn=g('QSND');
   var em=g('QE');
@@ -2906,7 +2932,7 @@ function bQ(){
      +'<div class="fg"><label class="fl">'+tq.q8_email+'</label><input class="fi" id="QE" type="email" placeholder="votre@email.com" value="'+(QA.email||'')+'"></div>'
      +'<div class="fg"><label class="fl">'+tq.q8_whatsapp+'</label><input class="fi" id="QWH" type="tel" placeholder="+33 6 xx xx xx xx" value="'+(QA.whats||'')+'"></div>'
      +'<div class="sr"><div style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:8px;font-weight:500">'+tq.q8_recap+'</div>'+rwHtml+'</div>'
-     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QSND">'+tq.q_send+'</button></div>';
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QSND" onclick="qSubmitBtn()">'+tq.q_send+'</button></div>';
   }
 
   g('QB').innerHTML=h;
