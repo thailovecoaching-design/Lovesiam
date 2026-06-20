@@ -1123,8 +1123,8 @@ h2 em{font-style:italic;color:var(--g)}
   </div>
 </div>
 <div style="display:flex;justify-content:center;padding:8px 12px 0;gap:8px">
-  <button id="view-fem" onclick="setGenderView('femme',this)" style="flex:1;padding:8px;border-radius:12px;border:1.5px solid var(--g);background:var(--g);color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--sans)">&#127481;&#127469; Vue Femmes thaï</button>
-  <button id="view-hom" onclick="setGenderView('homme',this)" style="flex:1;padding:8px;border-radius:12px;border:1.5px solid rgba(26,39,68,.2);background:transparent;color:var(--nv);font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--sans)">&#127467;&#127479; Vue Hommes français</button>
+  <button id="view-fem" onclick="setGenderView('femme',this)" style="flex:1;padding:8px;border-radius:12px;border:1.5px solid rgba(26,39,68,.2);background:transparent;color:var(--nv);font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--sans)">&#127481;&#127469; Vue Femmes thaï</button>
+  <button id="view-hom" onclick="setGenderView('homme',this)" style="flex:1;padding:8px;border-radius:12px;border:1.5px solid var(--g);background:var(--g);color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--sans)">&#127467;&#127479; Vue Hommes français</button>
 </div>
 <div class="g-tabs" style="position:sticky;top:50px;z-index:5;background:#fff;border-bottom:2px solid var(--b2)">
   <button class="gtb on" onclick="setGTab('all',this)">Tous <span class="gcnt" id="g-all">0</span></button>
@@ -1473,7 +1473,7 @@ PROFILES[3].joinedAt=NOW-30*DAY;
 PROFILES[4].joinedAt=NOW-60*DAY;
 PROFILES.forEach(function(p){p.isNew=(NOW-p.joinedAt)<DAY;});
 
-var genderView='femme'; // par défaut: voir les femmes thaïlandaises
+var genderView='homme'; // défaut: voir les hommes français (en attendant les femmes)
 
 const SB_URL='https://sbglyelgqceydofgllop.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
@@ -1522,7 +1522,12 @@ function loadApprovedProfiles(filterGender){
           return true;
         });
         showDbg(filtered.length+' profils filtrés ('+gf+')');
-        if(!filtered.length){toast('Aucun profil validé pour cette vue');renderGrid(gTab||'all');return;}
+        if(!filtered.length){
+          toast('Aucun profil validé pour la vue '+gf+' — profils démo affichés');
+          // Garder les profils démo existants
+          renderGrid(gTab||'all');
+          return;
+        }
         var NOW2=Date.now();
         var newProfiles=filtered.map(function(r,i){
           var jMs=r.created_at?new Date(r.created_at).getTime():NOW2-i*86400000;
@@ -1541,7 +1546,7 @@ function loadApprovedProfiles(filterGender){
       });
   }catch(e){showDbg('🔴 Supabase JS erreur: '+e.message);}
 }
-loadApprovedProfiles('femme');
+loadApprovedProfiles('homme');
 
 var MSGS=[
   {id:1,pid:0,name:"Ning",emoji:"&#128105;",bg:"linear-gradient(135deg,#E8D5C4,#C4A080)",time:"5min",prev:"Bonjour, ravie de vous rencontrer !",unread:1,online:true},
