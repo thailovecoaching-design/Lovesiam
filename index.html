@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>LoveSiam</title>
+<title>LoveSiam v3.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -2572,10 +2572,34 @@ function show(m){
 
 function closeMl(){document.getElementById('ML_BG').style.display='none';document.body.style.overflow=''}
 
+function qFieldErr(el,msg){
+  if(!el)return;
+  el.style.border='2px solid #C0392B';
+  el.style.background='rgba(192,57,43,.06)';
+  var errId='err_'+el.id;
+  var old=document.getElementById(errId);
+  if(old)old.remove();
+  var d=document.createElement('div');
+  d.id=errId;
+  d.style.cssText='color:#C0392B;font-size:.78rem;margin-top:3px;margin-bottom:6px;';
+  d.textContent='⚠ '+msg;
+  el.parentNode.insertBefore(d,el.nextSibling);
+  el.focus();
+}
+function qFieldOk(el){
+  if(!el)return;
+  el.style.border='';el.style.background='';
+  var errId='err_'+el.id;
+  var old=document.getElementById(errId);
+  if(old)old.remove();
+}
+
 function qNI(){
   const n=g('QN'),a=g('QAG'),h2=g('QH'),w=g('QW');
-  if(!n||!n.value.trim()){show('⚠️ Prénom requis');return}
-  if(!a||!a.value){show('⚠️ Âge requis');return}
+  var ok=true;
+  if(!n||!n.value.trim()){qFieldErr(n,'Prénom requis');ok=false;}else{qFieldOk(n);}
+  if(!a||!a.value||parseInt(a.value)<18||parseInt(a.value)>80){qFieldErr(a,'Âge requis (18–80)');ok=false;}else{qFieldOk(a);}
+  if(!ok)return;
   QA.name=n.value.trim();QA.age=a.value;
   const v=g('QV2');if(v)QA.ville=v.value.trim();
   if(h2&&h2.value)QA.height=h2.value;
@@ -2939,10 +2963,17 @@ function bQ(){
   if(pb)pb.style.width=((QS+1)/QT_STEPS*100)+'%';
 
   if(g('QNX'))g('QNX').onclick=function(){
-    if(QS===0){if(!QA.g){show('⚠️ '+(LANG==='th'?'เลือกโปรไฟล์ของคุณ':'Choisissez votre profil'));return;}QS++;bQ();}
+    if(QS===0){if(!QA.g){show('⚠️ '+(LANG==='th'?'เลือกโปรไฟล์ของคุณ':'Veuillez choisir votre profil'));return;}QS++;bQ();}
     else if(QS===1){qNI();}
     else if(QS===2){var d=g('QDESC');if(d)QA.desc=d.value.trim();QS++;bQ();}
-    else if(QS===3){QS++;bQ();}
+    else if(QS===3){
+      if(!QA.looking){
+        var lookErr=document.getElementById('look_err');
+        if(!lookErr){var le=document.createElement('div');le.id='look_err';le.style.cssText='color:#C0392B;font-size:.82rem;margin:8px 0;text-align:center;';le.textContent='⚠ Veuillez choisir ce que vous recherchez';var qb=g('QB');if(qb)qb.insertBefore(le,qb.querySelector('.qn'));}
+        return;
+      }
+      QS++;bQ();
+    }
     else if(QS===4){if(!QA.looking){show('⚠️ '+(LANG==='th'?'เลือกสิ่งที่คุณมองหา':'Choisissez ce que vous recherchez'));return;}QS++;bQ();}
     else{QS=Math.min(QS+1,QT_STEPS-1);bQ();}
   };
