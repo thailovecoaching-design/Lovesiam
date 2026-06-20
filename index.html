@@ -955,7 +955,6 @@ h2 em{font-style:italic;color:var(--g)}
 .report-opt{width:100%;padding:14px 16px;background:var(--b2);border:none;border-radius:10px;font-size:.9rem;color:var(--nv);text-align:left;cursor:pointer;font-family:var(--sans);font-weight:500;transition:background .15s}
 .report-opt.sel{background:rgba(192,57,43,.12);color:#C0392B;font-weight:700}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -1496,36 +1495,32 @@ function setGenderView(g2,btn){
   loadApprovedProfiles(g2);
 }
 
-// Charger les vrais profils validés depuis Supabase
-  dbg.innerHTML=msg+'<br><button onclick="this.parentNode.remove()" style="margin-top:8px;padding:3px 10px;background:var(--g);border:none;color:#fff;border-radius:6px;cursor:pointer;font-size:.7rem">Fermer</button>';
-}
 
 function loadApprovedProfiles(filterGender){
-  var gf=filterGender||genderView||'femme';
-  try{
-    var sb=window.supabase.createClient(SB_URL,SB_KEY);
-    sb.from('inscriptions')
-      .select('id,name,age,city,height,weight,family,looking,english_level,bio,photo_url,video_url,gender,status,created_at')
-      .eq('status','approved')
-      .order('created_at',{ascending:false})
-      .then(function(result){
-        if(result.error){return;}
-        var rows=result.data||[];
-        if(!rows.length){renderGrid(gTab||'all');return;}
+  var gf=filterGender||genderView||'homme';
+  var xhr=new XMLHttpRequest();
+  var url=SB_URL+'/rest/v1/inscriptions?apikey='+SB_KEY
+    +'&select=id,name,age,city,height,weight,family,looking,english_level,bio,photo_url,video_url,gender,status,created_at'
+    +'&status=eq.approved&order=created_at.desc';
+  xhr.open('GET',url,true);
+  xhr.timeout=10000;
+  xhr.onreadystatechange=function(){
+    if(xhr.readyState!==4)return;
+    if(xhr.status>=200&&xhr.status<300){
+      try{
+        var rows=JSON.parse(xhr.responseText)||[];
         var filtered=rows.filter(function(r){
           var g=(r.gender||'').toLowerCase().trim();
-          if(gf==='homme') return !g||g===''||g==='homme'||g==='h'||g.indexOf('homme')>=0||g.indexOf('man')>=0||g.indexOf('male')>=0;
+          if(gf==='homme') return !g||g==='homme'||g==='h'||g.indexOf('homme')>=0||g.indexOf('man')>=0;
           if(gf==='femme') return g==='femme'||g==='f'||g.indexOf('femme')>=0||g.indexOf('tha')>=0;
           return true;
         });
         if(!filtered.length){
-          PROFILES.length=0;
           var gridEl=document.querySelector('#pg-f .scroll');
           if(gridEl){
-            var msg=gf==='femme'
-              ?'<div style="text-align:center;padding:40px 20px;color:var(--td)"><div style="font-size:2rem;margin-bottom:12px">&#127481;&#127469;</div><div style="font-size:.9rem;line-height:1.6">Les profils de femmes thaïlandaises<br>seront disponibles prochainement.<br><br>Les inscriptions sont en cours.</div></div>'
-              :'<div style="text-align:center;padding:40px 20px;color:var(--td)"><div style="font-size:2rem;margin-bottom:12px">&#127467;&#127479;</div><div style="font-size:.9rem">Aucun profil validé pour le moment.</div></div>';
-            gridEl.innerHTML=msg;
+            gridEl.innerHTML='<div style="text-align:center;padding:48px 20px;color:var(--td);font-size:.9rem;line-height:2">'
+              +(gf==='femme'?'&#127481;&#127469;<br>Profils de femmes thaïlandaises<br>bientôt disponibles.':'&#127467;&#127479;<br>Aucun profil validé pour le moment.')
+              +'</div>';
           }
           return;
         }
@@ -1537,6 +1532,7 @@ function loadApprovedProfiles(filterGender){
             fam:r.family||'',looking:r.looking||'',en:r.english_level||'',
             online:false,joinedAt:jMs,isNew:(NOW2-jMs)<86400000,likedMe:false,bio:r.bio||'',
             emoji:gf==='femme'?'&#128105;':'&#128104;',photo:r.photo_url||'',video:r.video_url||'',
+            videoTranslated:r.video_translated||false,
             bg:gf==='femme'?'linear-gradient(160deg,#1A2744,#0D1522)':'linear-gradient(160deg,#2A1A44,#150D22)',
             fromSupabase:true};
         });
@@ -1544,8 +1540,12 @@ function loadApprovedProfiles(filterGender){
         newProfiles.forEach(function(p){PROFILES.push(p);});
         renderGrid(gTab||'all');
         renderSwipe();
-      });
-  }catch(e){}
+      }catch(e){console.log('Erreur profils',e);}
+    }
+  };
+  xhr.onerror=function(){console.log('XHR profils erreur');};
+  xhr.ontimeout=function(){console.log('XHR profils timeout');};
+  xhr.send();
 }
 loadApprovedProfiles('homme');
 
