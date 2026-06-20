@@ -1500,7 +1500,10 @@ function loadApprovedProfiles(filterGender){
   xhr.timeout=8000;
   xhr.onreadystatechange=function(){
     if(xhr.readyState!==4)return;
-    toast('Supabase: HTTP '+xhr.status+' / '+xhr.responseText.substring(0,60));
+    // DEBUG PANEL PERMANENT
+    var dbg=document.getElementById('supabase-debug');
+    if(!dbg){dbg=document.createElement('div');dbg.id='supabase-debug';dbg.style.cssText='position:fixed;bottom:70px;left:10px;right:10px;background:#1A2744;color:#fff;padding:10px;border-radius:10px;font-size:.72rem;z-index:9999;word-break:break-all;max-height:120px;overflow-y:auto';document.body.appendChild(dbg);}
+    dbg.innerHTML='<b>HTTP '+xhr.status+'</b> — '+xhr.responseText.substring(0,200)+'<br><button onclick="this.parentNode.remove()" style="margin-top:6px;padding:2px 8px;background:var(--g);border:none;color:#fff;border-radius:6px;cursor:pointer;font-size:.7rem">Fermer</button>';
     if(xhr.status>=200&&xhr.status<300){
       try{
         var rows=JSON.parse(xhr.responseText);
