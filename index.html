@@ -2320,6 +2320,26 @@ const SB_URL='https://sbglyelgqceydofgllop.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
 
 // XHR fiable sur tous iOS - remplace fetch pour l'envoi critique
+function qNextStep(){
+  if(QS===0){
+    if(!QA.g){show('⚠ Veuillez choisir votre profil');return;}
+    QS++;bQ();
+  }
+  else if(QS===1){qNI();}
+  else if(QS===2){
+    var d=g('QDESC');
+    var desc=(d?d.value.trim():'');
+    if(!desc){qFieldErr(d,'Une présentation est requise');return;}
+    qFieldOk(d);QA.desc=desc;QS++;bQ();
+  }
+  else if(QS===3){QS++;bQ();}
+  else if(QS===4){
+    if(!QA.looking){show('⚠ Veuillez choisir ce que vous recherchez');return;}
+    QS++;bQ();
+  }
+  else{QS=Math.min(QS+1,QT_STEPS-1);bQ();}
+}
+
 function qSubmitBtn(){
   var em=g('QE');
   var errDiv=document.getElementById('QE_ERR');
@@ -2576,34 +2596,24 @@ function qFieldErr(el,msg){
   if(!el)return;
   el.style.border='2px solid #C0392B';
   el.style.background='rgba(192,57,43,.06)';
-  var errId='err_'+el.id;
-  var old=document.getElementById(errId);
-  if(old)old.remove();
-  var d=document.createElement('div');
-  d.id=errId;
-  d.style.cssText='color:#C0392B;font-size:.78rem;margin-top:3px;margin-bottom:6px;';
-  d.textContent='⚠ '+msg;
-  el.parentNode.insertBefore(d,el.nextSibling);
-  el.focus();
+  show('⚠ '+msg);
 }
 function qFieldOk(el){
   if(!el)return;
   el.style.border='';el.style.background='';
-  var errId='err_'+el.id;
-  var old=document.getElementById(errId);
-  if(old)old.remove();
 }
 
 function qNI(){
   const n=g('QN'),a=g('QAG'),h2=g('QH'),w=g('QW');
   var ok=true;
   if(!n||!n.value.trim()){qFieldErr(n,'Prénom requis');ok=false;}else{qFieldOk(n);}
-  if(!a||!a.value||parseInt(a.value)<18||parseInt(a.value)>80){qFieldErr(a,'Âge requis (18–80)');ok=false;}else{qFieldOk(a);}
+  if(!a||!a.value){if(ok)qFieldErr(a,'Âge requis');ok=false;}else{qFieldOk(a);}
+  if(!h2||!h2.value){if(ok)qFieldErr(h2,'Taille requise');ok=false;}else{qFieldOk(h2);}
+  if(!w||!w.value){if(ok)qFieldErr(w,'Poids requis');ok=false;}else{qFieldOk(w);}
   if(!ok)return;
   QA.name=n.value.trim();QA.age=a.value;
   const v=g('QV2');if(v)QA.ville=v.value.trim();
-  if(h2&&h2.value)QA.height=h2.value;
-  if(w&&w.value)QA.weight=w.value;
+  QA.height=h2.value;QA.weight=w.value;
   QS++;bQ();
 }
 
@@ -2741,7 +2751,7 @@ function bQ(){
      +'<div class="cd '+(QA.g==='h'?'sl':'')+'" data-cd="g:h"><div class="ci2">👨</div><div><div class="cl">'+tq.q0_man+'</div><div class="cs3">'+tq.q0_man_sub+'</div></div><div class="ck">'+(QA.g==='h'?'✓':'')+'</div></div>'
      +'<div class="cd '+(QA.g==='f'?'sl':'')+'" data-cd="g:f"><div class="ci2">👩</div><div><div class="cl">'+tq.q0_woman+'</div><div class="cs3">'+tq.q0_woman_sub+'</div></div><div class="ck">'+(QA.g==='f'?'✓':'')+'</div></div>'
      +'</div>'
-     +'<div class="qn"><button class="qx qf" id="QNX">'+contBtn+'</button></div>';
+     +'<div class="qn"><button class="qx qf" id="QNX" onclick="qNextStep()">'+contBtn+'</button></div>';
   }
   else if(QS===1){
     var hO='',wO='';
@@ -2792,7 +2802,7 @@ function bQ(){
      +'<div id="PP3" style="display:none;margin-top:5px;font-size:.68rem;color:var(--gn)"></div></div></div>'
      +'<div class="ds"><div class="dl"></div><div class="dt">'+tq.q2_lang+'</div><div class="dl"></div></div>'
      +langBlock
-     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX" onclick="qNextStep()">'+contBtn+'</button></div>';
   }
   else if(QS===2){
     var bioOk=LANG==='th'?'ความหลงใหล การเดินทาง ภาษา วัฒนธรรม สิ่งที่คุณค้นหา':'Passions, voyages, langue, culture, ce que vous cherchez';
@@ -2815,7 +2825,7 @@ function bQ(){
      +'<div style="font-size:.72rem;font-weight:700;color:var(--rd);margin-bottom:5px">'+bioBadLbl+'</div>'
      +'<div style="font-size:.82rem;color:var(--tm)">'+bioBad+'</div>'
      +'</div>'
-     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX" onclick="qNextStep()">'+contBtn+'</button></div>';
   }
   else if(QS===3){
     var ageRanges=['18–25','25–30','30–35','35–40','40–50','50–60','60+'];
@@ -2828,7 +2838,7 @@ function bQ(){
      +'<div class="qt">Tranche d\'âge souhaitée</div>'
      +'<p class="qs">Sélectionnez votre tranche d\'âge</p>'
      +'<div class="pl">'+ageHtml+'</div>'
-     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX" onclick="qNextStep()">'+contBtn+'</button></div>';
   }
     else if(QS===4){
     var relOpts=LANG==='th'
@@ -2839,7 +2849,7 @@ function bQ(){
     h='<div class="qe">'+stepLabel+' 5/'+QT_STEPS+'</div>'
      +'<div class="qt">'+(LANG==='th'?'คุณ<em>กำลังมองหา</em>อะไร':'Ce que vous <em>recherchez</em>')+'</div>'
      +'<div class="cs2">'+relHtml+'</div>'
-     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX" onclick="qNextStep()">'+contBtn+'</button></div>';
   }
     else if(QS===5){
     var famOpts=LANG==='th'
@@ -2849,7 +2859,7 @@ function bQ(){
     h='<div class="qe">'+stepLabel+' 6/'+QT_STEPS+'</div>'
      +'<div class="qt">'+(LANG==='th'?'<em>สถานะ</em>ครอบครัว':'Votre <em>situation</em> familiale')+'</div>'
      +'<div class="cs2">'+famHtml+'</div>'
-     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX" onclick="qNextStep()">'+contBtn+'</button></div>';
   }
   else if(QS===6){
     var tip1=LANG==='th'?'สถานที่สว่าง':'Lieu lumineux';
@@ -2929,7 +2939,7 @@ function bQ(){
      +'<div class="uz" id="QUZ"><div style="font-size:1.7rem;margin-bottom:5px">📤</div><div style="font-size:.8rem;font-weight:500;color:var(--nv)">'+tq.q7_upload_btn+'</div><div style="font-size:.68rem;color:var(--td)">'+tq.q7_upload_size+'</div><input type="file" id="QUF" accept="video/*" capture="camcorder" style="display:none"></div>'
      +'<div id="QUS" style="display:none;padding:8px 11px;border-radius:8px;margin-bottom:8px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.18);font-size:.73rem;color:var(--gn)"></div>'
      +'<div style="text-align:center;margin-bottom:8px"><span style="font-size:.7rem;color:var(--td);cursor:pointer;text-decoration:underline" id="QSK">'+skipLbl+'</span></div>'
-     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX" onclick="qNextStep()">'+contBtn+'</button></div>';
   }
   else if(QS===7){
     var vidOk=LANG==='th'?'วิดีโอพร้อมแล้ว':'Vidéo prête';
@@ -2962,21 +2972,6 @@ function bQ(){
   g('QB').innerHTML=h;
   if(pb)pb.style.width=((QS+1)/QT_STEPS*100)+'%';
 
-  if(g('QNX'))g('QNX').onclick=function(){
-    if(QS===0){if(!QA.g){show('⚠️ '+(LANG==='th'?'เลือกโปรไฟล์ของคุณ':'Veuillez choisir votre profil'));return;}QS++;bQ();}
-    else if(QS===1){qNI();}
-    else if(QS===2){var d=g('QDESC');if(d)QA.desc=d.value.trim();QS++;bQ();}
-    else if(QS===3){
-      if(!QA.looking){
-        var lookErr=document.getElementById('look_err');
-        if(!lookErr){var le=document.createElement('div');le.id='look_err';le.style.cssText='color:#C0392B;font-size:.82rem;margin:8px 0;text-align:center;';le.textContent='⚠ Veuillez choisir ce que vous recherchez';var qb=g('QB');if(qb)qb.insertBefore(le,qb.querySelector('.qn'));}
-        return;
-      }
-      QS++;bQ();
-    }
-    else if(QS===4){if(!QA.looking){show('⚠️ '+(LANG==='th'?'เลือกสิ่งที่คุณมองหา':'Choisissez ce que vous recherchez'));return;}QS++;bQ();}
-    else{QS=Math.min(QS+1,QT_STEPS-1);bQ();}
-  };
   if(g('QBK'))g('QBK').onclick=function(){qCC();QS=Math.max(QS-1,0);bQ();};
   if(g('QSND'))g('QSND').onclick=function(e){
     e.preventDefault();
