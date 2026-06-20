@@ -2610,6 +2610,7 @@ function qNI(){
   if(!a||!a.value){if(ok)qFieldErr(a,'Âge requis');ok=false;}else{qFieldOk(a);}
   if(!h2||!h2.value){if(ok)qFieldErr(h2,'Taille requise');ok=false;}else{qFieldOk(h2);}
   if(!w||!w.value){if(ok)qFieldErr(w,'Poids requis');ok=false;}else{qFieldOk(w);}
+  if(!QA.len){if(ok)show('⚠ Niveau d\'anglais requis');ok=false;}
   if(!ok)return;
   QA.name=n.value.trim();QA.age=a.value;
   const v=g('QV2');if(v)QA.ville=v.value.trim();
@@ -2773,15 +2774,15 @@ function bQ(){
     var lbl_th = LANG==='th' ? 'ภาษาไทย' : 'Thaïlandais';
     var lbl_fr_lang = LANG==='th' ? 'ภาษาฝรั่งเศส' : 'Français';
     var lbl_en = LANG==='th' ? 'ภาษาอังกฤษ' : 'Anglais';
-    var langBlock='<div class="lr"><div class="lh"><span>&#127468;&#127463;</span><span style="font-size:.9rem;font-weight:500">'+lbl_en+'</span></div><div class="lp">'+langEN+'</div></div>'
+    var langBlock='<div class="lr"><div class="lh"><span>&#127468;&#127463;</span><span style="font-size:.9rem;font-weight:500">'+lbl_en+'<span style="color:#C0392B;margin-left:2px">*</span></span></div><div class="lp">'+langEN+'</div></div>'
     h='<div class="qe">'+stepLabel+' 2/'+QT_STEPS+'</div>'
      +'<div class="qt">'+tq.q2_title+'</div>'
-     +'<div class="fg"><label class="fl">'+tq.q2_name+'</label><input class="fi" id="QN" type="text" placeholder="'+tq.q2_name+'" value="'+(QA.name||'')+'"></div>'
-     +'<div class="fg"><label class="fl">'+tq.q2_age+'</label><select class="fsl" id="QAG"><option value="">—</option></select></div>'
+     +'<div class="fg"><label class="fl">'+tq.q2_name+'<span style="color:#C0392B;margin-left:2px">*</span></label><input class="fi" id="QN" type="text" placeholder="'+tq.q2_name+'" value="'+(QA.name||'')+'"></div>'
+     +'<div class="fg"><label class="fl">'+tq.q2_age+'<span style="color:#C0392B;margin-left:2px">*</span></label><select class="fsl" id="QAG"><option value="">—</option></select></div>'
      +buildCountrySelect(iF, QA.country, LANG)
     +'<div class="fg" id="QV2_WRAP"><label class="fl">'+cityLabel+'</label><input class="fi" id="QV2" type="text" placeholder="'+cityPh+'" value="'+(QA.ville||'')+'"></div>'
-     +'<div class="r2"><div class="fg"><label class="fl">'+tq.q2_height+'</label><select class="fsl" id="QH"><option value="">cm</option>'+hO+'</select></div>'
-     +'<div class="fg"><label class="fl">'+tq.q2_weight+'</label><select class="fsl" id="QW"><option value="">kg</option>'+wO+'</select></div></div>'
+     +'<div class="r2"><div class="fg"><label class="fl">'+tq.q2_height+'<span style="color:#C0392B;margin-left:2px">*</span></label><select class="fsl" id="QH"><option value="">cm</option>'+hO+'</select></div>'
+     +'<div class="fg"><label class="fl">'+tq.q2_weight+'<span style="color:#C0392B;margin-left:2px">*</span></label><select class="fsl" id="QW"><option value="">kg</option>'+wO+'</select></div></div>'
      +'<div class="ds"><div class="dl"></div><div class="dt">'+tq.q2_photos+'</div><div class="dl"></div></div>'
      +'<div style="margin-bottom:14px">'
      +'<div style="font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--nv);margin-bottom:7px;font-weight:600">'+tq.q2_photo1+'</div>'
@@ -2813,7 +2814,7 @@ function bQ(){
      +'<div class="qt">'+tq.q3_title+'</div>'
      +'<p class="qs">'+tq.q3_sub+'</p>'
      +'<div class="fg">'
-     +'<label class="fl">'+tq.q3_title+'</label>'
+     +'<label class="fl">'+tq.q3_title+' <span style="color:#C0392B">*</span></label>'
      +'<div style="position:relative">'
      +'<textarea class="fa" id="QDESC" rows="5" placeholder="'+tq.q3_placeholder+'" maxlength="500" oninput="updateBioCount(this)">'+(QA.desc||'')+'</textarea>'
      +'<div id="BIO_COUNT" style="text-align:right;font-size:.72rem;color:var(--td);margin-top:3px">'+(QA.desc?QA.desc.length:0)+'/500</div>'
@@ -2963,7 +2964,7 @@ function bQ(){
      +'<div class="qt">'+tq.q8_title+'</div>'
      +'<p class="qs">'+tq.q8_sub+'</p>'
      +(QV?'<div style="padding:8px 11px;border-radius:8px;margin-bottom:11px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.18);font-size:.73rem;color:var(--gn)">✅ '+vidOk+'</div>':'<div style="padding:8px 11px;border-radius:8px;margin-bottom:11px;background:var(--gd);border:1px solid rgba(196,150,42,.16);font-size:.73rem;color:var(--tm)">📹 '+vidNo+'</div>')
-     +'<div class="fg"><label class="fl">'+tq.q8_email+'</label><input class="fi" id="QE" type="email" placeholder="votre@email.com" value="'+(QA.email||'')+'"></div>'
+     +'<div class="fg"><label class="fl">'+tq.q8_email+'<span style="color:#C0392B;margin-left:2px"></span></label><input class="fi" id="QE" type="email" placeholder="votre@email.com" value="'+(QA.email||'')+'"></div>'
      +'<div class="fg"><label class="fl">'+tq.q8_whatsapp+'</label><input class="fi" id="QWH" type="tel" placeholder="+33 6 xx xx xx xx" value="'+(QA.whats||'')+'"></div>'
      +'<div class="sr"><div style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:8px;font-weight:500">'+tq.q8_recap+'</div>'+rwHtml+'</div>'
      +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QSND" onclick="qSubmitBtn()">'+tq.q_send+'</button></div>';
