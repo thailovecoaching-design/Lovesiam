@@ -1495,15 +1495,11 @@ function setGenderView(g2,btn){
 }
 
 // Charger les vrais profils validés depuis Supabase
-function showDbg(msg){
-  var dbg=document.getElementById('supabase-debug');
-  if(!dbg){dbg=document.createElement('div');dbg.id='supabase-debug';dbg.style.cssText='position:fixed;top:60px;left:10px;right:10px;background:#1A2744;color:#fff;padding:12px;border-radius:10px;font-size:.72rem;z-index:9999;word-break:break-all';document.body.appendChild(dbg);}
   dbg.innerHTML=msg+'<br><button onclick="this.parentNode.remove()" style="margin-top:8px;padding:3px 10px;background:var(--g);border:none;color:#fff;border-radius:6px;cursor:pointer;font-size:.7rem">Fermer</button>';
 }
 
 function loadApprovedProfiles(filterGender){
   var gf=filterGender||genderView||'femme';
-  showDbg('🔄 Chargement via Supabase JS...');
   try{
     var sb=window.supabase.createClient(SB_URL,SB_KEY);
     sb.from('inscriptions')
@@ -1511,9 +1507,8 @@ function loadApprovedProfiles(filterGender){
       .eq('status','approved')
       .order('created_at',{ascending:false})
       .then(function(result){
-        if(result.error){showDbg('❌ Erreur: '+result.error.message);return;}
+        if(result.error){return;}
         var rows=result.data||[];
-        showDbg(rows.length+' profils reçus');
         if(!rows.length){renderGrid(gTab||'all');return;}
         var filtered=rows.filter(function(r){
           var g=(r.gender||'').toLowerCase().trim();
@@ -1521,11 +1516,15 @@ function loadApprovedProfiles(filterGender){
           if(gf==='femme') return g==='femme'||g==='f'||g.indexOf('femme')>=0||g.indexOf('tha')>=0;
           return true;
         });
-        showDbg(filtered.length+' profils filtrés ('+gf+')');
         if(!filtered.length){
-          toast('Aucun profil validé pour la vue '+gf+' — profils démo affichés');
-          // Garder les profils démo existants
-          renderGrid(gTab||'all');
+          PROFILES.length=0;
+          var gridEl=document.querySelector('#pg-f .scroll');
+          if(gridEl){
+            var msg=gf==='femme'
+              ?'<div style="text-align:center;padding:40px 20px;color:var(--td)"><div style="font-size:2rem;margin-bottom:12px">&#127481;&#127469;</div><div style="font-size:.9rem;line-height:1.6">Les profils de femmes thaïlandaises<br>seront disponibles prochainement.<br><br>Les inscriptions sont en cours.</div></div>'
+              :'<div style="text-align:center;padding:40px 20px;color:var(--td)"><div style="font-size:2rem;margin-bottom:12px">&#127467;&#127479;</div><div style="font-size:.9rem">Aucun profil validé pour le moment.</div></div>';
+            gridEl.innerHTML=msg;
+          }
           return;
         }
         var NOW2=Date.now();
@@ -1544,7 +1543,7 @@ function loadApprovedProfiles(filterGender){
         renderGrid(gTab||'all');
         renderSwipe();
       });
-  }catch(e){showDbg('🔴 Supabase JS erreur: '+e.message);}
+  }catch(e){}
 }
 loadApprovedProfiles('homme');
 
