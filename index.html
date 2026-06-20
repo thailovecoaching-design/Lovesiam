@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -943,6 +944,12 @@ h2 em{font-style:italic;color:var(--g)}
 .dsl input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--g);border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:pointer;pointer-events:all;border:none}
 .dsl-track{position:absolute;left:0;right:0;height:4px;background:rgba(26,39,68,.12);border-radius:2px;z-index:0}
 .dsl-fill{position:absolute;height:4px;background:var(--g);border-radius:2px;z-index:1}
+/* ── DESKTOP: cadre centré, source unique de vérité ── */
+@media(min-width:769px){
+  body{background:#E9E6E0 !important;overflow:auto !important;height:auto !important}
+  .pg.on{position:static !important;width:780px !important;margin:0 auto !important;box-shadow:0 0 50px rgba(0,0,0,.12) !important;min-height:100vh;overflow-x:hidden !important}
+  .bn{position:fixed !important;left:50% !important;right:auto !important;width:780px !important;transform:translateX(-50%) !important}
+}
 </style>
 </head>
 <body>
@@ -998,13 +1005,13 @@ h2 em{font-style:italic;color:var(--g)}
             <div style="padding:9px"><div style="font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--nv)">Noi, 29</div><div style="font-size:.72rem;color:var(--td);margin-bottom:5px">&#128205; Chiang Mai</div><div style="font-size:.65rem;padding:2px 8px;background:var(--gd);color:var(--g);border-radius:7px;display:inline-block;border:1px solid rgba(196,150,42,.2);font-weight:600">&#127468;&#127463; Un peu</div></div>
           </div>
         </div>
-        <div style="background:linear-gradient(135deg,var(--nv),#243156);border-radius:16px;padding:18px;color:#fff">
-          <div style="font-family:var(--serif);font-size:1.4rem;margin-bottom:12px;text-align:center">Pourquoi <em style="color:var(--gl)">LoveSiam</em>&nbsp;?</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div style="display:flex;align-items:center;gap:7px;font-size:.85rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-weight:700">&#10003;</span>Profils v&eacute;rifi&eacute;s</div>
-            <div style="display:flex;align-items:center;gap:7px;font-size:.85rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-weight:700">&#10003;</span>Vid&eacute;os FR&#8596;TH</div>
-            <div style="display:flex;align-items:center;gap:7px;font-size:.85rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-weight:700">&#10003;</span>Accompagnement</div>
-            <div style="display:flex;align-items:center;gap:7px;font-size:.85rem;color:rgba(255,255,255,.9)"><span style="color:var(--gl);font-weight:700">&#10003;</span>Z&eacute;ro faux profil</div>
+        <div style="background:linear-gradient(135deg,var(--nv),#243156);border-radius:16px;padding:18px 24px;color:#fff">
+          <div style="font-family:var(--serif);font-size:1.4rem;margin-bottom:14px;text-align:center">Pourquoi <em style="color:var(--gl)">LoveSiam</em>&nbsp;?</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:340px;margin:0 auto">
+            <div style="display:flex;align-items:center;gap:8px;font-size:.92rem;color:rgba(255,255,255,.95)"><span style="color:var(--gl);font-weight:700;flex-shrink:0">&#10003;</span>Profils v&eacute;rifi&eacute;s</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:.92rem;color:rgba(255,255,255,.95)"><span style="color:var(--gl);font-weight:700;flex-shrink:0">&#10003;</span>Vid&eacute;os FR&#8596;TH</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:.92rem;color:rgba(255,255,255,.95)"><span style="color:var(--gl);font-weight:700;flex-shrink:0">&#10003;</span>Accompagnement</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:.92rem;color:rgba(255,255,255,.95)"><span style="color:var(--gl);font-weight:700;flex-shrink:0">&#10003;</span>Z&eacute;ro faux profil</div>
           </div>
         </div>
       </div>
@@ -1468,9 +1475,7 @@ function goPage(id){
       el.style.position="static";
       el.style.flexDirection="column";
       el.style.minHeight="100vh";
-      el.style.width="100%";
-      // Body en flux normal
-      document.body.style.cssText="background:#F0EDE8;overflow:auto;position:static;height:auto";
+      document.body.style.cssText="overflow:auto;position:static;height:auto";
       window.scrollTo(0,0);
     }
   }
@@ -2311,116 +2316,173 @@ var T = {
 
 function setupCityAutocomplete(id,lang){/* stub */}
 
-var SUPA_URL='https://sbglyelgqceydofgllop.supabase.co';
-var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
+const SB_URL='https://sbglyelgqceydofgllop.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
 
-function qCloudUploadVideo(file){
-  return new Promise(function(resolve){
-    if(!file){resolve('');return;}
-    var fd=new FormData();
-    fd.append('file',file);
-    fd.append('upload_preset','lovesiam_videos');
-    fetch('https://api.cloudinary.com/v1_1/dfxxg3dk4/video/upload',{method:'POST',body:fd})
-      .then(function(r){return r.json();})
-      .then(function(data){resolve(data&&data.secure_url?data.secure_url:'');})
-      .catch(function(){resolve('');});
-  });
-}
-
-async function qSub(){
-  var em=g('QE'), wh=g('QWH');
-  if(!em)return;
-  var ev=(em.value||'').trim();
-  var wv=wh?(wh.value||'').trim():'';
-  if(!ev){show('⚠️ Email requis');return;}
-  QA.email=ev; QA.whats=wv;
-  var btn=g('QSND');
-  if(btn){btn.textContent='Envoi…';btn.disabled=true;}
-
-  var videoFile=QA.vidBlob||QA.vidFile||null;
-  var videoUrl='';
-  try{videoUrl=await qCloudUploadVideo(videoFile);}catch(e){videoUrl='';}
-
-  var photoUrl=(QA.photos&&QA.photos[0])?QA.photos[0]:(QA.photo||'');
-
-  var entry={
-    name:QA.name||'',
-    age:QA.age||'',
-    gender:QA.g||'',
-    email:ev,
-    whatsapp:wv||'',
-    city:QA.ville||QA.city||'',
-    country:QA.country||'',
-    height:QA.height||'',
-    weight:QA.weight||'',
-    bio:QA.desc||'',
-    english_level:QA.len||'',
-    looking:QA.looking||'',
-    family:QA.fam||'',
-    age_range:(QA.ageRange||[]).join(', '),
-    photo_url:photoUrl,
-    video_url:videoUrl,
-    note:''
-  };
-
-  try{
-    var res=await fetch(SUPA_URL+'/rest/v1/inscriptions',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'apikey':SUPA_KEY,
-        'Authorization':'Bearer '+SUPA_KEY,
-        'Prefer':'return=minimal'
-      },
-      body:JSON.stringify(entry)
-    });
-    if(!res.ok){
-      console.log('Supabase error:',res.status);
-      show('⚠️ Erreur envoi, reessayez');
-      if(btn){btn.textContent='Envoyer ✦';btn.disabled=false;}
-      return;
+// XHR fiable sur tous iOS - remplace fetch pour l'envoi critique
+function qSubmitBtn(){
+  var em=g('QE');
+  var errDiv=document.getElementById('QE_ERR');
+  if(!em||!em.value.trim()){
+    em.style.border='2px solid #C0392B';
+    if(!errDiv){
+      var d=document.createElement('div');
+      d.id='QE_ERR';
+      d.style.cssText='color:#C0392B;font-size:.82rem;margin-top:4px;margin-bottom:8px;';
+      d.textContent='⚠ L\'adresse email est obligatoire';
+      em.parentNode.insertBefore(d,em.nextSibling);
     }
-  }catch(netErr){
-    console.log('Network error:',netErr);
-    show('⚠️ Pas de connexion, reessayez');
-    if(btn){btn.textContent='Envoyer ✦';btn.disabled=false;}
+    em.focus();
     return;
   }
+  if(errDiv)errDiv.remove();
+  em.style.border='';
+  var btn=g('QSND');
+  if(btn&&btn.disabled)return;
+  if(btn){btn.textContent='Envoi…';btn.disabled=true;}
+  try{qSub();}catch(err){
+    if(btn){btn.textContent='Envoyer ma candidature ✦';btn.disabled=false;}
+    alert('Erreur: '+(err&&err.message?err.message:'inattendue'));
+  }
+}
 
-  QD=true;
-  try{bQ();}catch(e){}
+function qSub(){
+  var btn=g('QSND');
+  var em=g('QE');
+  var wh=g('QWH');
+  if(!em||!em.value.trim()){
+    if(btn){btn.textContent='Envoyer ma candidature \u2756';btn.disabled=false;}
+    alert('Veuillez entrer votre email.');
+    return;
+  }
+  var ev=em.value.trim();
+  var wv=wh?wh.value.trim():'';
+  QA.email=ev;QA.whats=wv;
+
+  // 1. Sauvegarder localement en premier
+  var entry={
+    id:'ins_'+Date.now(),
+    date:new Date().toISOString(),
+    status:'pending',
+    name:QA.name||'',age:QA.age||'',
+    gender:QA.g==='h'?'homme':(QA.g==='f'?'femme':''),
+    email:ev,whatsapp:wv,
+    city:QA.ville||QA.city||'',
+    height:QA.height||'',weight:QA.weight||'',
+    bio:QA.desc||'',english_level:QA.len||'',
+    looking:QA.looking||'',family:QA.fam||'',
+    age_range:(QA.ageRange||[]).join(', ')
+  };
+  try{
+    var lst=JSON.parse(localStorage.getItem('ls_inscriptions')||'[]');
+    lst.unshift(entry);localStorage.setItem('ls_inscriptions',JSON.stringify(lst));
+  }catch(e){}
+
+  // 2. Afficher succès IMMÉDIATEMENT
+  var qwrap=document.getElementById('QB');
+  if(qwrap){
+    qwrap.innerHTML='<div style="text-align:center;padding:48px 24px">'
+      +'<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.9rem;font-weight:600;color:var(--nv);margin-bottom:10px">Inscription envoy\u00e9e</div>'
+      +'<div style="width:40px;height:2px;background:linear-gradient(to right,var(--g),var(--gl));margin:0 auto 18px"></div>'
+      +'<div style="font-size:.92rem;color:var(--tm);line-height:1.8;margin-bottom:28px">Dossier bien re\u00e7u.<br>Patrick vous contactera sous 48h<br>à <strong style="color:var(--nv)">'+ev+'</strong></div>'
+      +'<button onclick="goPage(\'pg-h\')" style="padding:13px 28px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:30px;font-size:.92rem;font-weight:600;cursor:pointer">Retour à l\'accueil</button>'
+      +'</div>';
+  }
+  QD=true;try{updNav();}catch(e){}
+
+  // 3. Envoyer à Supabase en arrière-plan (non-bloquant)
+  setTimeout(function(){
+    var payload=JSON.stringify({
+      status:'pending',
+      name:entry.name,age:entry.age?parseInt(entry.age):null,
+      gender:entry.gender,email:entry.email,whatsapp:entry.whatsapp,
+      city:entry.city,height:entry.height,weight:entry.weight,
+      bio:entry.bio,english_level:entry.english_level,
+      looking:entry.looking,family:entry.family,
+      age_range:entry.age_range,photo_url:'',video_url:'',
+      note:'local_id:'+entry.id
+    });
+    var xhr=new XMLHttpRequest();
+    xhr.onreadystatechange=function(){
+      if(xhr.readyState!==4)return;
+      if(xhr.status>=200&&xhr.status<300){
+        console.log('Supabase OK',xhr.status);
+      }else{
+        console.log('Supabase erreur',xhr.status,xhr.responseText);
+      }
+    };
+    xhr.ontimeout=function(){console.log('Supabase timeout');};
+    xhr.onerror=function(){console.log('Supabase onerror');};
+    xhr.open('POST',SB_URL+'/rest/v1/inscriptions',true);
+    xhr.setRequestHeader('Content-Type','application/json');
+    xhr.setRequestHeader('apikey',SB_KEY);
+    xhr.setRequestHeader('Authorization','Bearer '+SB_KEY);
+    xhr.setRequestHeader('Prefer','return=minimal');
+    xhr.timeout=15000;
+    xhr.send(payload);
+  },200);
+
+  // 4. Email admin en arrière-plan
+  setTimeout(function(){
+    var msg='Inscription LoveSiam\nPrénom: '+entry.name+'\nEmail: '+entry.email+'\nGenre: '+entry.gender+'\nVille: '+entry.city+'\nRecherche: '+entry.looking;
+    var xhr2=new XMLHttpRequest();
+    xhr2.open('POST','https://api.emailjs.com/api/v1.0/email/send',true);
+    xhr2.setRequestHeader('Content-Type','application/json');
+    xhr2.timeout=10000;
+    xhr2.send(JSON.stringify({service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',template_params:{to_email:'contact@thailovematching.com',from_name:entry.name||'Candidat',from_email:entry.email,subject:'Nouvelle inscription LoveSiam \u2014 '+entry.name,message:msg}}));
+  },400);
+
+  // 5. Email confirmation candidat en arrière-plan
+  setTimeout(function(){
+    var xhr3=new XMLHttpRequest();
+    xhr3.open('POST','https://api.emailjs.com/api/v1.0/email/send',true);
+    xhr3.setRequestHeader('Content-Type','application/json');
+    xhr3.timeout=10000;
+    xhr3.send(JSON.stringify({service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',template_params:{to_email:entry.email,from_name:'LoveSiam',from_email:'contact@thailovematching.com',subject:'Votre inscription LoveSiam est confirm\u00e9e',message:'Bonjour '+entry.name+',\n\nVotre inscription a bien \u00e9t\u00e9 re\u00e7ue.\nPatrick vous contactera sous 48h.\n\nCordialement,\nLoveSiam'}}));
+  },600);
 }
 
 
+
+
+
+
+
+function qCamRetry(){
+  QV=false;QA.vidBlob=null;
+  var cr=g('QCR');if(cr){cr.style.display='none';}
+  var brt=g('QBRT');if(brt)brt.style.display='none';
+  var cpf=g('QCPF');if(cpf)cpf.style.width='0%';
+  var cp2=g('QCP2');if(cp2)cp2.style.display='none';
+  qCamOn();
+}
 
 async function qCamOn(){
   const er=g('QCE');er.style.display='none';
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    er.style.display='block';er.textContent='📱 Caméra non disponible. Utilisez l\'option Importer ci-dessous.';
+    er.style.display='block';er.textContent='📱 Caméra non disponible. Utilisez l\'option Upload ci-dessous.';
     g('QCP').style.display='none';
     const uz=g('QUZ');if(uz){uz.style.border='2px solid var(--g)';uz.scrollIntoView({behavior:'smooth'})}
     return;
   }
-  var stream=null;
   try{
-    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true});
-  }catch(e1){
     try{
-      stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
-    }catch(e2){
-      er.style.display='block';
-      const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
-      if(e2.name==='NotAllowedError')er.textContent=(isIOS?'🔒 Réglages → Safari → Caméra → Autoriser, puis revenez sur cette page. Ou utilisez Importer ci-dessous.':'🔒 Accès caméra refusé. Autorisez-le dans les réglages du navigateur, ou utilisez Importer ci-dessous.');
-      else er.textContent='❌ Caméra indisponible sur cet appareil. Utilisez Importer une vidéo ci-dessous.';
-      g('QCP').style.display='none';
-      const uz=g('QUZ');if(uz){uz.style.border='2px solid var(--g)';uz.scrollIntoView({behavior:'smooth'})}
-      return;
+      QST=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true});
+    }catch(e0){
+      QST=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
     }
+    const v=g('QCV');v.srcObject=QST;v.setAttribute('playsinline','');v.setAttribute('autoplay','');v.setAttribute('muted','');v.muted=true;v.style.display='block';
+    try{await v.play()}catch(pe){}
+    g('QCP').style.display='none';g('QBA').style.display='none';g('QBR2').style.display='block';
+  }catch(e){
+    er.style.display='block';
+    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+    if(isIOS)er.textContent='📱 Sur iPhone: Réglages → Safari → Caméra → Autoriser. Ou utilisez Upload.';
+    else if(e.name==='NotAllowedError')er.textContent='🔒 Accès caméra refusé. Autorisez dans les réglages.';
+    else er.textContent='❌ Caméra indisponible. Utilisez Upload ci-dessous.';
+    g('QCP').style.display='none';
+    const uz=g('QUZ');if(uz){uz.style.border='2px solid var(--g)';uz.scrollIntoView({behavior:'smooth'})}
   }
-  QST=stream;
-  const v=g('QCV');v.srcObject=QST;v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');v.setAttribute('autoplay','');v.setAttribute('muted','');v.muted=true;v.style.display='block';
-  try{await v.play()}catch(pe){}
-  g('QCP').style.display='none';g('QBA').style.display='none';g('QBR2').style.display='block';
 }
 
 
@@ -2469,15 +2531,6 @@ function qCamRec(){
 
 
 function qCamStop(){clearInterval(QRT);if(QMR&&QMR.state!=='inactive')QMR.stop()}
-
-function qCamRetry(){
-  QV=false;QA.vidBlob=null;
-  var cr=g('QCR');if(cr){cr.style.display='none';cr.src='';}
-  var brt=g('QBRT');if(brt)brt.style.display='none';
-  var cp=g('QCP');if(cp)cp.style.display='';
-  var ba=g('QBA');if(ba)ba.style.display='';
-  qCC();
-}
 
 function qCC(){clearInterval(QRT);if(QST){QST.getTracks().forEach(function(t){t.stop();});QST=null;}}
 
@@ -2849,7 +2902,7 @@ function bQ(){
      +'<button id="QBRT" style="display:none;width:100%;padding:14px;border-radius:12px;border:none;background:var(--nv);color:#fff;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.02em">← '+tq.q7_retry+'</button>'
      +'</div>'
      +'<div class="ds"><div class="dl"></div><div class="dt">'+tq.q7_upload_title+'</div><div class="dl"></div></div>'
-     +'<div class="uz" id="QUZ"><div style="font-size:1.7rem;margin-bottom:5px">📤</div><div style="font-size:.8rem;font-weight:500;color:var(--nv)">'+tq.q7_upload_btn+'</div><div style="font-size:.68rem;color:var(--td)">'+tq.q7_upload_size+'</div><input type="file" id="QUF" accept="video/*" style="display:none"></div>'
+     +'<div class="uz" id="QUZ"><div style="font-size:1.7rem;margin-bottom:5px">📤</div><div style="font-size:.8rem;font-weight:500;color:var(--nv)">'+tq.q7_upload_btn+'</div><div style="font-size:.68rem;color:var(--td)">'+tq.q7_upload_size+'</div><input type="file" id="QUF" accept="video/*" capture="camcorder" style="display:none"></div>'
      +'<div id="QUS" style="display:none;padding:8px 11px;border-radius:8px;margin-bottom:8px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.18);font-size:.73rem;color:var(--gn)"></div>'
      +'<div style="text-align:center;margin-bottom:8px"><span style="font-size:.7rem;color:var(--td);cursor:pointer;text-decoration:underline" id="QSK">'+skipLbl+'</span></div>'
      +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QNX">'+contBtn+'</button></div>';
@@ -2879,7 +2932,7 @@ function bQ(){
      +'<div class="fg"><label class="fl">'+tq.q8_email+'</label><input class="fi" id="QE" type="email" placeholder="votre@email.com" value="'+(QA.email||'')+'"></div>'
      +'<div class="fg"><label class="fl">'+tq.q8_whatsapp+'</label><input class="fi" id="QWH" type="tel" placeholder="+33 6 xx xx xx xx" value="'+(QA.whats||'')+'"></div>'
      +'<div class="sr"><div style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--g);margin-bottom:8px;font-weight:500">'+tq.q8_recap+'</div>'+rwHtml+'</div>'
-     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QSND">'+tq.q_send+'</button></div>';
+     +'<div class="qn"><button class="qb" id="QBK">'+backBtn+'</button><button class="qx" id="QSND" onclick="qSubmitBtn()">'+tq.q_send+'</button></div>';
   }
 
   g('QB').innerHTML=h;
@@ -2894,7 +2947,23 @@ function bQ(){
     else{QS=Math.min(QS+1,QT_STEPS-1);bQ();}
   };
   if(g('QBK'))g('QBK').onclick=function(){qCC();QS=Math.max(QS-1,0);bQ();};
-  if(g('QSND'))g('QSND').onclick=qSub;
+  if(g('QSND'))g('QSND').onclick=function(e){
+    e.preventDefault();
+    var b=g('QSND');
+    if(b&&b.disabled)return;
+    var em=g('QE');
+    if(!em||!em.value.trim()){
+      var emailField=document.querySelector('#QE');
+      if(emailField){emailField.style.border='2px solid var(--rd)';emailField.focus();}
+      toast('&#9888; L\'adresse email est obligatoire');
+      return;
+    }
+    if(b){b.textContent='Envoi\u2026';b.disabled=true;}
+    try{qSub();}catch(err){
+      if(b){b.textContent='Envoyer ma candidature \u2756';b.disabled=false;}
+      toast('Erreur: '+(err&&err.message?err.message:'inattendue'));
+    }
+  };
   if(g('QBA'))g('QBA').onclick=qCamOn;
   if(g('QBR2'))g('QBR2').onclick=qCamRec;
   if(g('QBS'))g('QBS').onclick=qCamStop;
@@ -3102,9 +3171,11 @@ document.querySelectorAll(".pg").forEach(function(p){
   else{p.style.display="flex";}
 });
 if(window.innerWidth>=769){
-  document.body.style.cssText="background:#F0EDE8;overflow:auto;position:static;height:auto";
+  document.body.style.cssText="overflow:auto;position:static;height:auto";
   var pgh=g("pg-h");
-  if(pgh){pgh.style.flexDirection="column";pgh.style.minHeight="100vh";pgh.style.position="static";}
+  if(pgh){
+    pgh.style.flexDirection="column";pgh.style.minHeight="100vh";pgh.style.position="static";
+  }
 }
 updDsl("age");updDsl("h");updDsl("w");
 renderGrid("all");
