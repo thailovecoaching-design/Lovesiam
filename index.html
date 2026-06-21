@@ -947,10 +947,11 @@ h2 em{font-style:italic;color:var(--g)}
 /* ── DESKTOP: cadre centré, source unique de vérité ── */
 @media(min-width:769px){
   body{background:#E9E6E0 !important;overflow:auto !important;height:auto !important}
-  .pg.on{position:static !important;width:780px !important;margin:0 auto !important;box-shadow:0 0 50px rgba(0,0,0,.12) !important;min-height:100vh;overflow-x:hidden !important}
-  .bn{position:fixed !important;left:50% !important;right:auto !important;width:780px !important;transform:translateX(-50%) !important}
-  .pp-bg{position:fixed !important;left:50% !important;right:auto !important;width:780px !important;transform:translateX(-50%) !important;box-shadow:0 0 50px rgba(0,0,0,.2)}
-  #modal-report{position:fixed !important;left:50% !important;right:auto !important;width:780px !important;transform:translateX(-50%) !important}
+  .pg.on{position:static !important;width:480px !important;margin:0 auto !important;box-shadow:0 0 50px rgba(0,0,0,.12) !important;min-height:100vh;overflow-x:hidden !important}
+  .bn{position:fixed !important;left:50% !important;right:auto !important;width:480px !important;transform:translateX(-50%) !important}
+  .pp-bg{position:fixed !important;left:50% !important;right:auto !important;width:480px !important;transform:translateX(-50%) !important;box-shadow:0 0 50px rgba(0,0,0,.2)}
+  #modal-report{position:fixed !important;left:50% !important;right:auto !important;width:480px !important;transform:translateX(-50%) !important}
+  #pg-swipe{height:100vh !important;position:fixed !important;left:50% !important;right:auto !important;width:480px !important;transform:translateX(-50%) !important}
 }
 .report-opt{width:100%;padding:14px 16px;background:var(--b2);border:none;border-radius:10px;font-size:.9rem;color:var(--nv);text-align:left;cursor:pointer;font-family:var(--sans);font-weight:500;transition:background .15s}
 .report-opt.sel{background:rgba(192,57,43,.12);color:#C0392B;font-weight:700}
@@ -1547,7 +1548,7 @@ function loadApprovedProfiles(filterGender){
   xhr.ontimeout=function(){console.log('XHR profils timeout');};
   xhr.send();
 }
-loadApprovedProfiles('homme');
+try{loadApprovedProfiles('homme');}catch(e){console.log('profils:',e);}
 
 var MSGS=[
   {id:1,pid:0,name:"Ning",emoji:"&#128105;",bg:"linear-gradient(135deg,#E8D5C4,#C4A080)",time:"5min",prev:"Bonjour, ravie de vous rencontrer !",unread:1,online:true},
@@ -1831,8 +1832,14 @@ function renderSwipe(){
     if(p.isNew)badges+="<span style=\"background:rgba(196,150,42,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px\">&#10024; Nouveau</span>";
     badges+="<span style=\"background:rgba(0,0,0,.45);color:#fff;font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:12px\">"+enLabel(p.en)+"</span>";
     // Carte épurée : photo + info minimale
-    var swBg=p.photo?'background:url('+p.photo+') center/cover no-repeat':'background:'+p.bg;
-    card.innerHTML="<div class=\"swc-photo\" style=\""+swBg+";height:100%\">"+(p.photo?'':'<span style="font-size:80px">'+p.emoji+'</span>')
+    // Miniature : vidéo Cloudinary > photo > emoji
+    var thumbUrl='';
+    if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+      // Cloudinary génère automatiquement une miniature en changeant /video/upload/ par /video/upload/so_0/
+      thumbUrl=p.video.replace('/video/upload/','/video/upload/so_0,f_jpg,w_400/').replace(/\.(mp4|mov|webm)$/,'.jpg');
+    }
+    var swBg=thumbUrl?'background:url('+thumbUrl+') center/cover no-repeat':(p.photo?'background:url('+p.photo+') center/cover no-repeat':'background:'+p.bg);
+    card.innerHTML="<div class=\"swc-photo\" style=\""+swBg+";height:100%\">"+(thumbUrl||p.photo?'':(p.emoji))
       +"<div class=\"sw-badge-like\" id=\"sl"+i+"\">LIKE</div>"
       +"<div class=\"sw-badge-nope\" id=\"sn"+i+"\">PASSE</div>"
       +"<div style=\"position:absolute;bottom:0;left:0;right:0;padding:12px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 100%);\">"
@@ -2117,6 +2124,31 @@ function deleteMsgById(id){MSGS=MSGS.filter(function(m){return m.id!==id;});rend
 function setMTab(tab,btn){mTab=tab;document.querySelectorAll(".mtb").forEach(function(b){b.classList.remove("on");});if(btn)btn.classList.add("on");renderMsgList(tab);}
 
 // ── TRADUCTION CONVERSATION ──────────────────────────
+// ── TRADUCTION AUTOMATIQUE OPENAI ────────────────────
+var OPENAI_KEY='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';
+function translateMsg(text, fromLang, toLang, callback){
+  var xhr=new XMLHttpRequest();
+  xhr.open('POST','https://api.openai.com/v1/chat/completions',true);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.setRequestHeader('Authorization','Bearer '+OPENAI_KEY);
+  xhr.timeout=8000;
+  xhr.onreadystatechange=function(){
+    if(xhr.readyState!==4)return;
+    try{
+      var r=JSON.parse(xhr.responseText);
+      var translated=r.choices&&r.choices[0]&&r.choices[0].message&&r.choices[0].message.content;
+      if(translated)callback(translated.trim());
+    }catch(e){}
+  };
+  xhr.ontimeout=function(){};
+  xhr.onerror=function(){};
+  xhr.send(JSON.stringify({
+    model:'gpt-4o-mini',
+    max_tokens:200,
+    messages:[{role:'user',content:'Traduis ce message de '+fromLang+' en '+toLang+', donne UNIQUEMENT la traduction sans explication:\n\n'+text}]
+  }));
+}
+
 var convTradOn=true;
 function toggleConvTrad(){
   convTradOn=!convTradOn;
@@ -2146,22 +2178,29 @@ function selectReport(btn,reason){
   reportReason=reason;
   document.querySelectorAll('.report-opt').forEach(function(b){b.classList.remove('sel');});
   btn.classList.add('sel');
-  var sb=g('report-send-btn');if(sb){sb.disabled=false;sb.style.opacity='1';sb.style.background='rgba(192,57,43,.2)';}
+  var sb=g('report-send-btn');
+  if(sb){
+    sb.disabled=false;
+    sb.removeAttribute('disabled');
+    sb.style.opacity='1';
+    sb.style.background='#C0392B';
+    sb.style.color='#fff';
+    sb.style.cursor='pointer';
+  }
 }
 function sendReport(){
-  if(!reportReason)return;
-  var name=currentConvP?currentConvP.name:'Inconnu';
-  var msg='SIGNALEMENT LoveSiam\n===================\nProfil signalé: '+name+'\nRaison: '+reportReason+'\nSignalé par: '+(U?U.email:'visiteur')+'\nDate: '+new Date().toLocaleString('fr-FR');
-  // Envoi email admin
+  var name=currentConvP?currentConvP.name:(currentPP?currentPP.name:'Inconnu');
+  if(!reportReason){toast('⚠ Veuillez choisir une raison');return;}
+  var msg='SIGNALEMENT LoveSiam\n===================\nProfil signalé: '+name+'\nRaison: '+reportReason+'\nDate: '+new Date().toLocaleString('fr-FR');
   var xhr=new XMLHttpRequest();
   xhr.open('POST','https://api.emailjs.com/api/v1.0/email/send',true);
   xhr.setRequestHeader('Content-Type','application/json');
   xhr.send(JSON.stringify({
     service_id:'service_9mpf0pc',template_id:'template_yvczjb6',user_id:'_62gqRQHF8yL_AVRb',
-    template_params:{to_email:'contact@thailovematching.com',from_name:'LoveSiam Modération',from_email:'contact@thailovematching.com',subject:'⚠ Signalement profil: '+name+' ('+reportReason+')',message:msg}
+    template_params:{to_email:'contact@thailovematching.com',from_name:'LoveSiam Modération',from_email:'contact@thailovematching.com',subject:'⚠ Signalement: '+name+' — '+reportReason,message:msg}
   }));
   closeReportModal();
-  toast('⚠ Signalement envoyé. Merci.');
+  toast('✅ Signalement envoyé à contact@thailovematching.com');
 }
 
 function openConv(pidx){
@@ -2177,8 +2216,19 @@ function renderConv(pid){
   var el=g("conv-body");if(!el)return;el.innerHTML="";
   (convData[pid]||[]).forEach(function(msg){
     var w2=document.createElement("div");w2.style.cssText="display:flex;flex-direction:column;align-items:"+(msg.me?"flex-end":"flex-start");
-    var b=document.createElement("div");b.className="bbl "+(msg.me?"me":"them");b.textContent=msg.text;
+    var b=document.createElement("div");b.className="bbl "+(msg.me?"me":"them");
+    // Traduction : messages reçus (them) — ON=FR, OFF=TH original
+    if(!msg.me&&!convTradOn&&msg.textTH){
+      b.textContent=msg.textTH;
+      var fl=document.createElement('span');fl.textContent=' 🇹🇭';fl.style.fontSize='.75rem';b.appendChild(fl);
+    } else if(!msg.me&&convTradOn){
+      b.textContent=msg.text;
+      var fl2=document.createElement('span');fl2.textContent=' 🇫🇷';fl2.style.fontSize='.75rem';b.appendChild(fl2);
+    } else {
+      b.textContent=msg.text;
+    }
     var ti=document.createElement("div");ti.className="bbl-time";ti.textContent=msg.time;
+    if(!msg.me)ti.innerHTML+=' <span style="color:var(--td);font-size:.65rem">'+(convTradOn?'Traduit FR':'Original TH')+'</span>';
     w2.appendChild(b);w2.appendChild(ti);el.appendChild(w2);
   });
   el.scrollTop=el.scrollHeight;
