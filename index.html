@@ -2125,7 +2125,7 @@ function setMTab(tab,btn){mTab=tab;document.querySelectorAll(".mtb").forEach(fun
 
 // ── TRADUCTION CONVERSATION ──────────────────────────
 // ── TRADUCTION AUTOMATIQUE OPENAI ────────────────────
-var OPENAI_KEY='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';
+var OPENAI_KEY='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';
 function translateMsg(text, fromLang, toLang, callback){
   var xhr=new XMLHttpRequest();
   xhr.open('POST','https://api.openai.com/v1/chat/completions',true);
