@@ -960,16 +960,18 @@ function renderSwipe(){
     } else if(p.photoThumb){
       thumbUrl=p.photoThumb;
     }
-    var swBg=thumbUrl?'background:url("'+thumbUrl+'") center/cover no-repeat':'background:'+p.bg;
-    // Carte : plein écran avec gradient + infos en overlay
+    var swBg=thumbUrl
+      ?'background:url("'+thumbUrl+'") center/cover no-repeat;background-color:'+p.bg
+      :'background:'+p.bg;
+    card.style.cssText='position:absolute;inset:0;border-radius:18px;overflow:hidden;cursor:grab;touch-action:none;user-select:none;will-change:transform;box-shadow:0 8px 28px rgba(0,0,0,.18)';
     card.innerHTML=
       '<div style="'+swBg+';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:80px">'
       +(thumbUrl?'':p.emoji)
       +'<div class="sw-badge-like" id="sl'+i+'">LIKE</div>'
       +'<div class="sw-badge-nope" id="sn'+i+'">PASSE</div>'
-      +'<div style="position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 100%)">'
-      +'<div style="font-family:var(--serif);font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:4px">'+p.name+', '+p.age+'</div>'
-      +'<div style="font-size:.8rem;color:rgba(255,255,255,.75);margin-bottom:8px">&#128205; '+p.ville+(p.taille?' &middot; '+p.taille:'')+(p.poids?' &middot; '+p.poids:'')+'</div>'
+      +'<div style="position:absolute;bottom:0;left:0;right:0;padding:16px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,0) 100%)">'
+      +'<div style="font-family:var(--serif);font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:3px">'+p.name+', '+p.age+'</div>'
+      +'<div style="font-size:.78rem;color:rgba(255,255,255,.8);margin-bottom:7px">&#128205; '+p.ville+(p.taille?' &middot; '+p.taille:'')+(p.poids?' &middot; '+p.poids:'')+'</div>'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap">'+badges+'</div>'
       +'</div>'
       +'</div>';
@@ -1026,9 +1028,10 @@ function renderGrid(tab){
     } else if(p.photoThumb){
       gcThumb=p.photoThumb;
     }
+    var gcBgColor = p.bg || 'linear-gradient(160deg,#1A2744,#0D1522)';
     var gcStyle=gcThumb
-      ?'position:absolute;inset:0;background:url("'+gcThumb+'") center/cover no-repeat'
-      :'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.8rem;background:'+p.bg;
+      ?'position:absolute;inset:0;background:url("'+gcThumb+'") center/cover no-repeat;background-color:'+gcBgColor
+      :'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.8rem;background:'+gcBgColor;
     gc.innerHTML='<div style="'+gcStyle+'">'+(gcThumb?'':'<span>'+p.emoji+'</span>')+'</div>'
       +'<div class="gc-grd"></div>'
       +(p.isNew?'<div class="gc-new">NEW</div>':'')
@@ -1252,7 +1255,7 @@ function tradBio(toLang){
   xhr.send(JSON.stringify({
     model:'gpt-4o-mini',
     max_tokens:300,
-    messages:[{role:'user',content:'Traduis ce texte en '+targetLabel+'. Donne UNIQUEMENT la traduction, sans explication:\n\n'+bio}]
+    messages:[{role:'system',content:'Tu es un traducteur. Traduis le texte donné en '+targetLabel+'. Réponds UNIQUEMENT avec la traduction, rien d\'autre.'},{role:'user',content:bio}]
   }));
 }
 function likeFromProfileSwipe(){
