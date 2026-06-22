@@ -949,31 +949,29 @@ function renderSwipe(){
     if(p.online)badges+='<span style="background:rgba(39,174,96,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px">&#9679; En ligne</span>';
     if(p.isNew)badges+='<span style="background:rgba(196,150,42,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px">&#10024; Nouveau</span>';
     badges+='<span style="background:rgba(0,0,0,.45);color:#fff;font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:12px">'+enLabel(p.en)+'</span>';
-    // Miniature : photo > photoThumb (généré depuis vidéo) > miniature Cloudinary > bg
+    // Miniature : vidéo Cloudinary EN PRIORITÉ > photo > bg
     var thumbUrl='';
-    if(p.photo&&p.photo.indexOf('cloudinary.com')>=0){thumbUrl=p.photo;}
-    else if(p.photo&&p.photo.indexOf('data:image')===0){thumbUrl=p.photo;}
-    else if(p.photoThumb){thumbUrl=p.photoThumb;}
-    else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+    if(p.video&&p.video.indexOf('cloudinary.com')>=0){
       thumbUrl=p.video
         .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
         .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/,'.jpg');
+    } else if(p.photo&&(p.photo.indexOf('cloudinary.com')>=0||p.photo.indexOf('data:image')===0)){
+      thumbUrl=p.photo;
+    } else if(p.photoThumb){
+      thumbUrl=p.photoThumb;
     }
     var swBg=thumbUrl?'background:url("'+thumbUrl+'") center/cover no-repeat':'background:'+p.bg;
-    // Carte : photo 55% de hauteur + bandeau info en bas
+    // Carte : plein écran avec gradient + infos en overlay
     card.innerHTML=
-      // Zone photo (55% de la carte)
-      '<div style="'+swBg+';height:55%;position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:60px">'
+      '<div style="'+swBg+';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:80px">'
       +(thumbUrl?'':p.emoji)
       +'<div class="sw-badge-like" id="sl'+i+'">LIKE</div>'
       +'<div class="sw-badge-nope" id="sn'+i+'">PASSE</div>'
-      +'</div>'
-      // Bandeau info (45% restant) fond sombre
-      +'<div style="flex:1;background:#111827;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:6px;overflow:hidden">'
-      +'<div style="font-family:var(--serif);font-size:1.4rem;font-weight:700;color:#fff">'+p.name+', '+p.age+'</div>'
-      +'<div style="font-size:.8rem;color:rgba(255,255,255,.65)">&#128205; '+p.ville+' &middot; '+p.taille+' &middot; '+p.poids+'</div>'
+      +'<div style="position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 100%)">'
+      +'<div style="font-family:var(--serif);font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:4px">'+p.name+', '+p.age+'</div>'
+      +'<div style="font-size:.8rem;color:rgba(255,255,255,.75);margin-bottom:8px">&#128205; '+p.ville+(p.taille?' &middot; '+p.taille:'')+(p.poids?' &middot; '+p.poids:'')+'</div>'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap">'+badges+'</div>'
-      +(p.bio?'<div style="font-size:.75rem;color:rgba(255,255,255,.45);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">'+p.bio+'</div>':'')
+      +'</div>'
       +'</div>';
     if(isTop){(function(card,idx){
       var bl=g("sl"+idx),bn_=g("sn"+idx);
@@ -1017,18 +1015,20 @@ function renderGrid(tab){
   list.forEach(function(p){
     var liked=likedSet.has(p.id),gc=document.createElement("div");gc.className="gc";
     var enFlag="&#127468;&#127463;";
-    // Miniature grille : MÊME logique que swipe
+    // Miniature grille : vidéo Cloudinary EN PRIORITÉ > photo > bg
     var gcThumb='';
-    if(p.photo&&(p.photo.indexOf('cloudinary.com')>=0||p.photo.indexOf('data:image')===0)){gcThumb=p.photo;}
-    else if(p.photoThumb){gcThumb=p.photoThumb;}
-    else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+    if(p.video&&p.video.indexOf('cloudinary.com')>=0){
       gcThumb=p.video
         .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
         .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/,'.jpg');
+    } else if(p.photo&&(p.photo.indexOf('cloudinary.com')>=0||p.photo.indexOf('data:image')===0)){
+      gcThumb=p.photo;
+    } else if(p.photoThumb){
+      gcThumb=p.photoThumb;
     }
     var gcStyle=gcThumb
-      ?'width:100%;height:100%;background:url("'+gcThumb+'") center/cover no-repeat'
-      :'width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.8rem;background:'+p.bg;
+      ?'position:absolute;inset:0;background:url("'+gcThumb+'") center/cover no-repeat'
+      :'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.8rem;background:'+p.bg;
     gc.innerHTML='<div style="'+gcStyle+'">'+(gcThumb?'':'<span>'+p.emoji+'</span>')+'</div>'
       +'<div class="gc-grd"></div>'
       +(p.isNew?'<div class="gc-new">NEW</div>':'')
@@ -1089,7 +1089,7 @@ function openProfile(p){
         : '<div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;font-size:.72rem;color:rgba(255,255,255,.6);font-weight:600;margin-bottom:8px">&#127916; Vid&eacute;o originale</div>';
       slides.push('<div class="pp-media-slide video-slide">'
         + tradBadge
-        + '<video src="'+videoSrc+'" controls playsinline webkit-playsinline preload="metadata" style="width:100%;max-height:200px;border-radius:12px;object-fit:contain;background:#000;display:block"></video>'
+        + '<video src="'+videoSrc+'" controls playsinline webkit-playsinline preload="metadata" style="width:100%;height:220px;border-radius:12px;object-fit:cover;background:#000;display:block"></video>'
         + '<div style="color:rgba(255,255,255,.3);font-size:.62rem;margin-top:6px">&#8592; Photo</div>'
         + '</div>');
       dotHtml.push('<div class="pp-pdot vid on"></div>');
