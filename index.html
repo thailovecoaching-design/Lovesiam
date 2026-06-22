@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>LoveSiam v3.2</title>
+<title>LoveSiam v3.3</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -910,15 +911,15 @@ function renderSwipe(){
     if(p.online)badges+='<span style="background:rgba(39,174,96,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px">&#9679; En ligne</span>';
     if(p.isNew)badges+='<span style="background:rgba(196,150,42,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px">&#10024; Nouveau</span>';
     badges+='<span style="background:rgba(0,0,0,.45);color:#fff;font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:12px">'+enLabel(p.en)+'</span>';
-    // Miniature : vidéo Cloudinary EN PRIORITÉ > photo > bg
+    // Miniature swipe : photo (base64 ou URL) EN PRIORITÉ > bg coloré
     var thumbUrl='';
-    if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+    if(p.photo&&p.photo.length>10){
+      thumbUrl=p.photo;
+    } else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
       var cleanV=p.video.split('?')[0].split('#')[0];
       thumbUrl=cleanV
         .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
         .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/i,'.jpg');
-    } else if(p.photo&&p.photo.length>10){
-      thumbUrl=p.photo;
     }
     var swBg=thumbUrl?'background:url("'+thumbUrl+'") center/cover no-repeat':'background:'+p.bg;
     card.innerHTML='<div class="swc-photo" style="'+swBg+';height:100%">'+(thumbUrl?'':p.emoji)
@@ -971,15 +972,15 @@ function renderGrid(tab){
   list.forEach(function(p){
     var liked=likedSet.has(p.id),gc=document.createElement("div");gc.className="gc";
     var enFlag="&#127468;&#127463;";
-    // Miniature grille : vidéo Cloudinary EN PRIORITÉ > photo > bg
+    // Miniature grille : photo (base64 ou URL) EN PRIORITÉ > bg coloré
     var gcThumb='';
-    if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+    if(p.photo&&p.photo.length>10){
+      gcThumb=p.photo;
+    } else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
       var cleanVG=p.video.split('?')[0].split('#')[0];
       gcThumb=cleanVG
         .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
         .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/i,'.jpg');
-    } else if(p.photo&&p.photo.length>10){
-      gcThumb=p.photo;
     }
     var gcBg=gcThumb?'background:url("'+gcThumb+'") center/cover no-repeat':'background:'+p.bg;
     gc.innerHTML='<div class="gc-bg" style="'+gcBg+'">'+(gcThumb?'':'<span>'+p.emoji+'</span>')+'</div>'
