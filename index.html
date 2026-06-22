@@ -79,7 +79,7 @@ h2 em{font-style:italic;color:var(--g)}
 .vbtn.on{background:var(--g);color:#fff}
 /* SWIPE */
 #SW_WRAP{flex:1;position:relative;margin:10px 12px 0;border-radius:18px;overflow:hidden;min-height:0}
-.swc{position:absolute;inset:0;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 28px rgba(0,0,0,.18);cursor:grab;touch-action:none;user-select:none;will-change:transform}
+.swc{position:absolute;inset:0;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 28px rgba(0,0,0,.18);cursor:grab;touch-action:none;user-select:none;will-change:transform;background:#1A2744}
 .swc-photo{height:58%;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;flex-shrink:0}
 .swc-grd{position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,rgba(0,0,0,.7),transparent);pointer-events:none}
 .swc-info{flex:1;background:#111827;padding:12px 14px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
@@ -942,6 +942,7 @@ function renderSwipe(){
   for(var i=max;i>=swIdx;i--){
     var p=FP[i],isTop=(i===swIdx),sp=i-swIdx;
     var card=document.createElement("div");card.className="swc";card.id="swc"+i;
+    card.style.background=p.bg||'linear-gradient(160deg,#1A2744,#0D1522)';
     card.style.transform="scale("+(1-sp*0.04)+") translateY("+(sp*8)+"px)";
     card.style.zIndex=100-i;
     if(!isTop)card.style.transition="transform .3s ease";
