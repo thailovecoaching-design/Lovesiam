@@ -1201,10 +1201,21 @@ function tradBio(toLang){
   var btnFr=g('bio-btn-fr');
   var btnTh=g('bio-btn-th');
 
-  // Retour à l'original
-  if(toLang==='orig'){
+  // Ne pas traduire si bio trop courte
+  if(!bio || bio.length < 2){
+    if(status)status.innerHTML='<span style="color:var(--td)">Bio trop courte pour traduire</span>';
+    return;
+  }
+  var hasThai = /[\u0E00-\u0E7F]/.test(bio);
+  // Si on demande TH mais bio déjà en thaï, ou FR mais bio déjà en français
+  if(toLang==='th' && hasThai){
     if(txt)txt.textContent=bio;
-    if(status)status.textContent='';
+    if(status)status.innerHTML='&#127481;&#127469; Texte original en thaï';
+    return;
+  }
+  if(toLang==='fr' && !hasThai){
+    if(txt)txt.textContent=bio;
+    if(status)status.innerHTML='&#127467;&#127479; Texte original en fran\u00e7ais';
     return;
   }
 
