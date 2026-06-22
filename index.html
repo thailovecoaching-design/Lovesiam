@@ -913,21 +913,23 @@ function renderSwipe(){
     badges+='<span style="background:rgba(0,0,0,.45);color:#fff;font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:12px">'+enLabel(p.en)+'</span>';
     // Miniature swipe : photo (base64 ou URL) EN PRIORITÉ > bg coloré
     var thumbUrl='';
-    if(p.photo&&p.photo.length>10){
-      thumbUrl=p.photo;
-    } else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+    if(p.photo&&p.photo.length>10){thumbUrl=p.photo;}
+    else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
       var cleanV=p.video.split('?')[0].split('#')[0];
       thumbUrl=cleanV
         .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
         .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/i,'.jpg');
     }
-    var swBg=thumbUrl?'background:url("'+thumbUrl+'") center/cover no-repeat':'background:'+p.bg;
-    card.innerHTML='<div class="swc-photo" style="'+swBg+';height:100%">'+(thumbUrl?'':p.emoji)
+    // Utiliser <img> pour base64 ET URL (plus fiable que background-image)
+    var swMedia=thumbUrl
+      ?'<img src="'+thumbUrl+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">'
+      :'<div style="position:absolute;inset:0;background:'+p.bg+';display:flex;align-items:center;justify-content:center;font-size:80px">'+p.emoji+'</div>';
+    card.innerHTML='<div style="position:absolute;inset:0;overflow:hidden">'+swMedia
       +'<div class="sw-badge-like" id="sl'+i+'">LIKE</div>'
       +'<div class="sw-badge-nope" id="sn'+i+'">PASSE</div>'
       +'<div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 100%);">'
       +'<div style="font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:2px">'+p.name+', '+p.age+'</div>'
-      +'<div style="font-size:.8rem;color:rgba(255,255,255,.8);margin-bottom:7px">'+p.ville+' &middot; '+p.taille+' &middot; '+p.poids+'</div>'
+      +'<div style="font-size:.8rem;color:rgba(255,255,255,.8);margin-bottom:7px">'+p.ville+(p.taille?' &middot; '+p.taille:'')+(p.poids?' &middot; '+p.poids:'')+'</div>'
       +'<div>'+badges+'</div>'
       +'</div></div>';
     if(isTop){(function(card,idx){
@@ -974,16 +976,18 @@ function renderGrid(tab){
     var enFlag="&#127468;&#127463;";
     // Miniature grille : photo (base64 ou URL) EN PRIORITÉ > bg coloré
     var gcThumb='';
-    if(p.photo&&p.photo.length>10){
-      gcThumb=p.photo;
-    } else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+    if(p.photo&&p.photo.length>10){gcThumb=p.photo;}
+    else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
       var cleanVG=p.video.split('?')[0].split('#')[0];
       gcThumb=cleanVG
         .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
         .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/i,'.jpg');
     }
-    var gcBg=gcThumb?'background:url("'+gcThumb+'") center/cover no-repeat':'background:'+p.bg;
-    gc.innerHTML='<div class="gc-bg" style="'+gcBg+'">'+(gcThumb?'':'<span>'+p.emoji+'</span>')+'</div>'
+    // Utiliser <img> pour base64 ET URL (plus fiable que background-image)
+    var gcMedia=gcThumb
+      ?'<img src="'+gcThumb+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">'
+      :'<div class="gc-bg" style="background:'+p.bg+';position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span>'+p.emoji+'</span></div>';
+    gc.innerHTML=gcMedia
       +'<div class="gc-grd"></div>'
       +(p.isNew?'<div class="gc-new">NEW</div>':'')
       +'<div class="gc-info">'+(p.online?'<span class="gc-dot"></span>':'')+'<div class="gc-name">'+p.name+', '+p.age+'</div><div class="gc-sub">'+p.ville+' &middot; '+enFlag+' '+p.en+'</div></div>'
