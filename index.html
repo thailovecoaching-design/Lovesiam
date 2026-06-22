@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -915,13 +916,15 @@ function renderSwipe(){
     // Miniature : vidéo Cloudinary EN PRIORITÉ > photo > bg
     var thumbUrl='';
     if(p.video&&p.video.indexOf('cloudinary.com')>=0){
-      thumbUrl=p.video
-        .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
-        .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/i,'.jpg');
+      var cleanVideo=p.video.split('?')[0].split('#')[0];
+      thumbUrl=cleanVideo
+        .replace('/video/upload/','/video/upload/pg_1,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
+        .replace(/\.(mp4|mov|webm|avi|mkv)$/i,'.jpg');
     } else if(p.photo){
       thumbUrl=p.photo;
     }
     var swBg=thumbUrl?'background:url("'+thumbUrl+'") center/cover no-repeat':'background:'+p.bg;
+    if(p.video)console.log('[SW]',p.name,'→',thumbUrl.substring(0,100));
     card.innerHTML='<div class="swc-photo" style="'+swBg+';height:100%">'+(thumbUrl?'':p.emoji)
       +'<div class="sw-badge-like" id="sl'+i+'">LIKE</div>'
       +'<div class="sw-badge-nope" id="sn'+i+'">PASSE</div>'
@@ -975,9 +978,10 @@ function renderGrid(tab){
     // Miniature grille : vidéo Cloudinary EN PRIORITÉ > photo > bg
     var gcThumb='';
     if(p.video&&p.video.indexOf('cloudinary.com')>=0){
-      gcThumb=p.video
-        .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
-        .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/i,'.jpg');
+      var cleanVideoG=p.video.split('?')[0].split('#')[0];
+      gcThumb=cleanVideoG
+        .replace('/video/upload/','/video/upload/pg_1,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
+        .replace(/\.(mp4|mov|webm|avi|mkv)$/i,'.jpg');
     } else if(p.photo){
       gcThumb=p.photo;
     }
