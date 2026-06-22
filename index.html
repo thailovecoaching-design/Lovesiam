@@ -808,6 +808,7 @@ function loadApprovedProfiles(filterGender){
   xhr.open('GET',url,true);xhr.timeout=10000;
   xhr.onreadystatechange=function(){
     if(xhr.readyState!==4)return;
+    console.log('[SB] HTTP status='+xhr.status+' réponse='+xhr.responseText.substring(0,200));
     if(xhr.status>=200&&xhr.status<300){
       try{
         var rows=JSON.parse(xhr.responseText)||[];
@@ -832,11 +833,14 @@ function loadApprovedProfiles(filterGender){
       }catch(e){console.log('Erreur profils',e);}
     }
   };
-  xhr.onerror=function(){console.log('XHR profils erreur');};
-  xhr.ontimeout=function(){console.log('XHR profils timeout');};
+  xhr.onerror=function(){console.log('[SB] ERREUR XHR - vérifier CORS ou réseau');};
+  xhr.ontimeout=function(){console.log('[SB] TIMEOUT après 10s');};
   xhr.send();
 }
-try{loadApprovedProfiles('homme');}catch(e){console.log('profils:',e);}
+try{
+  console.log('[SB] Chargement profils depuis Supabase...');
+  loadApprovedProfiles('homme');
+}catch(e){console.log('[SB] Exception:',e);}
 
 var MSGS=[
   {id:1,pid:0,name:"Ning",emoji:"&#128105;",bg:"linear-gradient(135deg,#E8D5C4,#C4A080)",time:"5min",prev:"Bonjour, ravie de vous rencontrer !",unread:1,online:true},
@@ -913,18 +917,17 @@ function renderSwipe(){
     if(p.online)badges+='<span style="background:rgba(39,174,96,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px">&#9679; En ligne</span>';
     if(p.isNew)badges+='<span style="background:rgba(196,150,42,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px">&#10024; Nouveau</span>';
     badges+='<span style="background:rgba(0,0,0,.45);color:#fff;font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:12px">'+enLabel(p.en)+'</span>';
-    // Miniature : vidéo Cloudinary EN PRIORITÉ > photo > bg
+    // Miniature : PHOTO d'abord (base64 ou URL) > miniature vidéo Cloudinary > bg
     var thumbUrl='';
-    if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+    if(p.photo&&p.photo.length>10){
+      thumbUrl=p.photo;
+    } else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
       var cleanVideo=p.video.split('?')[0].split('#')[0];
       thumbUrl=cleanVideo
-        .replace('/video/upload/','/video/upload/pg_1,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
+        .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
         .replace(/\.(mp4|mov|webm|avi|mkv)$/i,'.jpg');
-    } else if(p.photo){
-      thumbUrl=p.photo;
     }
     var swBg=thumbUrl?'background:url("'+thumbUrl+'") center/cover no-repeat':'background:'+p.bg;
-    if(p.video)console.log('[SW]',p.name,'→',thumbUrl.substring(0,100));
     card.innerHTML='<div class="swc-photo" style="'+swBg+';height:100%">'+(thumbUrl?'':p.emoji)
       +'<div class="sw-badge-like" id="sl'+i+'">LIKE</div>'
       +'<div class="sw-badge-nope" id="sn'+i+'">PASSE</div>'
@@ -977,13 +980,13 @@ function renderGrid(tab){
     var enFlag="&#127468;&#127463;";
     // Miniature grille : vidéo Cloudinary EN PRIORITÉ > photo > bg
     var gcThumb='';
-    if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+    if(p.photo&&p.photo.length>10){
+      gcThumb=p.photo;
+    } else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
       var cleanVideoG=p.video.split('?')[0].split('#')[0];
       gcThumb=cleanVideoG
-        .replace('/video/upload/','/video/upload/pg_1,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
+        .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
         .replace(/\.(mp4|mov|webm|avi|mkv)$/i,'.jpg');
-    } else if(p.photo){
-      gcThumb=p.photo;
     }
     var gcBg=gcThumb?'background:url("'+gcThumb+'") center/cover no-repeat':'background:'+p.bg;
     gc.innerHTML='<div class="gc-bg" style="'+gcBg+'">'+(gcThumb?'':'<span>'+p.emoji+'</span>')+'</div>'
