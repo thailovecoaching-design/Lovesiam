@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -466,7 +465,7 @@ h2 em{font-style:italic;color:var(--g)}
 </div>
 
 <!-- SWIPE -->
-<div id="pg-swipe" class="pg" style="position:relative">
+<div id="pg-swipe" class="pg">
 <div class="tnav" style="padding:0 12px">
   <div class="logo" onclick="goPage('pg-h')">Love<em>Siam</em></div>
   <div style="display:flex;align-items:center;gap:6px">
@@ -478,14 +477,14 @@ h2 em{font-style:italic;color:var(--g)}
     <button onclick="openModal('m-filters')" style="background:none;border:1.5px solid rgba(26,39,68,.14);border-radius:12px;padding:4px 10px;font-size:.74rem;color:var(--nv);cursor:pointer;font-family:var(--sans)">&#8856; Filtres</button>
   </div>
 </div>
-<!-- Zone swipe : dots + carte + boutons PASSER/JAIME bien visibles au-dessus de la nav -->
-<div style="position:absolute;top:50px;left:0;right:0;bottom:62px;display:flex;flex-direction:column;padding:6px 12px 0">
+<!-- Zone swipe : dots + carte + boutons PASSER/JAIME bien visibles -->
+<div style="flex:1;display:flex;flex-direction:column;min-height:0;padding:6px 12px 0;padding-bottom:62px">
   <div id="SW_DOTS" style="display:flex;justify-content:center;gap:4px;padding:4px 0;flex-shrink:0"></div>
-  <div id="SW_WRAP" style="flex:1;position:relative;border-radius:18px;overflow:hidden;min-height:0;margin-bottom:0"></div>
-  <!-- BOUTONS PASSER / JAIME — collés sous la carte, au-dessus de la nav -->
-  <div id="SW_ACTS" style="height:96px;min-height:96px;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:40px;background:var(--b2);position:relative;z-index:10">
-    <button onclick="doSwipe('left')" style="width:72px;height:72px;border-radius:50%;background:#fff;border:3px solid #E8E0D8;font-size:2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.18);color:#666;-webkit-appearance:none;appearance:none">&#10005;</button>
-    <button onclick="doSwipe('right')" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#C0392B,#E74C3C);border:none;font-size:2.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(192,57,43,.5);-webkit-appearance:none;appearance:none">&#10084;&#65039;</button>
+  <div id="SW_WRAP" style="flex:1;position:relative;border-radius:18px;overflow:hidden;min-height:0"></div>
+  <!-- BOUTONS SWIPE : remontés, toujours sous la carte -->
+  <div id="SW_ACTS" class="sw-acts">
+    <button class="sw-xbtn" onclick="doSwipe('left')" title="Passer">&#10005;</button>
+    <button class="sw-hbtn" onclick="doSwipe('right')" title="J'aime">&#10084;&#65039;</button>
   </div>
 </div>
 <div class="bn">
@@ -776,14 +775,12 @@ h2 em{font-style:italic;color:var(--g)}
 var g=function(id){return document.getElementById(id)};
 var LANG="fr";
 var NOW=Date.now(),DAY=86400000;
-// Vidéo de démo Cloudinary (remplacée automatiquement par les vraies vidéos Supabase au chargement)
-var DEMO_VIDEO='https://res.cloudinary.com/dfxxg3dk4/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/lovesiam_videos/sample.jpg';
 var PROFILES=[
-  {id:1,name:"Ning",age:26,ville:"Bangkok",taille:"162 cm",poids:"52 kg",fam:"Celibataire sans enfant",looking:"Relation serieuse",en:"Un peu",online:true,joinedAt:0,likedMe:true,bio:"Enseignante de yoga a Bangkok. Je cherche un homme sincere et attentionne.",emoji:"&#128105;",bg:"linear-gradient(160deg,#5C2A0A,#2E1505)",video:"",videoTranslated:false},
-  {id:2,name:"Pim",age:24,ville:"Phuket",taille:"158 cm",poids:"48 kg",fam:"Celibataire sans enfant",looking:"Relation serieuse",en:"Excellent",online:true,joinedAt:0,likedMe:false,bio:"Guide touristique a Phuket. Passionnee de plongee et voyages.",emoji:"&#128105;",bg:"linear-gradient(160deg,#2A0A5C,#150530)",video:"",videoTranslated:false},
-  {id:3,name:"Noi",age:29,ville:"Chiang Mai",taille:"160 cm",poids:"50 kg",fam:"Celibataire sans enfant",looking:"Mariage",en:"Moyen",online:false,joinedAt:0,likedMe:true,bio:"Artiste bijou a Chiang Mai. La famille est ma valeur essentielle.",emoji:"&#128105;",bg:"linear-gradient(160deg,#0A2A3C,#051520)",video:"",videoTranslated:false},
-  {id:4,name:"Fah",age:34,ville:"Bangkok",taille:"165 cm",poids:"55 kg",fam:"Celibataire avec enfant",looking:"Mariage",en:"Moyen",online:true,joinedAt:0,likedMe:true,bio:"Infirmiere a Bangkok. Une fille de 8 ans. Je cherche un homme serieux.",emoji:"&#128105;",bg:"linear-gradient(160deg,#0A3C1A,#051508)",video:"",videoTranslated:false},
-  {id:5,name:"Wan",age:27,ville:"Pattaya",taille:"157 cm",poids:"47 kg",fam:"Celibataire sans enfant",looking:"Relation serieuse",en:"Excellent",online:false,joinedAt:2*3600000,likedMe:false,bio:"Professeure d'anglais a Pattaya. Je reve de visiter la France.",emoji:"&#128105;",bg:"linear-gradient(160deg,#3C0A1A,#200508)",video:"",videoTranslated:false}
+  {id:1,name:"Ning",age:26,ville:"Bangkok",taille:"162 cm",poids:"52 kg",fam:"Celibataire sans enfant",looking:"Relation serieuse",en:"Un peu",online:true,joinedAt:0,likedMe:true,bio:"Enseignante de yoga a Bangkok. Je cherche un homme sincere et attentionne.",emoji:"&#128105;",bg:"linear-gradient(160deg,#5C2A0A,#2E1505)"},
+  {id:2,name:"Pim",age:24,ville:"Phuket",taille:"158 cm",poids:"48 kg",fam:"Celibataire sans enfant",looking:"Relation serieuse",en:"Excellent",online:true,joinedAt:0,likedMe:false,bio:"Guide touristique a Phuket. Passionnee de plongee et voyages.",emoji:"&#128105;",bg:"linear-gradient(160deg,#2A0A5C,#150530)"},
+  {id:3,name:"Noi",age:29,ville:"Chiang Mai",taille:"160 cm",poids:"50 kg",fam:"Celibataire sans enfant",looking:"Mariage",en:"Moyen",online:false,joinedAt:0,likedMe:true,bio:"Artiste bijou a Chiang Mai. La famille est ma valeur essentielle.",emoji:"&#128105;",bg:"linear-gradient(160deg,#0A2A3C,#051520)"},
+  {id:4,name:"Fah",age:34,ville:"Bangkok",taille:"165 cm",poids:"55 kg",fam:"Celibataire avec enfant",looking:"Mariage",en:"Moyen",online:true,joinedAt:0,likedMe:true,bio:"Infirmiere a Bangkok. Une fille de 8 ans. Je cherche un homme serieux.",emoji:"&#128105;",bg:"linear-gradient(160deg,#0A3C1A,#051508)"},
+  {id:5,name:"Wan",age:27,ville:"Pattaya",taille:"157 cm",poids:"47 kg",fam:"Celibataire sans enfant",looking:"Relation serieuse",en:"Excellent",online:false,joinedAt:2*3600000,likedMe:false,bio:"Professeure d'anglais a Pattaya. Je reve de visiter la France.",emoji:"&#128105;",bg:"linear-gradient(160deg,#3C0A1A,#200508)"}
 ];
 PROFILES[0].joinedAt=NOW-5*DAY;PROFILES[1].joinedAt=NOW-2*3600000;PROFILES[2].joinedAt=NOW-12*3600000;PROFILES[3].joinedAt=NOW-30*DAY;PROFILES[4].joinedAt=NOW-60*DAY;
 PROFILES.forEach(function(p){p.isNew=(NOW-p.joinedAt)<DAY;});
@@ -808,7 +805,6 @@ function loadApprovedProfiles(filterGender){
   xhr.open('GET',url,true);xhr.timeout=10000;
   xhr.onreadystatechange=function(){
     if(xhr.readyState!==4)return;
-    console.log('[SB] HTTP status='+xhr.status+' réponse='+xhr.responseText.substring(0,200));
     if(xhr.status>=200&&xhr.status<300){
       try{
         var rows=JSON.parse(xhr.responseText)||[];
@@ -833,14 +829,11 @@ function loadApprovedProfiles(filterGender){
       }catch(e){console.log('Erreur profils',e);}
     }
   };
-  xhr.onerror=function(){console.log('[SB] ERREUR XHR - vérifier CORS ou réseau');};
-  xhr.ontimeout=function(){console.log('[SB] TIMEOUT après 10s');};
+  xhr.onerror=function(){console.log('XHR profils erreur');};
+  xhr.ontimeout=function(){console.log('XHR profils timeout');};
   xhr.send();
 }
-try{
-  console.log('[SB] Chargement profils depuis Supabase...');
-  loadApprovedProfiles('homme');
-}catch(e){console.log('[SB] Exception:',e);}
+try{loadApprovedProfiles('homme');}catch(e){console.log('profils:',e);}
 
 var MSGS=[
   {id:1,pid:0,name:"Ning",emoji:"&#128105;",bg:"linear-gradient(135deg,#E8D5C4,#C4A080)",time:"5min",prev:"Bonjour, ravie de vous rencontrer !",unread:1,online:true},
@@ -917,15 +910,15 @@ function renderSwipe(){
     if(p.online)badges+='<span style="background:rgba(39,174,96,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px">&#9679; En ligne</span>';
     if(p.isNew)badges+='<span style="background:rgba(196,150,42,.9);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:12px;margin-right:4px">&#10024; Nouveau</span>';
     badges+='<span style="background:rgba(0,0,0,.45);color:#fff;font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:12px">'+enLabel(p.en)+'</span>';
-    // Miniature : PHOTO d'abord (base64 ou URL) > miniature vidéo Cloudinary > bg
+    // Miniature : vidéo Cloudinary EN PRIORITÉ > photo > bg
     var thumbUrl='';
-    if(p.photo&&p.photo.length>10){
-      thumbUrl=p.photo;
-    } else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
-      var cleanVideo=p.video.split('?')[0].split('#')[0];
-      thumbUrl=cleanVideo
+    if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+      var cleanV=p.video.split('?')[0].split('#')[0];
+      thumbUrl=cleanV
         .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
-        .replace(/\.(mp4|mov|webm|avi|mkv)$/i,'.jpg');
+        .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/i,'.jpg');
+    } else if(p.photo&&p.photo.length>10){
+      thumbUrl=p.photo;
     }
     var swBg=thumbUrl?'background:url("'+thumbUrl+'") center/cover no-repeat':'background:'+p.bg;
     card.innerHTML='<div class="swc-photo" style="'+swBg+';height:100%">'+(thumbUrl?'':p.emoji)
@@ -980,13 +973,13 @@ function renderGrid(tab){
     var enFlag="&#127468;&#127463;";
     // Miniature grille : vidéo Cloudinary EN PRIORITÉ > photo > bg
     var gcThumb='';
-    if(p.photo&&p.photo.length>10){
-      gcThumb=p.photo;
-    } else if(p.video&&p.video.indexOf('cloudinary.com')>=0){
-      var cleanVideoG=p.video.split('?')[0].split('#')[0];
-      gcThumb=cleanVideoG
+    if(p.video&&p.video.indexOf('cloudinary.com')>=0){
+      var cleanVG=p.video.split('?')[0].split('#')[0];
+      gcThumb=cleanVG
         .replace('/video/upload/','/video/upload/so_0,f_jpg,w_400,h_500,c_fill,g_face,q_auto/')
-        .replace(/\.(mp4|mov|webm|avi|mkv)$/i,'.jpg');
+        .replace(/\.(mp4|mov|webm|MP4|MOV|WEBM)$/i,'.jpg');
+    } else if(p.photo&&p.photo.length>10){
+      gcThumb=p.photo;
     }
     var gcBg=gcThumb?'background:url("'+gcThumb+'") center/cover no-repeat':'background:'+p.bg;
     gc.innerHTML='<div class="gc-bg" style="'+gcBg+'">'+(gcThumb?'':'<span>'+p.emoji+'</span>')+'</div>'
@@ -1040,26 +1033,21 @@ function openProfile(p){
   var mediaStrip=g("pp-media"),dots=g("pp-dots");
   if(mediaStrip){
     var slides=[],dotHtml=[];
-    // Slides photos
-    if(p.photo){
-      slides.push('<div class="pp-media-slide photo-slide" style="background-image:url('+p.photo+')">'+(p.online?'<div class="pp-online-badge">&#9679; En ligne</div>':'')+'<div class="pp-photo-grd"></div></div>');
-      dotHtml.push('<div class="pp-pdot on"></div>');
-    }else{
-      slides.push('<div class="pp-media-slide photo-slide" style="background:'+p.bg+'"><span style="font-size:80px">'+p.emoji+'</span>'+(p.online?'<div class="pp-online-badge">&#9679; En ligne</div>':'')+'<div class="pp-photo-grd"></div></div>');
-      dotHtml.push('<div class="pp-pdot on"></div>');
-    }
-    // Slide vidéo — toujours affichée (player réel ou placeholder)
+    // SLIDE 1 : VIDÉO EN PREMIER
     if(p.video){
       var tradBadge=p.videoTranslated
-        ?'<div style="background:rgba(196,150,42,.15);border:1px solid var(--g);border-radius:20px;padding:4px 14px;font-size:.72rem;color:var(--g);font-weight:600;margin-bottom:8px">&#127760; Vidéo traduite FR&#8596;TH</div>'
-        :'<div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:.72rem;color:rgba(255,255,255,.7);font-weight:600;margin-bottom:8px">&#127916; Vidéo originale</div>';
-      slides.push('<div class="pp-media-slide video-slide">'+tradBadge+'<video src="'+p.video+'" controls playsinline webkit-playsinline style="width:100%;max-height:260px;border-radius:12px;object-fit:contain;background:#000"></video></div>');
-      dotHtml.push('<div class="pp-pdot vid"></div>');
-    } else {
-      // Placeholder vidéo — indique qu'elle sera disponible bientôt
-      slides.push('<div class="pp-media-slide video-slide"><div style="text-align:center;padding:20px"><div style="font-size:3rem;margin-bottom:12px">&#127916;</div><div style="color:rgba(255,255,255,.7);font-size:.9rem;font-weight:600;margin-bottom:6px">Vidéo de présentation</div><div style="color:rgba(255,255,255,.4);font-size:.78rem">Bientôt disponible</div></div></div>');
-      dotHtml.push('<div class="pp-pdot vid"></div>');
+        ?'<div style="background:rgba(196,150,42,.15);border:1px solid var(--g);border-radius:20px;padding:4px 14px;font-size:.72rem;color:var(--g);font-weight:600;margin-bottom:8px">&#127760; Vid\xE9o traduite FR\u2194TH</div>'
+        :'<div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:.72rem;color:rgba(255,255,255,.7);font-weight:600;margin-bottom:8px">&#127916; Vid\xE9o originale</div>';
+      slides.push('<div class="pp-media-slide video-slide">'+tradBadge+'<video src="'+p.video+'" controls playsinline webkit-playsinline preload="metadata" style="width:100%;max-height:240px;border-radius:10px;object-fit:contain;background:#000"></video><div style="color:rgba(255,255,255,.4);font-size:.65rem;margin-top:6px">&#8592; Glisse pour voir les photos</div></div>');
+      dotHtml.push('<div class="pp-pdot vid on"></div>');
     }
+    // SLIDE 2 : PHOTO
+    if(p.photo){
+      slides.push('<div class="pp-media-slide photo-slide" style="background-image:url(\''+p.photo+'\')">'+(p.online?'<div class="pp-online-badge">&#9679; En ligne</div>':'')+'<div class="pp-photo-grd"></div></div>');
+    } else {
+      slides.push('<div class="pp-media-slide photo-slide" style="background:'+p.bg+'"><span style="font-size:80px">'+p.emoji+'</span>'+(p.online?'<div class="pp-online-badge">&#9679; En ligne</div>':'')+'<div class="pp-photo-grd"></div></div>');
+    }
+    dotHtml.push('<div class="pp-pdot'+(p.video?'':' on')+'"></div>');
     mediaStrip.innerHTML=slides.join('');
     if(dots){
       dots.innerHTML=dotHtml.join('');
