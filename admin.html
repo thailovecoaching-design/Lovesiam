@@ -68,6 +68,15 @@ body{font-family:var(--sans);background:#F0EDE8;color:var(--nv);min-height:100vh
 .badge.m{background:#EDE0FF;color:#5A2D8B}
 .badge.f{background:#FFE4F0;color:#8B2D5A}
 
+/* MODAL CONFIRMATION */
+.confirm-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:none;align-items:center;justify-content:center}
+.confirm-modal.on{display:flex}
+.confirm-box{background:#fff;border-radius:16px;padding:28px;max-width:340px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.confirm-title{font-size:1.1rem;font-weight:700;color:var(--nv);margin-bottom:8px}
+.confirm-text{font-size:.88rem;color:var(--td);line-height:1.6;margin-bottom:22px}
+.confirm-btns{display:flex;gap:10px}
+.confirm-cancel{flex:1;padding:11px;border-radius:10px;border:1.5px solid rgba(26,39,68,.15);background:#fff;font-size:.88rem;font-weight:600;cursor:pointer;color:var(--nv);font-family:var(--sans)}
+.confirm-ok{flex:1;padding:11px;border-radius:10px;border:none;background:#C0392B;font-size:.88rem;font-weight:700;cursor:pointer;color:#fff;font-family:var(--sans)}
 /* DÉTAIL */
 .detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-start;justify-content:flex-end}
 .detail-overlay.on{display:flex}
@@ -170,6 +179,18 @@ body{font-family:var(--sans);background:#F0EDE8;color:var(--nv);min-height:100vh
 </div>
 
 <!-- DETAIL PANEL -->
+<!-- Modal confirmation suppression -->
+<div class="confirm-modal" id="CONFIRM_MODAL">
+  <div class="confirm-box">
+    <div class="confirm-title">&#128465; Supprimer ce profil ?</div>
+    <div class="confirm-text">Cette action est <strong>irréversible</strong>.<br>Le profil sera supprimé du site et de l'admin.</div>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="closeConfirm()">Annuler</button>
+      <button class="confirm-ok" id="CONFIRM_OK_BTN">Supprimer définitivement</button>
+    </div>
+  </div>
+</div>
+
 <div class="detail-overlay" id="DETAIL" onclick="if(event.target===this)closeDetail()">
   <div class="detail-panel" id="DP"></div>
 </div>
@@ -252,7 +273,7 @@ function mapRow(d){
     name:d.name,age:d.age,gender:d.gender,email:d.email,whatsapp:d.whatsapp,
     city:d.city,country:d.country,height:d.height,weight:d.weight,bio:d.bio,
     englishLevel:d.english_level,looking:d.looking,family:d.family,
-    photos:d.photo_url?[d.photo_url]:[],
+    photos:[d.photo_url,d.photo2_url,d.photo3_url].filter(Boolean),
     video:d.video_url||'',
     videoTranslated:!!d.video_translated,
     note:d.note||''
@@ -490,25 +511,49 @@ function validate(id,status){
   showToast(labels[status]||'Statut mis à jour');
 }
 
+var _deleteId=null;
+
 function deleteInscription(id){
-  if(!confirm('Supprimer définitivement ce profil ? Cette action est irréversible.'))return;
-  var xhr=new XMLHttpRequest();
-  xhr.open('DELETE',SUPA_URL+'/rest/v1/inscriptions?id=eq.'+id,true);
-  xhr.setRequestHeader('apikey',SUPA_KEY);
-  xhr.setRequestHeader('Authorization','Bearer '+SUPA_KEY);
-  xhr.setRequestHeader('Prefer','return=minimal');
-  xhr.onreadystatechange=function(){
-    if(xhr.readyState!==4)return;
-    if(xhr.status>=200&&xhr.status<300){
-      // Supprimer de ALL_DATA définitivement
+  _deleteId=id;
+  var modal=document.getElementById('CONFIRM_MODAL');
+  if(modal)modal.classList.add('on');
+  var btn=document.getElementById('CONFIRM_OK_BTN');
+  if(btn)btn.onclick=function(){closeConfirm();doDelete(_deleteId);};
+}
+
+function closeConfirm(){
+  var modal=document.getElementById('CONFIRM_MODAL');
+  if(modal)modal.classList.remove('on');
+  _deleteId=null;
+}
+
+function doDelete(id){
+  if(!id)return;
+  showToast('⏳ Suppression en cours...');
+  fetch(SUPA_URL+'/rest/v1/inscriptions?id=eq.'+id,{
+    method:'DELETE',
+    headers:{
+      'apikey':SUPA_KEY,
+      'Authorization':'Bearer '+SUPA_KEY,
+      'Prefer':'return=minimal'
+    }
+  })
+  .then(function(r){
+    if(r.ok){
       ALL_DATA=ALL_DATA.filter(function(d){return String(d.id)!==String(id);});
       closeDetail();
       render();
-      showToast('\uD83D\uDDD1 Profil supprimé définitivement');
-    }else{
-      alert('Erreur suppression ('+xhr.status+'): '+xhr.responseText);
-      showToast('❌ Erreur suppression: '+xhr.status);
+      showToast('✅ Profil supprimé définitivement');
+    } else {
+      r.text().then(function(t){
+        showToast('❌ Erreur ('+ r.status+'): '+t.substring(0,80));
+      });
     }
+  })
+  .catch(function(e){
+    showToast('❌ Erreur réseau: '+e.message);
+  });
+}
   };
   xhr.send();
 }
@@ -609,11 +654,12 @@ function exportCSV(){
 }
 
 function clearAll(){
-  if(!confirm('Effacer TOUTES les inscriptions ? Cette action est irreversible.'))return;
+  var ok=window.confirm?window.confirm('Effacer TOUTES les inscriptions ? Action irr\xE9versible.'):true;
+  if(!ok)return;
   fetch(SUPA_URL+'/rest/v1/inscriptions?id=neq.00000000-0000-0000-0000-000000000000',{
     method:'DELETE',
     headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'}
-  }).then(function(){refreshData();showToast('🗑 Données effacées');});
+  }).then(function(){refreshData();showToast('\uD83D\uDDD1 Donn\xE9es effac\xE9es');});
 }
 
 // ═══════════════════════════════
