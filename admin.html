@@ -194,7 +194,7 @@ var ALL_DATA=[];
         if(ALL_DATA.length===0){
           // Tester si le token fonctionne vraiment
           fetch(SUPA_URL+'/rest/v1/inscriptions?select=count&limit=1',{
-            headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN}
+            headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
           }).then(function(r){
             if(r.status===401||r.status===403){
               localStorage.removeItem('ls_admin_token');
@@ -263,7 +263,7 @@ function getInscriptions(){return ALL_DATA;}
 
 function refreshData(){
   return fetch(SUPA_URL+'/rest/v1/inscriptions?select=*&order=created_at.desc',{
-    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN}
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
   }).then(function(r){return r.json();}).then(function(rows){
     ALL_DATA=(rows||[]).map(mapRow);
     render();
@@ -275,7 +275,7 @@ function updateStatus(id,status,note){
   if(note!==undefined)body.note=note;
   return fetch(SUPA_URL+'/rest/v1/inscriptions?id=eq.'+id,{
     method:'PATCH',
-    headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN,'Prefer':'return=minimal'},
+    headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
     body:JSON.stringify(body)
   }).then(function(){return refreshData();});
 }
@@ -283,7 +283,7 @@ function updateStatus(id,status,note){
 function setVideoTranslated(id,val){
   return fetch(SUPA_URL+'/rest/v1/inscriptions?id=eq.'+id,{
     method:'PATCH',
-    headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN,'Prefer':'return=minimal'},
+    headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
     body:JSON.stringify({video_translated:val})
   }).then(function(){return refreshData();});
 }
@@ -495,15 +495,18 @@ function deleteInscription(id){
   var xhr=new XMLHttpRequest();
   xhr.open('DELETE',SUPA_URL+'/rest/v1/inscriptions?id=eq.'+id,true);
   xhr.setRequestHeader('apikey',SUPA_KEY);
-  xhr.setRequestHeader('Authorization','Bearer '+SESSION_TOKEN);
+  xhr.setRequestHeader('Authorization','Bearer '+SUPA_KEY);
+  xhr.setRequestHeader('Prefer','return=minimal');
   xhr.onreadystatechange=function(){
     if(xhr.readyState!==4)return;
     if(xhr.status>=200&&xhr.status<300){
-      ALL_DATA=ALL_DATA.filter(function(d){return d.id!==id;});
+      // Supprimer de ALL_DATA définitivement
+      ALL_DATA=ALL_DATA.filter(function(d){return String(d.id)!==String(id);});
       closeDetail();
       render();
-      showToast('🗑 Profil supprimé');
+      showToast('\uD83D\uDDD1 Profil supprimé définitivement');
     }else{
+      alert('Erreur suppression ('+xhr.status+'): '+xhr.responseText);
       showToast('❌ Erreur suppression: '+xhr.status);
     }
   };
@@ -609,7 +612,7 @@ function clearAll(){
   if(!confirm('Effacer TOUTES les inscriptions ? Cette action est irreversible.'))return;
   fetch(SUPA_URL+'/rest/v1/inscriptions?id=neq.00000000-0000-0000-0000-000000000000',{
     method:'DELETE',
-    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SESSION_TOKEN,'Prefer':'return=minimal'}
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'}
   }).then(function(){refreshData();showToast('🗑 Données effacées');});
 }
 
