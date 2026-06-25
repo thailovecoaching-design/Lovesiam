@@ -134,8 +134,7 @@ body{font-family:var(--sans);background:#F0EDE8;color:var(--nv);min-height:100vh
   <div style="background:#fff;border-radius:16px;padding:32px;width:320px;max-width:90vw">
     <div style="font-family:var(--serif);font-size:1.4rem;color:var(--nv);margin-bottom:4px;text-align:center">Love<em style="color:var(--g);font-style:italic">Siam</em></div>
     <div style="font-size:.78rem;color:var(--td);text-align:center;margin-bottom:20px">Espace administrateur</div>
-    <input id="LOGIN_EMAIL" type="email" placeholder="Email" style="width:100%;padding:10px 12px;border:1.5px solid rgba(26,39,68,.15);border-radius:8px;margin-bottom:10px;font-family:var(--sans);font-size:.88rem;outline:none;box-sizing:border-box">
-    <input id="LOGIN_PASS" type="password" placeholder="Mot de passe" style="width:100%;padding:10px 12px;border:1.5px solid rgba(26,39,68,.15);border-radius:8px;margin-bottom:14px;font-family:var(--sans);font-size:.88rem;outline:none;box-sizing:border-box">
+    <input id="LOGIN_PASS" type="password" placeholder="Mot de passe admin" style="width:100%;padding:10px 12px;border:1.5px solid rgba(26,39,68,.15);border-radius:8px;margin-bottom:14px;font-family:var(--sans);font-size:.88rem;outline:none;box-sizing:border-box">
     <button id="LOGIN_BTN" style="width:100%;padding:11px;background:var(--g);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:var(--sans)">Se connecter</button>
     <div id="LOGIN_ERR" style="color:var(--rd);font-size:.78rem;text-align:center;margin-top:10px;display:none"></div>
   </div>
@@ -145,8 +144,10 @@ body{font-family:var(--sans);background:#F0EDE8;color:var(--nv);min-height:100vh
   <div class="nav-logo">Love<em>Siam</em> <span style="font-size:.7rem;opacity:.5;font-family:var(--sans)">Admin</span></div>
   <div class="nav-info">Page d'administration privée</div>
   <div class="nav-btns">
-    <button class="nav-btn ghost" onclick="exportCSV()">📥 Export CSV</button>
-    <button class="nav-btn primary" onclick="clearAll()">🗑 Tout effacer</button>
+    <button class="nav-btn ghost" onclick="localStorage.removeItem('ls_admin_ok');location.reload()">&#128682; D&#233;connexion</button>
+    <button class="nav-btn ghost" onclick="refreshData()">&#8635; Actualiser</button>
+    <button class="nav-btn ghost" onclick="exportCSV()">&#128229; Export CSV</button>
+    <button class="nav-btn primary" onclick="clearAll()">&#128465; Tout effacer</button>
   </div>
 </div>
 
@@ -200,59 +201,35 @@ body{font-family:var(--sans);background:#F0EDE8;color:var(--nv);min-height:100vh
 <script>
 var SUPA_URL='https://sbglyelgqceydofgllop.supabase.co';
 var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZ2x5ZWxncWNleWRvZmdsbG9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NzI5NzgsImV4cCI6MjA5NjE0ODk3OH0.DWWEdXOdVQkVQPxZSq_TWdjADcG_lujugVZuziM_I2c';
-var SESSION_TOKEN=null;
 var ALL_DATA=[];
+// Mot de passe admin local (pas besoin de Supabase Auth)
+var ADMIN_PASS='LoveSiam2026!';
 
-// Restaurer la session depuis localStorage si disponible
+// Vérifier session
 (function(){
   try{
-    var stored=localStorage.getItem('ls_admin_token');
-    if(stored){
-      SESSION_TOKEN=stored;
+    var stored=localStorage.getItem('ls_admin_ok');
+    if(stored==='1'){
       document.getElementById('LOGIN_OVERLAY').style.display='none';
-      refreshData().then(function(){
-        // Si aucune donnée et token potentiellement expiré, re-forcer le login
-        if(ALL_DATA.length===0){
-          // Tester si le token fonctionne vraiment
-          fetch(SUPA_URL+'/rest/v1/inscriptions?select=count&limit=1',{
-            headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}
-          }).then(function(r){
-            if(r.status===401||r.status===403){
-              localStorage.removeItem('ls_admin_token');
-              SESSION_TOKEN=null;
-              document.getElementById('LOGIN_OVERLAY').style.display='flex';
-            }
-          });
-        }
-      });
+      refreshData();
     }
   }catch(e){}
 })();
 
-function loginAdmin(email,pass){
-  return fetch(SUPA_URL+'/auth/v1/token?grant_type=password',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','apikey':SUPA_KEY},
-    body:JSON.stringify({email:email,password:pass})
-  }).then(function(r){return r.json();});
-}
-
 document.getElementById('LOGIN_BTN').onclick=function(){
-  var email=document.getElementById('LOGIN_EMAIL').value.trim();
   var pass=document.getElementById('LOGIN_PASS').value;
   var err=document.getElementById('LOGIN_ERR');
   err.style.display='none';
-  if(!email||!pass){err.textContent='Remplissez email et mot de passe';err.style.display='block';return;}
-  loginAdmin(email,pass).then(function(data){
-    if(data&&data.access_token){
-      SESSION_TOKEN=data.access_token;
-      try{localStorage.setItem('ls_admin_token',SESSION_TOKEN);}catch(e){}
-      document.getElementById('LOGIN_OVERLAY').style.display='none';
-      refreshData();
-    }else{
-      err.textContent='Email ou mot de passe incorrect';err.style.display='block';
-    }
-  }).catch(function(){err.textContent='Erreur de connexion';err.style.display='block';});
+  if(!pass){err.textContent='Entrez le mot de passe';err.style.display='block';return;}
+  if(pass===ADMIN_PASS){
+    try{localStorage.setItem('ls_admin_ok','1');}catch(e){}
+    document.getElementById('LOGIN_OVERLAY').style.display='none';
+    refreshData();
+  }else{
+    err.textContent='Mot de passe incorrect';err.style.display='block';
+    document.getElementById('LOGIN_PASS').value='';
+    document.getElementById('LOGIN_PASS').focus();
+  }
 };
 document.getElementById('LOGIN_PASS').addEventListener('keydown',function(e){
   if(e.key==='Enter')document.getElementById('LOGIN_BTN').click();
