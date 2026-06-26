@@ -627,16 +627,13 @@ function exportCSV(){
   showToast('📥 Export CSV téléchargé');
 }
 
-var _clearAllMode=false;
-
 function clearAll(){
-  _clearAllMode=true;
   _deleteId='__ALL__';
   var modal=document.getElementById('CONFIRM_MODAL');
   var title=modal.querySelector('.confirm-title');
   var text=modal.querySelector('.confirm-text');
-  if(title)title.textContent='⚠️ Effacer TOUTES les inscriptions ?';
-  if(text)text.innerHTML='Cette action supprimera <strong>tous</strong> les profils.<br>Action <strong>irréversible</strong>.';
+  if(title)title.innerHTML='&#9888;&#65039; Effacer TOUT ?';
+  if(text)text.innerHTML='Cette action supprimera <strong>toutes</strong> les inscriptions.<br>Action <strong>irr\xE9versible</strong>.';
   modal.classList.add('on');
   var btn=document.getElementById('CONFIRM_OK_BTN');
   if(btn)btn.onclick=function(){
@@ -644,7 +641,7 @@ function clearAll(){
     fetch(SUPA_URL+'/rest/v1/inscriptions?id=neq.00000000-0000-0000-0000-000000000000',{
       method:'DELETE',
       headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'}
-    }).then(function(){refreshData();showToast('\uD83D\uDDD1 Toutes les donn\xE9es effac\xE9es');});
+    }).then(function(){refreshData();showToast('\uD83D\uDDD1 Donn\xE9es effac\xE9es');});
   };
 }
 
