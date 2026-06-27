@@ -495,7 +495,11 @@ function deleteInscription(id){
   var modal=document.getElementById('CONFIRM_MODAL');
   if(modal)modal.classList.add('on');
   var btn=document.getElementById('CONFIRM_OK_BTN');
-  if(btn)btn.onclick=function(){closeConfirm();doDelete(_deleteId);};
+  if(btn)btn.onclick=function(){
+    var idToDelete=_deleteId;
+    closeConfirm();
+    doDelete(idToDelete);
+  };
 }
 
 function closeConfirm(){
