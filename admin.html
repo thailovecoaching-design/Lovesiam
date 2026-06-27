@@ -506,29 +506,30 @@ function closeConfirm(){
 
 function doDelete(id){
   if(!id)return;
-  showToast('⏳ Suppression en cours...');
+  showToast('⏳ Suppression...');
   fetch(SUPA_URL+'/rest/v1/inscriptions?id=eq.'+id,{
     method:'DELETE',
     headers:{
       'apikey':SUPA_KEY,
       'Authorization':'Bearer '+SUPA_KEY,
+      'Content-Type':'application/json',
       'Prefer':'return=minimal'
     }
   })
   .then(function(r){
-    if(r.ok){
+    if(r.status===204||r.status===200||r.ok){
       ALL_DATA=ALL_DATA.filter(function(d){return String(d.id)!==String(id);});
       closeDetail();
       render();
-      showToast('✅ Profil supprimé définitivement');
+      showToast('✅ Profil supprimé');
     } else {
       r.text().then(function(t){
-        showToast('❌ Erreur ('+ r.status+'): '+t.substring(0,80));
+        alert('Erreur DELETE ('+r.status+'):\n'+t);
       });
     }
   })
   .catch(function(e){
-    showToast('❌ Erreur réseau: '+e.message);
+    alert('Erreur réseau: '+e.message);
   });
 }
 
