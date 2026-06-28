@@ -1397,30 +1397,23 @@ function sendMsg(){
   var text=inp.value.trim();
   if(!text||!currentConvId)return;
   inp.value='';inp.disabled=true;
-  // Traduire FR->TH puis FR->EN en parallele
-  var trTH='',trEN='';
-  function doSave(){
-    fetch(SB_URL+'/rest/v1/messages',{
+  // Un seul appel Edge Function qui traduit vers TH ET EN
+  fetch(SB_URL+'/functions/v1/transcribe-video',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_KEY},
+    body:JSON.stringify({textOnly:true,text:text,targetLang:'thai',targetLang2:'english',sourceLang:'fr'})
+  }).then(function(r){return r.json();})
+  .then(function(d){
+    var trTH=d.translation||text;
+    var trEN=d.translation2||text;
+    return fetch(SB_URL+'/rest/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=minimal'},
       body:JSON.stringify({conversation_id:currentConvId,sender_id:'patrick_fr',sender_lang:'fr',content:text,content_translated:trTH,content_en:trEN})
-    }).then(function(){inp.disabled=false;loadMessages();})
-    .catch(function(){inp.disabled=false;});
-  }
-  var pending=2;
-  function oneDone(){pending--;if(pending===0)doSave();}
-  // TH
-  fetch(SB_URL+'/functions/v1/transcribe-video',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_KEY},
-    body:JSON.stringify({textOnly:true,text:text,targetLang:'thai',sourceLang:'fr'})
-  }).then(function(r){return r.json();}).then(function(d){trTH=d.translation||text;oneDone();}).catch(function(){oneDone();});
-  // EN
-  fetch(SB_URL+'/functions/v1/transcribe-video',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+SB_KEY},
-    body:JSON.stringify({textOnly:true,text:text,targetLang:'english',sourceLang:'fr'})
-  }).then(function(r){return r.json();}).then(function(d){trEN=d.translation||text;oneDone();}).catch(function(){oneDone();});
+    });
+  })
+  .then(function(){inp.disabled=false;loadMessages();})
+  .catch(function(){inp.disabled=false;});
 }
 
 function showMatch(p){
